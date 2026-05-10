@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 // Helper: generate JWT token
 const generateToken = (userId) => {
@@ -8,8 +10,11 @@ const generateToken = (userId) => {
   });
 };
 
-// NOTE: All DB interactions are left as TODOs. Coordinate with DB teammate
-// before implementing queries to avoid clashes.
+// Helper: remove sensitive fields from user object
+const sanitizeUser = (user) => {
+  const { password, ...userWithoutPassword } = user;
+  return userWithoutPassword;
+};
 
 // Register a new user
 const register = async (req, res) => {
@@ -21,7 +26,6 @@ const register = async (req, res) => {
       password,
       mobileNo,
       city,
-      state,
       country,
       dob,
       language,
@@ -75,31 +79,39 @@ const register = async (req, res) => {
     // Hash password
     const hashedPassword = await bcryptjs.hash(password, 10);
 
-    // TODO: Database - check if email already exists
-    // TODO: Database - insert user record with fields: firstName, lastName, email, hashedPassword, mobileNo, city, state, country, dob, language, preferredCurrency, profilePhoto
-    // Coordinate with DB teammate before implementing the actual queries.
+    // Check if email already exists in database
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser) {
+      return res.status(409).json({ error: 'Email already registered' });
+    }
 
-    // For now return a placeholder user object (replace with DB result later)
-    const user = {
-      id: 1,
-      firstName,
-      lastName,
-      email,
-      mobileNo: cleanedMobile,
-      city: city || null,
-      state: state || null,
-      country: country || null,
-      dob: dob || null,
-      language: language || null,
-      preferredCurrency: preferredCurrency || null,
-      profilePhoto: profilePhoto || null,
-      created_at: new Date(),
-    };
+    // Create user in database
+    const user = await prisma.user.create({
+      data: {
+        firstName,
+        lastName,
+        email,
+        password: hashedPassword,
+        mobileNo: cleanedMobile,
+        city: city || null,
+        country: country || null,
+        dob: dob ? new Date(dob) : null,
+        language: language || null,
+        preferredCurrency: preferredCurrency || null,
+        profilePhoto: profilePhoto || null,
+      },
+    });
 
     const token = generateToken(user.id);
+    const userWithoutPassword = sanitizeUser(user);
 
-    return res.status(201).json({ message: 'User registered (placeholder)', token, user });
+    return res.status(201).json({ 
+      message: 'User registered successfully', 
+      token, 
+      user: userWithoutPassword 
+    });
   } catch (error) {
+    console.error('Registration error:', error);
     return res.status(500).json({ error: 'Registration failed: ' + error.message });
   }
 };
@@ -113,20 +125,29 @@ const login = async (req, res) => {
       return res.status(400).json({ error: 'Email and password are required' });
     }
 
-    // TODO: Database - fetch user by email
-    // Example: const user = await db.query('SELECT * FROM users WHERE email=$1', [email])
-    // For now, use placeholder user with hashed password to allow local testing of logic
-    const placeholderHashed = await bcryptjs.hash(password, 10);
-    const user = { id: 1, firstName: 'Test', lastName: 'User', email, password: placeholderHashed };
+    // Fetch user by email from database
+    const user = await prisma.user.findUnique({ where: { email } });
+    
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
 
+    // Compare password with hashed password
     const isPasswordValid = await bcryptjs.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
     const token = generateToken(user.id);
-    return res.json({ message: 'Login successful (placeholder)', token, user: { id: user.id, firstName: user.firstName, lastName: user.lastName, email: user.email } });
+    const userWithoutPassword = sanitizeUser(user);
+
+    return res.json({ 
+      message: 'Login successful', 
+      token, 
+      user: userWithoutPassword 
+    });
   } catch (error) {
+    console.error('Login error:', error);
     return res.status(500).json({ error: 'Login failed: ' + error.message });
   }
 };
@@ -140,27 +161,21 @@ const getMe = async (req, res) => {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    // TODO: Database - fetch user by id and return full profile
-    // Example: const result = await db.query('SELECT id, first_name, last_name, email, mobile_no, city, state, country, dob, language, preferred_currency, profile_photo FROM users WHERE id=$1', [userId])
+    // Fetch user from database
+    const user = await prisma.user.findUnique({ where: { id: userId } });
 
-    // Placeholder response
-    const user = {
-      id: userId,
-      firstName: 'Test',
-      lastName: 'User',
-      email: 'test@example.com',
-      mobileNo: null,
-      city: null,
-      state: null,
-      country: null,
-      dob: null,
-      language: null,
-      preferredCurrency: null,
-      profilePhoto: null,
-    };
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
 
-    return res.json({ message: 'User data (placeholder)', user });
+    const userWithoutPassword = sanitizeUser(user);
+
+    return res.json({ 
+      message: 'User data retrieved', 
+      user: userWithoutPassword 
+    });
   } catch (error) {
+    console.error('Get user error:', error);
     return res.status(500).json({ error: 'Failed to get user: ' + error.message });
   }
 };
