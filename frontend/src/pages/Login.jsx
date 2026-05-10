@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles } from 'lucide-react'
+import CursorTrailEffect from '../components/landing/CursorTrailEffect'
 
 export default function Login() {
   const [showPass, setShowPass] = useState(false)
@@ -20,8 +21,11 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
       style={{ background: '#0f0f13' }}>
 
+      {/* Cursor trail — renders at z-[2], behind the form */}
+      <CursorTrailEffect />
+
       {/* Subtle ambient glow — behind everything */}
-      <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden">
+      <div className="absolute inset-0 z-[0] pointer-events-none overflow-hidden">
         <div style={{
           position: 'absolute', top: '20%', left: '50%', transform: 'translateX(-50%)',
           width: 480, height: 320, borderRadius: '50%', filter: 'blur(90px)',
