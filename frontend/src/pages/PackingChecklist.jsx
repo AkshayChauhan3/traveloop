@@ -47,18 +47,18 @@ export default function PackingChecklist() {
       <div className="p-6 lg:p-8 space-y-6">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-white flex items-center gap-2"><PackageCheck className="w-6 h-6 text-emerald-400" />Packing Checklist</h1>
-            <p className="text-slate-400 text-sm mt-1">{packedCount}/{items.length} items packed</p>
+            <h1 className="text-2xl font-bold flex items-center gap-2" style={{ color: '#1e2d1f' }}><PackageCheck className="w-6 h-6 text-brand-500" />Packing Checklist</h1>
+            <p className="text-slate-500 text-sm mt-1">{packedCount}/{items.length} items packed</p>
           </div>
         </div>
 
         {/* Progress */}
         <div className="glass-card p-5">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-white font-semibold">Packing Progress</span>
+            <span className="font-semibold" style={{ color: '#1e2d1f' }}>Packing Progress</span>
             <span className={`text-lg font-bold ${pct === 100 ? 'text-emerald-400' : pct >= 60 ? 'text-amber-400' : 'text-brand-400'}`}>{pct}%</span>
           </div>
-          <div className="w-full h-3 rounded-full bg-white/10">
+          <div className="w-full h-3 rounded-full overflow-hidden" style={{ background: '#dff3e3' }}>
             <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 1 }}
               className={`h-full rounded-full ${pct === 100 ? 'bg-emerald-400' : pct >= 60 ? 'bg-amber-400' : 'bg-brand-400'}`} />
           </div>
@@ -70,7 +70,7 @@ export default function PackingChecklist() {
           <input placeholder="Add new item..." value={newItem} onChange={e => setNewItem(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && add()} className="input-field flex-1 min-w-48 text-sm" id="checklist-new-item" />
           <select value={newCategory} onChange={e => setNewCategory(e.target.value)} className="input-field w-44 text-sm">
-            {CATEGORIES.map(c => <option key={c.id} value={c.id} className="bg-surface-200">{c.emoji} {c.label}</option>)}
+            {CATEGORIES.map(c => <option key={c.id} value={c.id} className="bg-white text-slate-800">{c.emoji} {c.label}</option>)}
           </select>
           <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} onClick={add} className="btn-primary text-sm flex items-center gap-1.5 py-2.5 px-4">
             <Plus className="w-4 h-4" />Add
@@ -102,7 +102,7 @@ export default function PackingChecklist() {
           return (
             <div key={cat.id} className="glass-card p-5">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-white font-semibold flex items-center gap-2">
+                <h3 className="font-semibold flex items-center gap-2" style={{ color: '#1e2d1f' }}>
                   <span className="text-lg">{cat.emoji}</span>{cat.label}
                 </h3>
                 <span className="text-slate-400 text-xs">{catPacked}/{catItems.length}</span>
@@ -110,12 +110,14 @@ export default function PackingChecklist() {
               <div className="space-y-2">
                 {catItems.map((item, i) => (
                   <motion.div key={item.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}
-                    className={`flex items-center gap-3 p-3 rounded-xl border transition-all group ${item.packed ? 'bg-emerald-500/5 border-emerald-500/20' : 'glass border-white/5 hover:border-white/10'}`}>
+                    className={`flex items-center gap-3 p-3 rounded-xl border transition-all group ${
+                      item.packed ? 'bg-leaf-light border-brand-200' : 'bg-white border-slate-200 hover:border-brand-200'
+                    }`}>
                     <button onClick={() => toggle(item.id)}
                       className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 transition-all ${item.packed ? 'bg-emerald-500 border-emerald-500' : 'border-white/20 hover:border-brand-400'}`}>
                       {item.packed && <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />}
                     </button>
-                    <span className={`flex-1 text-sm ${item.packed ? 'line-through text-slate-500' : 'text-slate-200'}`}>{item.label}</span>
+                    <span className={`flex-1 text-sm ${ item.packed ? 'line-through text-slate-400' : 'text-slate-700'}`}>{item.label}</span>
                     <button onClick={() => remove(item.id)} className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-rose-400 transition-all">
                       <Trash2 className="w-4 h-4" />
                     </button>

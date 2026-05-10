@@ -1,86 +1,144 @@
 import { motion } from 'framer-motion'
-import { Star, Quote } from 'lucide-react'
+import { Plus, MapPin, DollarSign, Share2, Sparkles, CheckCircle2, Brain } from 'lucide-react'
 
-const testimonials = [
+const steps = [
   {
-    name: 'Priya Mehta',
-    role: 'Solo Traveler',
-    avatar: 'P',
-    color: 'from-brand-400 to-brand-600',
-    rating: 5,
-    text: 'Traveloop completely changed how I plan trips. The AI Optimizer gave me a perfect Bali itinerary in under 30 seconds. Mind blown!',
-    trip: 'Bali, Indonesia',
+    number: '01',
+    icon: Plus,
+    title: 'Create a Trip',
+    description: 'Start by naming your trip, setting your dates, and picking your travel style — adventure, relaxation, culture, and more.',
+    color: 'brand',
   },
   {
-    name: 'Arjun Sharma',
-    role: 'Adventure Seeker',
-    avatar: 'A',
-    color: 'from-cyan-400 to-brand-500',
-    rating: 5,
-    text: 'The budget warning system saved my Himalayan trek. It flagged that Day 4 was overspent and suggested a cheaper guesthouse. Super smart!',
-    trip: 'Leh-Ladakh, India',
+    number: '02',
+    icon: MapPin,
+    title: 'Add Destinations & Activities',
+    description: 'Browse thousands of destinations, add cities day by day, and populate each day with activities using our intuitive builder.',
+    color: 'cyan',
   },
   {
-    name: 'Zara Ahmed',
-    role: 'Couple Traveler',
-    avatar: 'Z',
-    color: 'from-amber-400 to-rose-500',
-    rating: 5,
-    text: 'We used Traveloop for our honeymoon to Greece and it was flawless. The itinerary builder made everything so organized and beautiful.',
-    trip: 'Santorini, Greece',
+    number: '03',
+    icon: DollarSign,
+    title: 'Track Your Budget',
+    description: 'Monitor spending in real time. Smart budget warnings alert you before you overspend, and suggest cheaper alternatives.',
+    color: 'amber',
+  },
+  {
+    number: '04',
+    icon: Share2,
+    title: 'Share or Save Your Itinerary',
+    description: 'Export a beautiful itinerary, share it with travel companions, or keep it private in your personal trip library.',
+    color: 'emerald',
   },
 ]
 
-export default function TestimonialsSection() {
+const colorMap = {
+  brand:   { icon: 'text-brand-500', bg: 'bg-leaf-light', border: 'border-brand-300', num: 'text-brand-400' },
+  cyan:    { icon: 'text-cyan-600',  bg: 'bg-cyan-50',    border: 'border-cyan-200',   num: 'text-cyan-400' },
+  amber:   { icon: 'text-amber-600', bg: 'bg-amber-50',   border: 'border-amber-200',  num: 'text-amber-400' },
+  emerald: { icon: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200', num: 'text-emerald-500' },
+}
+
+const tools = [
+  { icon: Brain,         label: 'AI Trip Optimizer',      desc: 'Generate a full itinerary from your mood & budget in seconds.' },
+  { icon: DollarSign,   label: 'Smart Budget Warnings',   desc: 'Never overspend — real-time alerts with saving suggestions.' },
+  { icon: CheckCircle2, label: 'Travel Checklist',        desc: 'Category-wise packing list so you never forget an essential.' },
+  { icon: Sparkles,     label: 'Notes & Trip Planner',    desc: 'Attach notes, hotel contacts, and local tips to each trip.' },
+]
+
+export default function HowItWorksSection() {
   return (
-    <section className="py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <span className="badge badge-emerald mb-4 inline-block">Testimonials</span>
-          <h2 className="section-title">Loved by <span className="gradient-text">travelers worldwide</span></h2>
-          <p className="section-subtitle">Real stories from people who planned unforgettable trips with Traveloop</p>
-        </motion.div>
+    <>
+      {/* ─── How It Works ─── */}
+      <section className="relative py-24 overflow-hidden" style={{ background: '#F8FAF5' }}>
+        <div className="absolute inset-0 bg-grid opacity-30" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <span className="badge badge-purple mb-4 inline-block">How It Works</span>
+            <h2 className="section-title">
+              Plan smarter in{' '}
+              <span className="gradient-text">4 simple steps</span>
+            </h2>
+            <p className="section-subtitle max-w-2xl mx-auto">
+              From first inspiration to a fully packed itinerary — Traveloop makes every step easy and enjoyable.
+            </p>
+          </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {testimonials.map((t, i) => (
-            <motion.div
-              key={t.name}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.15 }}
-              whileHover={{ y: -4 }}
-              className="glass-card p-6 relative group"
-            >
-              <Quote className="absolute top-4 right-4 w-8 h-8 text-brand-500/20" />
-              
-              {/* Stars */}
-              <div className="flex gap-1 mb-4">
-                {Array(t.rating).fill(0).map((_, j) => (
-                  <Star key={j} className="w-4 h-4 text-amber-400 fill-amber-400" />
-                ))}
-              </div>
-
-              <p className="text-slate-300 text-sm leading-relaxed mb-6">"{t.text}"</p>
-
-              <div className="flex items-center gap-3">
-                <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${t.color} flex items-center justify-center text-white font-bold`}>
-                  {t.avatar}
-                </div>
-                <div>
-                  <p className="text-white font-semibold text-sm">{t.name}</p>
-                  <p className="text-slate-500 text-xs">{t.role} · {t.trip}</p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {steps.map((step, i) => {
+              const Icon = step.icon
+              const c = colorMap[step.color]
+              return (
+                <motion.div
+                  key={step.number}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.12 }}
+                  whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                  className="glass-card p-6 relative flex flex-col"
+                >
+                  <div className={`text-5xl font-black mb-4 ${c.num} opacity-30 leading-none`}>{step.number}</div>
+                  <div className={`w-12 h-12 rounded-xl ${c.bg} border ${c.border} flex items-center justify-center mb-4`}>
+                    <Icon className={`w-6 h-6 ${c.icon}`} />
+                  </div>
+                  <h3 className="font-bold text-lg text-slate-800 mb-2">{step.title}</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed flex-1">{step.description}</p>
+                </motion.div>
+              )
+            })}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* ─── Featured Tools ─── */}
+      <section className="py-24" style={{ background: '#ffffff' }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-14"
+          >
+            <span className="badge badge-emerald mb-4 inline-block">Featured Tools</span>
+            <h2 className="section-title">
+              Everything in{' '}
+              <span className="gradient-text">one place</span>
+            </h2>
+            <p className="section-subtitle max-w-2xl mx-auto">
+              Powerful tools designed to make travel planning feel effortless, organized, and even fun.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {tools.map((tool, i) => {
+              const Icon = tool.icon
+              return (
+                <motion.div
+                  key={tool.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                  className="glass-card p-6 text-center group hover:border-brand-300 transition-all"
+                >
+                  <div className="w-14 h-14 rounded-2xl bg-leaf-light border border-brand-200 flex items-center justify-center mx-auto mb-4 group-hover:bg-leaf-soft transition-colors">
+                    <Icon className="w-7 h-7 text-brand-500" />
+                  </div>
+                  <h3 className="font-bold text-slate-800 mb-2">{tool.label}</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed">{tool.desc}</p>
+                </motion.div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+    </>
   )
 }

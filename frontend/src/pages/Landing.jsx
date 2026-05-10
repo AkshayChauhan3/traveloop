@@ -10,7 +10,7 @@ import CursorTrailEffect from '../components/landing/CursorTrailEffect'
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-[#050a14] overflow-hidden">
+    <div className="min-h-screen overflow-hidden" style={{ background: '#FAFAF7' }}>
       <CursorTrailEffect />
       <Navbar />
       <HeroSection />
@@ -18,11 +18,11 @@ export default function Landing() {
       <TestimonialsSection />
 
       {/* CTA Section */}
-      <section className="py-24 relative overflow-hidden">
+      <section className="py-24 relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #F0FAF0 0%, #FAFAF7 100%)' }}>
         <div className="absolute inset-0">
           <div
-            className="absolute inset-0 opacity-20"
-            style={{ background: 'radial-gradient(ellipse at center, rgba(124,58,237,0.4), transparent 70%)' }}
+            className="absolute inset-0 opacity-30"
+            style={{ background: 'radial-gradient(ellipse at center, rgba(76,175,80,0.15), transparent 70%)' }}
           />
         </div>
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
@@ -31,11 +31,11 @@ export default function Landing() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl md:text-5xl font-black text-white mb-6">
+            <h2 className="text-4xl md:text-5xl font-black mb-6" style={{ color: '#1e2d1f' }}>
               Ready to plan your{' '}
               <span className="gradient-text">dream trip?</span>
             </h2>
-            <p className="text-slate-400 text-lg mb-10">
+            <p className="text-slate-500 text-lg mb-10">
               Join thousands of travelers who plan smarter with Traveloop's AI-powered platform.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

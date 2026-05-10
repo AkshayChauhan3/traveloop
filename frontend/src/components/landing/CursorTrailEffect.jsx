@@ -17,7 +17,7 @@ const SHAPES = [
 
 let _imgIdx = 0
 let _count   = 0
-const MAX    = 8
+const MAX    = 12
 
 /* ── inject styles once ─────────────────────────────────────────────────── */
 let _css = false
@@ -33,7 +33,7 @@ function injectCSS() {
       overflow: hidden;
       border: 1.5px solid rgba(255,255,255,0.2);
       box-shadow: 0 12px 40px rgba(0,0,0,0.6);
-      background: rgba(255,255,255,0.05); /* Fallback bg */
+      background: rgba(0,0,0,0.05); /* Fallback bg */
       opacity: 0;
       will-change: opacity, transform;
     }
@@ -44,7 +44,7 @@ function injectCSS() {
       -webkit-user-drag:none;
     }
     .tl-in  { transition: opacity 0.25s ease-out; opacity: 0.85 !important; }
-    .tl-out { transition: opacity 0.6s ease-in;   opacity: 0    !important; }
+    .tl-out { transition: opacity 0.5s ease-in;   opacity: 0    !important; }
 
     /* cursor ring pulse */
     @keyframes cRing {
@@ -54,7 +54,7 @@ function injectCSS() {
     .tl-ring {
       position:fixed; pointer-events:none; z-index:9999;
       border-radius:50%;
-      border: 1.5px solid rgba(167,139,250,0.7);
+      border: 1.5px solid rgba(225,29,72,0.7);
       width:36px; height:36px;
       animation: cRing 1.7s ease-in-out infinite;
       will-change: transform, opacity;
@@ -63,9 +63,9 @@ function injectCSS() {
       position:fixed; pointer-events:none; z-index:9999;
       border-radius:50%;
       width:8px; height:8px;
-      background:#a78bfa;
+      background:#e11d48;
       transform:translate(-50%,-50%);
-      box-shadow: 0 0 10px 3px rgba(167,139,250,0.75);
+      box-shadow: 0 0 10px 3px rgba(225,29,72,0.4);
     }
   `
   document.head.appendChild(s)
@@ -102,12 +102,12 @@ function spawn(x, y, container) {
   requestAnimationFrame(() => el.classList.add('tl-in'))
 
   // Fade OUT after hold time
-  const hold = 600 + Math.random() * 400
+  const hold = 400 + Math.random() * 400
   setTimeout(() => {
     el.classList.remove('tl-in')
     el.classList.add('tl-out')
     // remove from DOM after transition ends
-    setTimeout(() => { el.remove(); _count-- }, 650)
+    setTimeout(() => { el.remove(); _count-- }, 500)
   }, hold)
 }
 
@@ -175,7 +175,7 @@ export default function CursorTrailEffect() {
       if (!isScrolledRef.current) {
         const dx = x - lastRef.current.x
         const dy = y - lastRef.current.y
-        if (dx * dx + dy * dy >= 55 * 55) {        // spawn every ~55px
+        if (dx * dx + dy * dy >= 30 * 30) {        // spawn every ~30px
           lastRef.current = { x, y }
           spawn(x, y, containerRef.current)
         }

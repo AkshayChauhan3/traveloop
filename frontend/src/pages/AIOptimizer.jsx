@@ -94,7 +94,7 @@ export default function AIOptimizer() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Input */}
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="glass-card p-6 space-y-5">
-            <h2 className="text-lg font-bold text-white">Your Preferences</h2>
+            <h2 className="text-lg font-bold text-slate-900 mb-4">Your Preferences</h2>
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-2">Budget (₹)</label>
               <input id="ai-budget" type="number" placeholder="e.g. 50000" value={form.budget} onChange={e => setForm({ ...form, budget: e.target.value })} className="input-field" />
@@ -112,8 +112,8 @@ export default function AIOptimizer() {
                   return (
                     <button key={mood.id} id={`mood-${mood.id}`} onClick={() => setForm({ ...form, mood: mood.id })}
                       className={`p-3 rounded-xl border transition-all text-center ${sel ? c.selected : `${c.border} ${c.bg}`}`}>
-                      <div className="text-xl mb-1">{mood.emoji}</div>
-                      <div className={`text-xs font-medium ${c.text}`}>{mood.label}</div>
+                      <h3 className="text-slate-900 font-bold mb-1">{mood.emoji}</h3>
+                      <div className="flex items-center gap-3 text-sm text-slate-500">{mood.label}</div>
                     </button>
                   )
                 })}
@@ -168,8 +168,8 @@ export default function AIOptimizer() {
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
                 <div className="glass-card glow-border p-5">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-white font-bold flex items-center gap-2"><Sparkles className="w-4 h-4 text-brand-400" />AI Generated Plan</h3>
-                    <span className="badge badge-purple">Optimized</span>
+                    <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2"><Sparkles className="w-6 h-6 text-brand-500" />AI Trip Optimizer</h1>
+                    <p className="text-slate-500 text-sm mt-1">Generate your perfect itinerary based on your preferences</p>
                   </div>
                   <div className="grid grid-cols-2 gap-3 mb-4">
                     <div className="glass p-3 rounded-xl">
@@ -204,7 +204,7 @@ export default function AIOptimizer() {
                             <span className="badge badge-purple">Day {day.day}</span>
                             <span className="text-white text-sm font-medium">{day.city}</span>
                           </div>
-                          <span className="text-emerald-400 text-sm">₹{day.cost.toLocaleString()}</span>
+                          <div className="text-emerald-600 font-semibold text-sm">₹{day.cost.toLocaleString()}</div>
                         </div>
                         <div className="flex flex-wrap gap-1.5">
                           {day.activities.map(act => <span key={act} className="text-xs text-slate-400 bg-white/5 px-2 py-1 rounded-lg">{act}</span>)}

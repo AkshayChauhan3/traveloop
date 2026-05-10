@@ -30,7 +30,7 @@ export default function Signup() {
   }
 
   return (
-    <div className="min-h-screen bg-[#050a14] flex overflow-hidden">
+    <div className="min-h-screen bg-surface-50 flex overflow-hidden">
       {/* Left panel - Image */}
       <motion.div
         initial={{ x: -100, opacity: 0 }}
@@ -45,8 +45,8 @@ export default function Signup() {
             alt="travel"
             className="w-full h-full object-cover opacity-40"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#050a14] via-[#050a14]/60 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050a14] via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-surface-50 via-surface-50/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-surface-50 via-transparent to-transparent" />
         </div>
 
         <div className="relative z-10">
@@ -56,17 +56,18 @@ export default function Signup() {
             </div>
             <span className="text-xl font-bold">
               <span className="gradient-text-purple">Travel</span>
-              <span className="text-white">oop</span>
+              <span className="gradient-text-purple">Travel</span>
+              <span className="text-slate-900">oop</span>
             </span>
           </Link>
         </div>
 
         <div className="relative z-10">
-          <h2 className="text-4xl font-black text-white mb-4 leading-tight">
+          <h2 className="text-4xl font-black text-slate-900 mb-4 leading-tight">
             Your next adventure<br />
             <span className="gradient-text">starts here</span>
           </h2>
-          <p className="text-slate-400 text-lg mb-8">
+          <p className="text-slate-500 text-lg mb-8">
             Join thousands of travelers planning smarter, exploring more, and spending less.
           </p>
           {[
@@ -76,7 +77,7 @@ export default function Signup() {
           ].map((feat) => (
             <div key={feat} className="flex items-center gap-3 mb-3">
               <CheckCircle className="w-5 h-5 text-brand-400 flex-shrink-0" />
-              <span className="text-slate-300 text-sm">{feat}</span>
+              <span className="text-slate-600 text-sm">{feat}</span>
             </div>
           ))}
         </div>
@@ -98,23 +99,24 @@ export default function Signup() {
               </div>
               <span className="text-xl font-bold">
                 <span className="gradient-text-purple">Travel</span>
-                <span className="text-white">oop</span>
+                <span className="gradient-text-purple">Travel</span>
+                <span className="text-slate-900">oop</span>
               </span>
             </Link>
           </div>
 
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">Create your account</h1>
-            <p className="text-slate-400">Start planning your adventures for free</p>
+            <h1 className="text-3xl font-bold text-slate-900 mb-2">Create your account</h1>
+            <p className="text-slate-500">Start planning your adventures for free</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Name row */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-medium text-slate-400 mb-1.5">First Name</label>
+                <label className="block text-xs font-medium text-slate-500 mb-1.5">First Name</label>
                 <div className="relative">
-                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input
                     id="signup-firstname"
                     type="text"
@@ -127,7 +129,7 @@ export default function Signup() {
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-medium text-slate-400 mb-1.5">Last Name</label>
+                <label className="block text-xs font-medium text-slate-500 mb-1.5">Last Name</label>
                 <input
                   id="signup-lastname"
                   type="text"
@@ -142,9 +144,9 @@ export default function Signup() {
 
             {/* Email */}
             <div>
-              <label className="block text-xs font-medium text-slate-400 mb-1.5">Email Address</label>
+              <label className="block text-xs font-medium text-slate-500 mb-1.5">Email Address</label>
               <div className="relative">
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
                   id="signup-email"
                   type="email"
@@ -159,9 +161,9 @@ export default function Signup() {
 
             {/* Phone */}
             <div>
-              <label className="block text-xs font-medium text-slate-400 mb-1.5">Phone Number</label>
+              <label className="block text-xs font-medium text-slate-500 mb-1.5">Phone Number</label>
               <div className="relative">
-                <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
                   id="signup-phone"
                   type="tel"
@@ -176,9 +178,9 @@ export default function Signup() {
             {/* City + Country */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-medium text-slate-400 mb-1.5">City</label>
+                <label className="block text-xs font-medium text-slate-500 mb-1.5">City</label>
                 <div className="relative">
-                  <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input
                     id="signup-city"
                     type="text"
@@ -190,9 +192,9 @@ export default function Signup() {
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-medium text-slate-400 mb-1.5">Country</label>
+                <label className="block text-xs font-medium text-slate-500 mb-1.5">Country</label>
                 <div className="relative">
-                  <Globe className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  <Globe className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input
                     id="signup-country"
                     type="text"
@@ -207,9 +209,9 @@ export default function Signup() {
 
             {/* Password */}
             <div>
-              <label className="block text-xs font-medium text-slate-400 mb-1.5">Password</label>
+              <label className="block text-xs font-medium text-slate-500 mb-1.5">Password</label>
               <div className="relative">
-                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
                   id="signup-password"
                   type={showPass ? 'text' : 'password'}
@@ -222,7 +224,7 @@ export default function Signup() {
                 <button
                   type="button"
                   onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                 >
                   {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -231,7 +233,7 @@ export default function Signup() {
 
             {/* Additional Info */}
             <div>
-              <label className="block text-xs font-medium text-slate-400 mb-1.5">About You (optional)</label>
+              <label className="block text-xs font-medium text-slate-500 mb-1.5">About You (optional)</label>
               <textarea
                 id="signup-info"
                 placeholder="Tell us about your travel style..."
@@ -271,7 +273,7 @@ export default function Signup() {
 
           <p className="text-center text-slate-500 text-sm mt-6">
             Already have an account?{' '}
-            <Link to="/login" className="text-brand-400 hover:text-brand-300 font-medium transition-colors">
+            <Link to="/login" className="text-brand-600 hover:text-brand-700 font-medium transition-colors">
               Sign in
             </Link>
           </p>

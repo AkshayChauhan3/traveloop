@@ -3,23 +3,23 @@ import { NavLink, Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard, Map, Sparkles, DollarSign, Compass,
-  PackageCheck, Users, BookOpen, Search, User, Settings,
-  Plane, ChevronLeft, ChevronRight, Bell, LogOut, Plus,
+  PackageCheck, Users, BookOpen, Search, User,
+  Leaf, ChevronLeft, ChevronRight, Bell, LogOut, Plus,
   BarChart2
 } from 'lucide-react'
 
 const sidebarLinks = [
-  { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/trips', icon: Map, label: 'My Trips' },
-  { to: '/create-trip', icon: Plus, label: 'New Trip' },
-  { to: '/itinerary', icon: Compass, label: 'Itinerary' },
-  { to: '/ai-optimizer', icon: Sparkles, label: 'AI Optimizer' },
-  { to: '/budget', icon: DollarSign, label: 'Budget' },
-  { to: '/explore', icon: Search, label: 'Explore' },
-  { to: '/checklist', icon: PackageCheck, label: 'Packing List' },
-  { to: '/community', icon: Users, label: 'Community' },
-  { to: '/notes', icon: BookOpen, label: 'Trip Notes' },
-  { to: '/admin', icon: BarChart2, label: 'Analytics' },
+  { to: '/dashboard',    icon: LayoutDashboard, label: 'Dashboard' },
+  { to: '/trips',        icon: Map,             label: 'My Trips' },
+  { to: '/create-trip',  icon: Plus,            label: 'New Trip' },
+  { to: '/itinerary',    icon: Compass,         label: 'Itinerary' },
+  { to: '/ai-optimizer', icon: Sparkles,        label: 'AI Optimizer' },
+  { to: '/budget',       icon: DollarSign,      label: 'Budget' },
+  { to: '/explore',      icon: Search,          label: 'Explore' },
+  { to: '/checklist',    icon: PackageCheck,    label: 'Packing List' },
+  { to: '/community',    icon: Users,           label: 'Community' },
+  { to: '/notes',        icon: BookOpen,        label: 'Trip Notes' },
+  { to: '/admin',        icon: BarChart2,       label: 'Analytics' },
 ]
 
 export default function DashboardLayout({ children }) {
@@ -27,17 +27,23 @@ export default function DashboardLayout({ children }) {
   const navigate = useNavigate()
 
   return (
-    <div className="flex h-screen bg-[#050a14] overflow-hidden">
+    <div className="flex h-screen overflow-hidden" style={{ background: '#F8FAF5' }}>
+
       {/* Sidebar */}
       <motion.aside
         animate={{ width: collapsed ? 72 : 260 }}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
-        className="relative flex flex-col glass border-r border-white/5 z-20 flex-shrink-0"
+        className="relative flex flex-col z-20 flex-shrink-0"
+        style={{
+          background: '#ffffff',
+          borderRight: '1.5px solid #dff3e3',
+          boxShadow: '2px 0 12px rgba(76,175,80,0.06)',
+        }}
       >
         {/* Logo */}
-        <div className="flex items-center gap-3 px-4 py-5 border-b border-white/5">
+        <div className="flex items-center gap-3 px-4 py-5" style={{ borderBottom: '1.5px solid #dff3e3' }}>
           <div className="bg-gradient-to-br from-brand-400 to-brand-600 p-2 rounded-xl flex-shrink-0">
-            <Plane className="w-5 h-5 text-white" />
+            <Leaf className="w-5 h-5 text-white" />
           </div>
           <AnimatePresence>
             {!collapsed && (
@@ -48,7 +54,7 @@ export default function DashboardLayout({ children }) {
                 className="text-lg font-bold whitespace-nowrap overflow-hidden"
               >
                 <span className="gradient-text-purple">Travel</span>
-                <span className="text-white">oop</span>
+                <span style={{ color: '#1e2d1f' }}>oop</span>
               </motion.span>
             )}
           </AnimatePresence>
@@ -83,7 +89,7 @@ export default function DashboardLayout({ children }) {
         </nav>
 
         {/* Bottom */}
-        <div className="px-2 py-4 border-t border-white/5 space-y-1">
+        <div className="px-2 py-4 space-y-1" style={{ borderTop: '1.5px solid #dff3e3' }}>
           <NavLink
             to="/profile"
             className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''} ${collapsed ? 'justify-center px-2' : ''}`}
@@ -93,7 +99,8 @@ export default function DashboardLayout({ children }) {
           </NavLink>
           <button
             onClick={() => navigate('/')}
-            className={`sidebar-link w-full text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 ${collapsed ? 'justify-center px-2' : ''}`}
+            className={`sidebar-link w-full ${collapsed ? 'justify-center px-2' : ''}`}
+            style={{ color: '#dc2626' }}
           >
             <LogOut className="w-5 h-5 flex-shrink-0" />
             {!collapsed && <span className="text-sm">Logout</span>}
@@ -103,7 +110,13 @@ export default function DashboardLayout({ children }) {
         {/* Collapse Toggle */}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="absolute -right-3 top-6 w-6 h-6 rounded-full glass border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:border-brand-500/50 transition-all z-10"
+          className="absolute -right-3 top-6 w-6 h-6 rounded-full flex items-center justify-center transition-all z-10"
+          style={{
+            background: '#ffffff',
+            border: '1.5px solid #dff3e3',
+            color: '#4a6b4c',
+            boxShadow: '0 2px 6px rgba(76,175,80,0.12)',
+          }}
           id="sidebar-collapse-btn"
         >
           {collapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
@@ -112,19 +125,26 @@ export default function DashboardLayout({ children }) {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+
         {/* Top Bar */}
-        <header className="flex items-center justify-between px-6 py-4 border-b border-white/5 glass z-10">
+        <header className="flex items-center justify-between px-6 py-4 z-10"
+          style={{
+            background: '#ffffff',
+            borderBottom: '1.5px solid #dff3e3',
+            boxShadow: '0 2px 8px rgba(76,175,80,0.05)',
+          }}>
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-sm font-bold">
               S
             </div>
             <div>
-              <p className="text-white text-sm font-medium">Sneh Chauhan</p>
+              <p className="text-sm font-medium" style={{ color: '#1e2d1f' }}>Sneh Chauhan</p>
               <p className="text-slate-500 text-xs">Pro Traveler</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <button className="relative p-2 rounded-xl glass text-slate-400 hover:text-white transition-colors">
+            <button className="relative p-2 rounded-xl border text-slate-500 hover:text-brand-600 transition-colors"
+              style={{ background: '#ffffff', borderColor: '#dff3e3' }}>
               <Bell className="w-5 h-5" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-brand-500 rounded-full" />
             </button>
@@ -142,7 +162,7 @@ export default function DashboardLayout({ children }) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto bg-grid">
+        <main className="flex-1 overflow-y-auto bg-grid" style={{ background: '#F8FAF5' }}>
           {children}
         </main>
       </div>

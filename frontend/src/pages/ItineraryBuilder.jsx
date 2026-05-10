@@ -6,13 +6,13 @@ import DashboardLayout from '../layouts/DashboardLayout'
 
 const activityTypeColors = {
   accommodation: 'badge-purple',
-  sightseeing: 'badge-cyan',
-  food: 'badge-amber',
-  adventure: 'badge-rose',
-  transport: 'badge-emerald',
-  shopping: 'badge-purple',
-  leisure: 'badge-cyan',
-  rest: 'badge-emerald',
+  sightseeing:   'badge-cyan',
+  food:          'badge-amber',
+  adventure:     'badge-rose',
+  transport:     'badge-emerald',
+  shopping:      'badge-purple',
+  leisure:       'badge-cyan',
+  rest:          'badge-emerald',
 }
 
 export default function ItineraryBuilder() {
@@ -48,11 +48,11 @@ export default function ItineraryBuilder() {
         {/* Header */}
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-              <Calendar className="w-6 h-6 text-brand-400" />
+            <h1 className="text-2xl font-bold flex items-center gap-2" style={{ color: '#1e2d1f' }}>
+              <Calendar className="w-6 h-6 text-brand-500" />
               Itinerary Builder
             </h1>
-            <p className="text-slate-400 text-sm mt-1">Himalayan Adventure · {days.length} days · Jun 1–12</p>
+            <p className="text-slate-500 text-sm mt-1">Himalayan Adventure · {days.length} days · Jun 1–12</p>
           </div>
           <motion.button whileHover={{ scale: 1.04 }} onClick={addDay} className="btn-primary flex items-center gap-2 text-sm">
             <Plus className="w-4 h-4" />Add Day
@@ -71,13 +71,13 @@ export default function ItineraryBuilder() {
                 <button onClick={() => toggleDay(day.day)}
                   className="w-full flex items-center justify-between p-5 hover:bg-white/2 transition-colors">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-brand-500/20 border border-brand-500/30 flex flex-col items-center justify-center">
-                      <span className="text-xs text-brand-400 font-medium">Day</span>
-                      <span className="text-white font-black text-lg leading-none">{day.day}</span>
+                    <div className="w-12 h-12 rounded-xl bg-leaf-light border border-brand-200 flex flex-col items-center justify-center">
+                      <span className="text-xs text-brand-600 font-medium">Day</span>
+                      <span className="font-black text-lg leading-none" style={{ color: '#1e2d1f' }}>{day.day}</span>
                     </div>
                     <div className="text-left">
-                      <h3 className="text-white font-bold">{day.city}</h3>
-                      <p className="text-slate-400 text-sm">{day.date} · {day.activities.length} activities</p>
+                      <h3 className="font-bold" style={{ color: '#1e2d1f' }}>{day.city}</h3>
+                      <p className="text-slate-500 text-sm">{day.date} · {day.activities.length} activities</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
@@ -100,7 +100,7 @@ export default function ItineraryBuilder() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <span className="text-white text-sm font-medium truncate">{activity.title}</span>
+                              <span className="font-medium text-sm truncate" style={{ color: '#1e2d1f' }}>{activity.title}</span>
                               <span className={`badge ${activityTypeColors[activity.type] || 'badge-purple'} capitalize`}>{activity.type}</span>
                             </div>
                             <div className="flex items-center gap-3 mt-1 text-xs text-slate-500">
@@ -116,7 +116,8 @@ export default function ItineraryBuilder() {
                       ))}
                     </div>
                     <button onClick={() => addActivity(dayIndex)}
-                      className="w-full py-2.5 rounded-xl border border-dashed border-white/10 text-slate-500 hover:border-brand-500/40 hover:text-brand-400 transition-all flex items-center justify-center gap-2 text-sm">
+                      className="w-full py-2.5 rounded-xl border border-dashed text-slate-500 hover:text-brand-600 transition-all flex items-center justify-center gap-2 text-sm"
+                      style={{ borderColor: '#bce8bc' }}>
                       <Plus className="w-4 h-4" />Add Activity
                     </button>
                   </div>

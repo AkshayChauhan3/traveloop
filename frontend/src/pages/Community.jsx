@@ -43,8 +43,8 @@ export default function Community() {
       <div className="p-6 lg:p-8 space-y-6">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-white flex items-center gap-2"><Users className="w-6 h-6 text-rose-400" />Community Trips</h1>
-            <p className="text-slate-400 text-sm mt-1">Discover and copy amazing trips from fellow travelers</p>
+            <h1 className="text-2xl font-bold flex items-center gap-2" style={{ color: '#1e2d1f' }}><Users className="w-6 h-6 text-brand-500" />Community Trips</h1>
+            <p className="text-slate-500 text-sm mt-1">Discover and copy amazing trips from fellow travelers</p>
           </div>
         </div>
 
@@ -59,7 +59,7 @@ export default function Community() {
               whileHover={{ y: -4 }} className="trip-card">
               <div className="relative h-44 overflow-hidden rounded-t-xl">
                 <img src={trip.image} alt={trip.name} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-surface-100 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 <div className="absolute top-3 right-3 flex gap-2">
                   {trip.tags.map(tag => <span key={tag} className="badge badge-purple capitalize">{tag}</span>)}
                 </div>
@@ -68,7 +68,7 @@ export default function Community() {
                 <div className="flex items-center gap-2 mb-3">
                   <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${trip.color} flex items-center justify-center text-white text-sm font-bold flex-shrink-0`}>{trip.avatar}</div>
                   <div>
-                    <p className="text-white text-sm font-medium">{trip.name}</p>
+                    <p className="font-medium text-sm" style={{ color: '#1e2d1f' }}>{trip.name}</p>
                     <p className="text-slate-500 text-xs">by {trip.author}</p>
                   </div>
                 </div>
@@ -79,13 +79,15 @@ export default function Community() {
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3 text-xs text-slate-500">
                     <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{trip.days} days</span>
-                    <span className="text-emerald-400">₹{(trip.budget / 1000).toFixed(0)}K</span>
+                    <span className="text-brand-600 font-semibold">₹{(trip.budget / 1000).toFixed(0)}K</span>
                     <span className="flex items-center gap-1"><Star className="w-3 h-3 text-amber-400 fill-amber-400" />{trip.rating}</span>
                   </div>
                 </div>
                 <div className="flex gap-2">
                   <button onClick={() => setLiked(l => ({ ...l, [trip.id]: !l[trip.id] }))}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm border transition-all ${liked[trip.id] ? 'bg-rose-500/20 border-rose-500/40 text-rose-400' : 'glass border-white/10 text-slate-400 hover:text-rose-400'}`}>
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm border transition-all ${
+                    liked[trip.id] ? 'bg-rose-50 border-rose-200 text-rose-500' : 'bg-white border-slate-200 text-slate-400 hover:text-rose-400'
+                  }`}>
                     <Heart className={`w-4 h-4 ${liked[trip.id] ? 'fill-rose-400' : ''}`} />
                     {trip.likes + (liked[trip.id] ? 1 : 0)}
                   </button>
