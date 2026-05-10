@@ -73,26 +73,6 @@ model Stop {
   updatedAt       DateTime  @updatedAt
 }
 
-model Activity {
-  id              Int       @id @default(autoincrement())
-  stopId          Int
-  stop            Stop      @relation(fields: [stopId], references: [id], onDelete: Cascade)
-  userId          Int
-  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  name            String
-  description     String?
-  category        String
-  durationHours   Int       @default(2)
-  estimatedCost   Float     @default(0)
-  startTime       String?
-  completed       Boolean   @default(false)
-  completedAt     DateTime?
-  notes           String?
-  
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-}
 
 model Expense {
   id              Int       @id @default(autoincrement())
