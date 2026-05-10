@@ -4,8 +4,6 @@ import { Compass, Github, Twitter, Instagram, Linkedin, Heart } from 'lucide-rea
 const footerLinks = {
   Product: [
     { label: 'Dashboard',       to: '/dashboard' },
-    { label: 'AI Optimizer',    to: '/ai-optimizer' },
-    { label: 'Budget Analytics',to: '/budget' },
     { label: 'Itinerary Builder',to: '/itinerary' },
   ],
   Explore: [

@@ -3,18 +3,34 @@ import { motion } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles, Compass } from 'lucide-react'
 import CursorTrailEffect from '../components/landing/CursorTrailEffect'
+import { authApi } from '../lib/api'
+import { useAuth } from '../context/AuthContext'
 
 export default function Login() {
   const [showPass, setShowPass] = useState(false)
   const [form, setForm]         = useState({ email: '', password: '', remember: false })
   const [loading, setLoading]   = useState(false)
   const [focused, setFocused]   = useState('')
+  const [error, setError]       = useState('')
   const navigate = useNavigate()
+  const { login } = useAuth()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    setTimeout(() => { setLoading(false); navigate('/dashboard') }, 1400)
+    setError('')
+    try {
+      const result = await authApi.login({
+        email: form.email.trim(),
+        password: form.password,
+      })
+      login(result.token, result.user)
+      navigate('/dashboard')
+    } catch (err) {
+      setError(err.message || 'Unable to sign in')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -172,6 +188,11 @@ export default function Login() {
             </div>
 
             {/* Submit */}
+            {error && (
+              <div className="text-sm text-rose-600 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2">
+                {error}
+              </div>
+            )}
             <motion.button
               id="login-submit"
               type="submit"
@@ -216,9 +237,9 @@ export default function Login() {
           <motion.button
             whileHover={{ scale: 1.015 }}
             whileTap={{ scale: 0.985 }}
-            onClick={() => navigate('/dashboard')}
-            style={{
-              width: '100%', padding: '12px',
+            onClick={() => navigate('/signup')}
+              style={{
+                width: '100%', padding: '12px',
               background: 'rgba(76,175,80,0.07)',
               border: '1.5px solid rgba(76,175,80,0.2)',
               borderRadius: 10, color: '#3F8F50',

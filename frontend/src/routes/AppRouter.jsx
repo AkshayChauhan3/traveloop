@@ -1,12 +1,11 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import ProtectedRoute from '../components/ProtectedRoute'
 import Landing from '../pages/Landing'
 import Login from '../pages/Login'
 import Signup from '../pages/Signup'
 import Dashboard from '../pages/Dashboard'
 import CreateTrip from '../pages/CreateTrip'
-import AIOptimizer from '../pages/AIOptimizer'
 import ItineraryBuilder from '../pages/ItineraryBuilder'
-import BudgetAnalytics from '../pages/BudgetAnalytics'
 import MyTrips from '../pages/MyTrips'
 import ExplorePage from '../pages/Search'
 import Profile from '../pages/Profile'
@@ -34,18 +33,16 @@ export default function AppRouter() {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/create-trip" element={<CreateTrip />} />
-        <Route path="/ai-optimizer" element={<AIOptimizer />} />
-        <Route path="/itinerary" element={<ItineraryBuilder />} />
-        <Route path="/budget" element={<BudgetAnalytics />} />
-        <Route path="/trips" element={<MyTrips />} />
-        <Route path="/explore" element={<ExplorePage />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/checklist" element={<PackingChecklist />} />
-        <Route path="/community" element={<Community />} />
-        <Route path="/notes" element={<TripNotes />} />
-        <Route path="/admin" element={<AdminAnalytics />} />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/create-trip" element={<ProtectedRoute><CreateTrip /></ProtectedRoute>} />
+        <Route path="/itinerary" element={<ProtectedRoute><ItineraryBuilder /></ProtectedRoute>} />
+        <Route path="/trips" element={<ProtectedRoute><MyTrips /></ProtectedRoute>} />
+        <Route path="/explore" element={<ProtectedRoute><ExplorePage /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/checklist" element={<ProtectedRoute><PackingChecklist /></ProtectedRoute>} />
+        <Route path="/community" element={<ProtectedRoute><Community /></ProtectedRoute>} />
+        <Route path="/notes" element={<ProtectedRoute><TripNotes /></ProtectedRoute>} />
+        <Route path="/admin" element={<ProtectedRoute><AdminAnalytics /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

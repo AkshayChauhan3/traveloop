@@ -7,14 +7,13 @@ import {
   ChevronLeft, ChevronRight, Bell, LogOut, Plus,
   BarChart2
 } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
 
 const sidebarLinks = [
   { to: '/dashboard',    icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/trips',        icon: Map,             label: 'My Trips' },
   { to: '/create-trip',  icon: Plus,            label: 'New Trip' },
   { to: '/itinerary',    icon: Compass,         label: 'Itinerary' },
-  { to: '/ai-optimizer', icon: Sparkles,        label: 'AI Optimizer' },
-  { to: '/budget',       icon: DollarSign,      label: 'Budget' },
   { to: '/explore',      icon: Search,          label: 'Explore' },
   { to: '/checklist',    icon: PackageCheck,    label: 'Packing List' },
   { to: '/community',    icon: Users,           label: 'Community' },
@@ -25,6 +24,9 @@ const sidebarLinks = [
 export default function DashboardLayout({ children }) {
   const [collapsed, setCollapsed] = useState(false)
   const navigate = useNavigate()
+  const { user, logout } = useAuth()
+  const initials = user ? `${user.firstName?.[0] || ''}${user.lastName?.[0] || ''}`.trim() || 'T' : 'T'
+  const displayName = user ? `${user.firstName || ''} ${user.lastName || ''}`.trim() : 'Traveler'
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: '#F8FAF5' }}>
@@ -104,7 +106,10 @@ export default function DashboardLayout({ children }) {
             {!collapsed && <span className="text-sm">Profile</span>}
           </NavLink>
           <button
-            onClick={() => navigate('/')}
+            onClick={() => {
+              logout()
+              navigate('/')
+            }}
             className={`sidebar-link w-full ${collapsed ? 'justify-center px-2' : ''}`}
             style={{ color: '#dc2626' }}
           >
@@ -154,11 +159,11 @@ export default function DashboardLayout({ children }) {
               flexShrink: 0,
               boxShadow: '0 2px 8px rgba(76,175,80,0.3)',
             }}>
-              S
+              {initials}
             </div>
             <div>
-              <p className="text-sm font-medium" style={{ color: '#1e2d1f' }}>Sneh Chauhan</p>
-              <p className="text-slate-500 text-xs">Pro Traveler</p>
+              <p className="text-sm font-medium" style={{ color: '#1e2d1f' }}>{displayName}</p>
+              <p className="text-slate-500 text-xs">{user?.email || 'Signed in'}</p>
             </div>
           </div>
           <div className="flex items-center gap-3">

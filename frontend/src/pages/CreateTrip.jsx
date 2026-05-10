@@ -1,24 +1,47 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { CalendarPlus, MapPin, DollarSign, FileText, Tag, Image, Sparkles } from 'lucide-react'
-import { mockDestinations } from '../data/mockDestinations'
+import { CalendarPlus, MapPin, DollarSign, FileText, Tag, Sparkles } from 'lucide-react'
 import DashboardLayout from '../layouts/DashboardLayout'
 import { Link, useNavigate } from 'react-router-dom'
+import { tripApi } from '../lib/api'
+import { useAuth } from '../context/AuthContext'
 
 const TRIP_TYPES = ['Adventure', 'Cultural', 'Beach & Relaxing', 'Romantic', 'Solo', 'Spiritual', 'Party', 'Road Trip']
+const FEATURED = [
+  { name: 'Manali', country: 'India', image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80', avgCost: 38000 },
+  { name: 'Bali', country: 'Indonesia', image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80', avgCost: 55000 },
+  { name: 'Swiss Alps', country: 'Switzerland', image: 'https://images.unsplash.com/photo-1531168556467-80aace0d0144?w=800&q=80', avgCost: 180000 },
+  { name: 'Jaipur', country: 'India', image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?w=800&q=80', avgCost: 45000 },
+]
 
 export default function CreateTrip() {
   const [form, setForm] = useState({ name: '', startDate: '', endDate: '', description: '', type: '', budget: '' })
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const navigate = useNavigate()
+  const { refreshUser } = useAuth()
 
-  const handleCreate = (e) => {
+  const handleCreate = async (e) => {
     e.preventDefault()
     setLoading(true)
-    setTimeout(() => { setLoading(false); navigate('/itinerary') }, 1500)
+    setError('')
+    try {
+      const result = await tripApi.create({
+        title: form.name.trim(),
+        description: form.description.trim() || `${form.type || 'Custom'} trip created in Traveloop`,
+        startDate: form.startDate,
+        endDate: form.endDate,
+        budget: Number(form.budget || 0),
+        status: 'PLANNED',
+      })
+      await refreshUser().catch(() => null)
+      navigate(`/itinerary?tripId=${result.data.id}`)
+    } catch (err) {
+      setError(err.message || 'Unable to create trip')
+    } finally {
+      setLoading(false)
+    }
   }
-
-  const featured = mockDestinations.slice(0, 4)
 
   return (
     <DashboardLayout>
@@ -32,6 +55,11 @@ export default function CreateTrip() {
           {/* Form */}
           <div className="lg:col-span-2">
             <form onSubmit={handleCreate} className="glass-card p-6 space-y-5">
+              {error && (
+                <div className="text-sm text-rose-600 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2">
+                  {error}
+                </div>
+              )}
               <div>
                 <label className="block text-sm font-medium text-slate-600 mb-2">Trip Name *</label>
                 <div className="relative">
@@ -87,11 +115,6 @@ export default function CreateTrip() {
                   disabled={loading} className="btn-primary flex items-center gap-2 disabled:opacity-50">
                   {loading ? <><motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }} className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full" />Creating...</> : <><CalendarPlus className="w-4 h-4" />Create Trip</>}
                 </motion.button>
-                <Link to="/ai-optimizer">
-                  <button type="button" className="btn-secondary flex items-center gap-2 text-sm">
-                    <Sparkles className="w-4 h-4 text-brand-400" />Use AI Optimizer
-                  </button>
-                </Link>
               </div>
             </form>
           </div>
@@ -100,8 +123,8 @@ export default function CreateTrip() {
           <div>
             <h2 className="text-base font-bold text-slate-900 mb-4">✨ Trip Inspiration</h2>
             <div className="space-y-3">
-              {featured.map((dest, i) => (
-                <motion.div key={dest.id} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}
+              {FEATURED.map((dest, i) => (
+                <motion.div key={dest.name} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}
                   className="glass-card p-3 flex items-center gap-3 hover:border-brand-500/30 transition-all cursor-pointer">
                   <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0">
                     <img src={dest.image} alt={dest.name} className="w-full h-full object-cover" />

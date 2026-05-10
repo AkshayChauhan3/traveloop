@@ -104,9 +104,9 @@ export default function AdminAnalytics() {
           <div className="space-y-3">
             {[
               { user: 'Riya P.', action: 'Created trip', detail: 'Bali Spirit Tour', time: '2 min ago', avatar: 'R' },
-              { user: 'Karan M.', action: 'Used AI Optimizer', detail: 'Generated Manali plan', time: '5 min ago', avatar: 'K' },
               { user: 'Dev S.', action: 'Shared trip', detail: 'Thailand Island Hop', time: '12 min ago', avatar: 'D' },
-              { user: 'Anika R.', action: 'Budget warning triggered', detail: 'Day 3 over budget', time: '18 min ago', avatar: 'A' },
+              { user: 'Sneha M.', action: 'Added stop', detail: 'Jaipur, Rajasthan', time: '20 min ago', avatar: 'S' },
+              { user: 'Arjun K.', action: 'Joined community', detail: 'Welcome new member', time: '35 min ago', avatar: 'A' },
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-3 p-3 glass rounded-xl">
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">{item.avatar}</div>

@@ -56,24 +56,21 @@ const mapCityDetails = (city) => ({
 // ===== SEARCH CITIES =====
 const searchCities = async (query) => {
   try {
-    if (!query || query.trim() === '') {
-      return {
-        success: false,
-        message: 'Search query required'
-      };
-    }
+    const whereClause = query && query.trim() !== '' ? {
+      OR: [
+        { name: { contains: query, mode: 'insensitive' } },
+        { country: { contains: query, mode: 'insensitive' } },
+        { description: { contains: query, mode: 'insensitive' } },
+        { vibe: { contains: query, mode: 'insensitive' } },
+        { language: { contains: query, mode: 'insensitive' } },
+        { bestSeason: { contains: query, mode: 'insensitive' } },
+        { attractions: { some: { name: { contains: query, mode: 'insensitive' } } } },
+        { activities: { some: { name: { contains: query, mode: 'insensitive' } } } }
+      ]
+    } : {};
 
     const results = await prisma.city.findMany({
-      where: {
-        OR: [
-          { name: { contains: query, mode: 'insensitive' } },
-          { country: { contains: query, mode: 'insensitive' } },
-          { description: { contains: query, mode: 'insensitive' } },
-          { vibe: { contains: query, mode: 'insensitive' } },
-          { language: { contains: query, mode: 'insensitive' } },
-          { bestSeason: { contains: query, mode: 'insensitive' } }
-        ]
-      },
+      where: whereClause,
       orderBy: { name: 'asc' },
       include: {
         _count: {
@@ -134,23 +131,18 @@ const getCityDetails = async (cityName) => {
 // ===== SEARCH ACTIVITIES =====
 const searchActivities = async (query) => {
   try {
-    if (!query || query.trim() === '') {
-      return {
-        success: false,
-        message: 'Search query required'
-      };
-    }
+    const whereClause = query && query.trim() !== '' ? {
+      OR: [
+        { name: { contains: query, mode: 'insensitive' } },
+        { description: { contains: query, mode: 'insensitive' } },
+        { costRange: { contains: query, mode: 'insensitive' } },
+        { duration: { contains: query, mode: 'insensitive' } },
+        { availabilityTime: { contains: query, mode: 'insensitive' } }
+      ]
+    } : {};
 
     const results = await prisma.cityActivity.findMany({
-      where: {
-        OR: [
-          { name: { contains: query, mode: 'insensitive' } },
-          { description: { contains: query, mode: 'insensitive' } },
-          { costRange: { contains: query, mode: 'insensitive' } },
-          { duration: { contains: query, mode: 'insensitive' } },
-          { availabilityTime: { contains: query, mode: 'insensitive' } }
-        ]
-      },
+      where: whereClause,
       include: {
         city: true
       },

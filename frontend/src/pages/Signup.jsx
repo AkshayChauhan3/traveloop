@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 import { User, Mail, Phone, Globe, MapPin, Lock, Eye, EyeOff, Plane, ArrowRight, CheckCircle } from 'lucide-react'
+import { authApi } from '../lib/api'
+import { useAuth } from '../context/AuthContext'
 
 const TRAVEL_IMAGES = [
   'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
@@ -11,22 +13,37 @@ const TRAVEL_IMAGES = [
 
 export default function Signup() {
   const [showPass, setShowPass] = useState(false)
-  const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const [form, setForm] = useState({
     firstName: '', lastName: '', email: '', phone: '',
     city: '', country: '', password: '', info: ''
   })
   const navigate = useNavigate()
+  const { login } = useAuth()
   const imgIndex = Math.floor(Date.now() / 10000) % TRAVEL_IMAGES.length
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
+    setError('')
+    try {
+      const result = await authApi.register({
+        firstName: form.firstName.trim(),
+        lastName: form.lastName.trim(),
+        email: form.email.trim(),
+        mobileNo: form.phone.trim(),
+        password: form.password,
+        city: form.city.trim() || undefined,
+        country: form.country.trim() || undefined,
+      })
+      login(result.token, result.user)
       navigate('/dashboard')
-    }, 1500)
+    } catch (err) {
+      setError(err.message || 'Unable to create account')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -55,7 +72,6 @@ export default function Signup() {
               <Plane className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-bold">
-              <span className="gradient-text-purple">Travel</span>
               <span className="gradient-text-purple">Travel</span>
               <span className="text-slate-900">oop</span>
             </span>
@@ -98,7 +114,6 @@ export default function Signup() {
                 <Plane className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold">
-                <span className="gradient-text-purple">Travel</span>
                 <span className="gradient-text-purple">Travel</span>
                 <span className="text-slate-900">oop</span>
               </span>
@@ -245,6 +260,11 @@ export default function Signup() {
             </div>
 
             {/* Submit */}
+            {error && (
+              <div className="text-sm text-rose-600 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2">
+                {error}
+              </div>
+            )}
             <motion.button
               type="submit"
               id="signup-submit"
