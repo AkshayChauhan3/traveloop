@@ -13,9 +13,9 @@ const {
 // ===== CREATE EXPENSE =====
 // POST /api/expenses
 // Body: { trip_id, stop_id?, category, amount, description?, date? }
-router.post('/', verifyToken, (req, res) => {
+router.post('/', verifyToken, async (req, res) => {
   try {
-    const result = createExpense(req.body, req.userId);
+    const result = await createExpense(req.body, req.userId);
     
     if (!result.success) {
       return res.status(400).json({
@@ -40,16 +40,16 @@ router.post('/', verifyToken, (req, res) => {
 
 // ===== GET EXPENSES FOR A TRIP =====
 // GET /api/expenses?trip_id=X
-router.get('/', verifyToken, (req, res) => {
+router.get('/', verifyToken, async (req, res) => {
   try {
     const tripId = req.query.trip_id;
     const stopId = req.query.stop_id;
     
     let result;
     if (stopId) {
-      result = getExpensesByStop(stopId, req.userId);
+      result = await getExpensesByStop(stopId, req.userId);
     } else if (tripId) {
-      result = getExpensesByTrip(tripId, req.userId);
+      result = await getExpensesByTrip(tripId, req.userId);
     } else {
       return res.status(400).json({
         success: false,
@@ -72,7 +72,7 @@ router.get('/', verifyToken, (req, res) => {
 
 // ===== GET BUDGET SUMMARY FOR A TRIP =====
 // GET /api/expenses/:tripId/summary?total_budget=X
-router.get('/:tripId/summary', verifyToken, (req, res) => {
+router.get('/:tripId/summary', verifyToken, async (req, res) => {
   try {
     const totalBudget = parseFloat(req.query.total_budget);
     
@@ -83,7 +83,7 @@ router.get('/:tripId/summary', verifyToken, (req, res) => {
       });
     }
 
-    const result = getBudgetSummary(req.params.tripId, totalBudget, req.userId);
+    const result = await getBudgetSummary(req.params.tripId, totalBudget, req.userId);
     
     if (!result.success) {
       return res.status(500).json(result);
@@ -105,9 +105,9 @@ router.get('/:tripId/summary', verifyToken, (req, res) => {
 // ===== UPDATE EXPENSE =====
 // PUT /api/expenses/:id
 // Body: { category?, amount?, description?, date?, stop_id? }
-router.put('/:id', verifyToken, (req, res) => {
+router.put('/:id', verifyToken, async (req, res) => {
   try {
-    const result = updateExpense(req.params.id, req.body, req.userId);
+    const result = await updateExpense(req.params.id, req.body, req.userId);
     
     if (!result.success) {
       return res.status(404).json({
@@ -132,9 +132,9 @@ router.put('/:id', verifyToken, (req, res) => {
 
 // ===== DELETE EXPENSE =====
 // DELETE /api/expenses/:id
-router.delete('/:id', verifyToken, (req, res) => {
+router.delete('/:id', verifyToken, async (req, res) => {
   try {
-    const result = deleteExpense(req.params.id, req.userId);
+    const result = await deleteExpense(req.params.id, req.userId);
     
     if (!result.success) {
       return res.status(404).json({

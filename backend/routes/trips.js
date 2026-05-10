@@ -12,9 +12,9 @@ const {
 // ===== CREATE TRIP =====
 // POST /api/trips
 // Body: { name, description, start_date, end_date, total_budget }
-router.post('/', verifyToken, (req, res) => {
+router.post('/', verifyToken, async (req, res) => {
   try {
-    const result = createTrip(req.body, req.userId);
+    const result = await createTrip(req.body, req.userId);
     
     if (!result.success) {
       return res.status(400).json({ 
@@ -39,9 +39,9 @@ router.post('/', verifyToken, (req, res) => {
 
 // ===== GET ALL USER TRIPS =====
 // GET /api/trips
-router.get('/', verifyToken, (req, res) => {
+router.get('/', verifyToken, async (req, res) => {
   try {
-    const result = getUserTrips(req.userId);
+    const result = await getUserTrips(req.userId);
     
     return res.status(200).json({
       success: true,
@@ -58,9 +58,9 @@ router.get('/', verifyToken, (req, res) => {
 
 // ===== GET SINGLE TRIP =====
 // GET /api/trips/:id
-router.get('/:id', verifyToken, (req, res) => {
+router.get('/:id', verifyToken, async (req, res) => {
   try {
-    const result = getTripById(req.params.id, req.userId);
+    const result = await getTripById(req.params.id, req.userId);
     
     if (!result.success) {
       return res.status(404).json({
@@ -85,9 +85,9 @@ router.get('/:id', verifyToken, (req, res) => {
 // ===== UPDATE TRIP =====
 // PUT /api/trips/:id
 // Body: { name?, description?, start_date?, end_date?, total_budget?, status? }
-router.put('/:id', verifyToken, (req, res) => {
+router.put('/:id', verifyToken, async (req, res) => {
   try {
-    const result = updateTrip(req.params.id, req.body, req.userId);
+    const result = await updateTrip(req.params.id, req.body, req.userId);
     
     if (!result.success) {
       return res.status(404).json({
@@ -112,9 +112,9 @@ router.put('/:id', verifyToken, (req, res) => {
 
 // ===== DELETE TRIP =====
 // DELETE /api/trips/:id
-router.delete('/:id', verifyToken, (req, res) => {
+router.delete('/:id', verifyToken, async (req, res) => {
   try {
-    const result = deleteTrip(req.params.id, req.userId);
+    const result = await deleteTrip(req.params.id, req.userId);
     
     if (!result.success) {
       return res.status(404).json({

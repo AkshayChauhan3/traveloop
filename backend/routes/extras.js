@@ -13,9 +13,9 @@ const {
 // ===== CREATE ACTIVITY =====
 // POST /api/extras/activities
 // Body: { stop_id, name, description?, category?, duration_hours?, estimated_cost?, start_time?, notes? }
-router.post('/activities', verifyToken, (req, res) => {
+router.post('/activities', verifyToken, async (req, res) => {
   try {
-    const result = createActivity(req.body, req.userId);
+    const result = await createActivity(req.body, req.userId);
     
     if (!result.success) {
       return res.status(400).json({
@@ -40,7 +40,7 @@ router.post('/activities', verifyToken, (req, res) => {
 
 // ===== GET ACTIVITIES FOR A STOP =====
 // GET /api/extras/activities?stop_id=X
-router.get('/activities', verifyToken, (req, res) => {
+router.get('/activities', verifyToken, async (req, res) => {
   try {
     const stopId = req.query.stop_id;
     
@@ -51,7 +51,7 @@ router.get('/activities', verifyToken, (req, res) => {
       });
     }
 
-    const result = getActivitiesByStop(stopId, req.userId);
+    const result = await getActivitiesByStop(stopId, req.userId);
     
     return res.status(200).json({
       success: true,
@@ -68,9 +68,9 @@ router.get('/activities', verifyToken, (req, res) => {
 
 // ===== GET SINGLE ACTIVITY =====
 // GET /api/extras/activities/:id
-router.get('/activities/:id', verifyToken, (req, res) => {
+router.get('/activities/:id', verifyToken, async (req, res) => {
   try {
-    const result = getActivityById(req.params.id, req.userId);
+    const result = await getActivityById(req.params.id, req.userId);
     
     if (!result.success) {
       return res.status(404).json({
@@ -95,9 +95,9 @@ router.get('/activities/:id', verifyToken, (req, res) => {
 // ===== UPDATE ACTIVITY =====
 // PUT /api/extras/activities/:id
 // Body: { name?, description?, category?, duration_hours?, estimated_cost?, start_time?, notes? }
-router.put('/activities/:id', verifyToken, (req, res) => {
+router.put('/activities/:id', verifyToken, async (req, res) => {
   try {
-    const result = updateActivity(req.params.id, req.body, req.userId);
+    const result = await updateActivity(req.params.id, req.body, req.userId);
     
     if (!result.success) {
       return res.status(404).json({
@@ -122,9 +122,9 @@ router.put('/activities/:id', verifyToken, (req, res) => {
 
 // ===== MARK ACTIVITY COMPLETE =====
 // PATCH /api/extras/activities/:id/complete
-router.patch('/activities/:id/complete', verifyToken, (req, res) => {
+router.patch('/activities/:id/complete', verifyToken, async (req, res) => {
   try {
-    const result = markActivityComplete(req.params.id, req.userId);
+    const result = await markActivityComplete(req.params.id, req.userId);
     
     if (!result.success) {
       return res.status(404).json({
@@ -149,9 +149,9 @@ router.patch('/activities/:id/complete', verifyToken, (req, res) => {
 
 // ===== DELETE ACTIVITY =====
 // DELETE /api/extras/activities/:id
-router.delete('/activities/:id', verifyToken, (req, res) => {
+router.delete('/activities/:id', verifyToken, async (req, res) => {
   try {
-    const result = deleteActivity(req.params.id, req.userId);
+    const result = await deleteActivity(req.params.id, req.userId);
     
     if (!result.success) {
       return res.status(404).json({

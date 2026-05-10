@@ -12,9 +12,9 @@ const {
 // ===== CREATE STOP FOR A TRIP =====
 // POST /api/stops
 // Body: { trip_id, city, country?, arrival_date, departure_date, accommodation?, notes? }
-router.post('/', verifyToken, (req, res) => {
+router.post('/', verifyToken, async (req, res) => {
   try {
-    const result = createStop(req.body, req.body.trip_id, req.userId);
+    const result = await createStop(req.body, req.body.trip_id, req.userId);
     
     if (!result.success) {
       return res.status(400).json({
@@ -39,7 +39,7 @@ router.post('/', verifyToken, (req, res) => {
 
 // ===== GET ALL STOPS FOR A TRIP =====
 // GET /api/stops?trip_id=X
-router.get('/', verifyToken, (req, res) => {
+router.get('/', verifyToken, async (req, res) => {
   try {
     const tripId = req.query.trip_id;
     
@@ -50,7 +50,7 @@ router.get('/', verifyToken, (req, res) => {
       });
     }
 
-    const result = getStopsByTrip(tripId, req.userId);
+    const result = await getStopsByTrip(tripId, req.userId);
     
     return res.status(200).json({
       success: true,
@@ -67,9 +67,9 @@ router.get('/', verifyToken, (req, res) => {
 
 // ===== GET SINGLE STOP =====
 // GET /api/stops/:id
-router.get('/:id', verifyToken, (req, res) => {
+router.get('/:id', verifyToken, async (req, res) => {
   try {
-    const result = getStopById(req.params.id, req.userId);
+    const result = await getStopById(req.params.id, req.userId);
     
     if (!result.success) {
       return res.status(404).json({
@@ -94,9 +94,9 @@ router.get('/:id', verifyToken, (req, res) => {
 // ===== UPDATE STOP =====
 // PUT /api/stops/:id
 // Body: { city?, country?, arrival_date?, departure_date?, accommodation?, notes? }
-router.put('/:id', verifyToken, (req, res) => {
+router.put('/:id', verifyToken, async (req, res) => {
   try {
-    const result = updateStop(req.params.id, req.body, req.userId);
+    const result = await updateStop(req.params.id, req.body, req.userId);
     
     if (!result.success) {
       return res.status(404).json({
@@ -121,9 +121,9 @@ router.put('/:id', verifyToken, (req, res) => {
 
 // ===== DELETE STOP =====
 // DELETE /api/stops/:id
-router.delete('/:id', verifyToken, (req, res) => {
+router.delete('/:id', verifyToken, async (req, res) => {
   try {
-    const result = deleteStop(req.params.id, req.userId);
+    const result = await deleteStop(req.params.id, req.userId);
     
     if (!result.success) {
       return res.status(404).json({

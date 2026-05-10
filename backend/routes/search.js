@@ -11,10 +11,10 @@ const {
 
 // ===== SEARCH CITIES =====
 // GET /api/search/cities?q=paris
-router.get('/cities', (req, res) => {
+router.get('/cities', async (req, res) => {
   try {
     const query = req.query.q;
-    const result = searchCities(query);
+    const result = await searchCities(query);
     
     if (!result.success) {
       return res.status(400).json({
@@ -38,9 +38,9 @@ router.get('/cities', (req, res) => {
 
 // ===== GET CITY DETAILS =====
 // GET /api/search/cities/:name
-router.get('/cities/:name', (req, res) => {
+router.get('/cities/:name', async (req, res) => {
   try {
-    const result = getCityDetails(req.params.name);
+    const result = await getCityDetails(req.params.name);
     
     if (!result.success) {
       return res.status(404).json({
@@ -64,10 +64,10 @@ router.get('/cities/:name', (req, res) => {
 
 // ===== SEARCH ACTIVITIES =====
 // GET /api/search/activities?q=hiking
-router.get('/activities', (req, res) => {
+router.get('/activities', async (req, res) => {
   try {
     const query = req.query.q;
-    const result = searchActivities(query);
+    const result = await searchActivities(query);
     
     if (!result.success) {
       return res.status(400).json({
@@ -91,9 +91,9 @@ router.get('/activities', (req, res) => {
 
 // ===== GET TRENDING DESTINATIONS =====
 // GET /api/search/trending
-router.get('/trending', (req, res) => {
+router.get('/trending', async (req, res) => {
   try {
-    const result = getTrendingDestinations();
+    const result = await getTrendingDestinations();
     
     return res.status(200).json({
       success: true,
@@ -110,7 +110,7 @@ router.get('/trending', (req, res) => {
 
 // ===== GET RECOMMENDATIONS =====
 // GET /api/search/recommendations?budget=5000
-router.get('/recommendations', verifyToken, (req, res) => {
+router.get('/recommendations', verifyToken, async (req, res) => {
   try {
     const preferences = {
       budget: req.query.budget ? parseFloat(req.query.budget) : 5000,
@@ -118,7 +118,7 @@ router.get('/recommendations', verifyToken, (req, res) => {
       duration_days: req.query.duration ? parseInt(req.query.duration) : 7
     };
 
-    const result = getDestinationRecommendations(req.userId, preferences);
+    const result = await getDestinationRecommendations(req.userId, preferences);
     
     return res.status(200).json({
       success: true,
