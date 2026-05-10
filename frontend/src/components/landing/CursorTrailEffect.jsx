@@ -24,8 +24,8 @@ const SPAWN_DIST = 55    // px — tight train cart spacing
 // Max "carts" visible at one time
 const MAX_CARDS = 10
 
-// Hold time before fade starts (ms) — fast!
-const HOLD_MS = 180
+// Hold time before fade starts (ms) — slightly slower, cards linger a bit
+const HOLD_MS = 450
 
 // Fade-out duration (ms) — fast!
 const FADE_MS = 200
