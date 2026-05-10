@@ -43,7 +43,7 @@ function injectCSS() {
       -webkit-user-drag:none;
     }
     .tl-in  { transition: opacity 0.12s ease-out; opacity: 0.88 !important; }
-    .tl-out { transition: opacity 0.32s ease-in;  opacity: 0    !important; }
+    .tl-out { transition: opacity 0.15s ease-in;  opacity: 0    !important; }
 
     /* cursor ring pulse */
     @keyframes cRing {
@@ -100,13 +100,13 @@ function spawn(x, y, container) {
   // Fade IN — one rAF so browser has painted the element first
   requestAnimationFrame(() => el.classList.add('tl-in'))
 
-  // Fade OUT after hold time
-  const hold = 900 + Math.random() * 200
+  // Fade OUT after hold time (very fast)
+  const hold = 150 + Math.random() * 150
   setTimeout(() => {
     el.classList.remove('tl-in')
     el.classList.add('tl-out')
     // remove from DOM after transition ends
-    setTimeout(() => { el.remove(); _count-- }, 340)
+    setTimeout(() => { el.remove(); _count-- }, 180)
   }, hold)
 }
 
