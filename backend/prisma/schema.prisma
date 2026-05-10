@@ -32,3 +32,84 @@ model User {
 
   createdAt          DateTime @default(now())
 }
+
+model City {
+
+  id                 Int      @id @default(autoincrement())
+
+  name               String
+  country            String
+
+  description        String?
+
+  population         String?
+
+  averageDailyCost   Float?
+
+  bestSeason         String?
+
+  language           String?
+
+  currency           String?
+
+  vibe               String?
+
+  imageUrl           String?
+
+  latitude           Float?
+  longitude          Float?
+
+  createdAt          DateTime @default(now())
+
+  attractions        Attraction[]
+
+  activities         Activity[]
+}
+
+model Attraction {
+
+  id                Int      @id @default(autoincrement())
+
+  name              String
+
+  description       String?
+
+  imageUrl          String?
+
+  ticketPrice       Float?
+
+  availabilityTime  String?
+
+  cityId            Int
+
+  city              City @relation(fields: [cityId], references: [id])
+
+  createdAt         DateTime @default(now())
+}
+
+model Activity {
+
+  id                Int      @id @default(autoincrement())
+
+  name              String
+
+  category          String
+
+  description       String?
+
+  duration          String?
+
+  price             Float?
+
+  costRange         String?
+
+  imageUrl          String?
+
+  availabilityTime  String?
+
+  cityId            Int
+
+  city              City @relation(fields: [cityId], references: [id])
+
+  createdAt         DateTime @default(now())
+}

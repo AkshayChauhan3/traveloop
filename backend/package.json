@@ -3,17 +3,25 @@
   "version": "1.0.0",
   "description": "Backend API for Traveloop travel planning app",
   "main": "index.js",
+
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
+
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
+
   "keywords": [
     "travel",
     "planning",
     "hackathon"
   ],
+
   "author": "",
   "license": "ISC",
+
   "dependencies": {
     "@prisma/client": "^6.19.3",
     "bcryptjs": "^2.4.3",
@@ -25,6 +33,7 @@
     "pg": "^8.10.0",
     "prisma": "^6.19.3"
   },
+
   "devDependencies": {
     "nodemon": "^3.0.1"
   }
