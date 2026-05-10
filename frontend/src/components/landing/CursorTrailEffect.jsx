@@ -9,12 +9,12 @@ const IMAGES = [
   'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=300&q=80',
 ]
 
-// Card dimensions — small, consistent, like train carts
-const CARD_W = 120
-const CARD_H =  80
+// Card dimensions — bigger cards for visual impact
+const CARD_W = 200
+const CARD_H = 140
 
 // How far cursor must travel before spawning the next card (cart spacing)
-const SPAWN_DIST = 110   // px — smaller = tighter train, larger = more spaced
+const SPAWN_DIST = 55    // px — tight train cart spacing
 
 // Max "carts" visible at one time
 const MAX_CARDS = 5
