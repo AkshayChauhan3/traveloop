@@ -250,8 +250,27 @@
   .text-balance { text-wrap: balance; }
 }
 
-/* Custom cursor — only active on landing page via .cursor-hidden class */
-.cursor-hidden,
-.cursor-hidden * {
+/* Custom cursor — only active on landing/login pages via .cursor-hidden class */
+/* Interactive elements ALWAYS keep their native cursor so inputs remain usable */
+.cursor-hidden {
   cursor: none !important;
+}
+.cursor-hidden *:not(input):not(textarea):not(select):not(button):not(a):not([role="button"]):not([tabindex]) {
+  cursor: none !important;
+}
+/* Restore correct cursor for all interactive elements */
+.cursor-hidden input,
+.cursor-hidden input:focus,
+.cursor-hidden textarea,
+.cursor-hidden textarea:focus {
+  cursor: text !important;
+}
+.cursor-hidden select {
+  cursor: default !important;
+}
+.cursor-hidden button,
+.cursor-hidden a,
+.cursor-hidden [role="button"],
+.cursor-hidden label[for] {
+  cursor: pointer !important;
 }
