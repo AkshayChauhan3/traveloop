@@ -31,3 +31,9 @@ yarn-debug.log*
 
 # Misc
 .cache/
+.eslintcache
+
+# ── Exclude mock data and utility helpers ─────────────────────────
+# Mentors see pages/components only — not generated data files
+frontend/src/data/
+frontend/src/utils/

@@ -43,7 +43,7 @@ function injectCSS() {
       -webkit-user-drag:none;
     }
     .tl-in  { transition: opacity 0.12s ease-out; opacity: 0.88 !important; }
-    .tl-out { transition: opacity 0.32s ease-in;  opacity: 0    !important; }
+    .tl-out { transition: opacity 0.15s ease-in;  opacity: 0    !important; }
 
     /* cursor ring pulse */
     @keyframes cRing {
@@ -71,7 +71,7 @@ function injectCSS() {
 }
 
 /* ── spawn one card at (x,y) ─────────────────────────────────────────────── */
-function spawn(x, y) {
+function spawn(x, y, container) {
   if (_count >= MAX) return
   _count++
 
@@ -95,32 +95,57 @@ function spawn(x, y) {
   const img = document.createElement('img')
   img.src = src; img.alt = ''
   el.appendChild(img)
-  document.body.appendChild(el)
+  if (container) container.appendChild(el)
 
   // Fade IN — one rAF so browser has painted the element first
   requestAnimationFrame(() => el.classList.add('tl-in'))
 
-  // Fade OUT after hold time
-  const hold = 900 + Math.random() * 200
+  // Fade OUT after hold time (very fast)
+  const hold = 150 + Math.random() * 150
   setTimeout(() => {
     el.classList.remove('tl-in')
     el.classList.add('tl-out')
     // remove from DOM after transition ends
-    setTimeout(() => { el.remove(); _count-- }, 340)
+    setTimeout(() => { el.remove(); _count-- }, 180)
   }, hold)
 }
 
 /* ── component ───────────────────────────────────────────────────────────── */
 export default function CursorTrailEffect() {
+  const containerRef = useRef(null)
   const ringRef = useRef(null)
   const dotRef  = useRef(null)
   const posRef  = useRef({ x: -300, y: -300 })
   const lastRef = useRef({ x: -300, y: -300 })
+  const isScrolledRef = useRef(false)
 
   useEffect(() => {
     injectCSS()
-    document.body.classList.add('cursor-hidden')
-    return () => document.body.classList.remove('cursor-hidden')
+    
+    // Check scroll position to determine if trail should be active
+    const handleScroll = () => {
+      // Stop the trail when scrolled past the first viewport (Hero section)
+      const scrolled = window.scrollY > window.innerHeight * 0.8
+      isScrolledRef.current = scrolled
+      
+      if (scrolled) {
+        document.body.classList.remove('cursor-hidden')
+        if (ringRef.current) ringRef.current.style.display = 'none'
+        if (dotRef.current) dotRef.current.style.display = 'none'
+      } else {
+        document.body.classList.add('cursor-hidden')
+        if (ringRef.current) ringRef.current.style.display = 'block'
+        if (dotRef.current) dotRef.current.style.display = 'block'
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll() // initial check
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      document.body.classList.remove('cursor-hidden')
+    }
   }, [])
 
   useEffect(() => {
@@ -135,6 +160,7 @@ export default function CursorTrailEffect() {
     const tick = () => {
       const { x, y } = posRef.current
 
+      // Always update cursor position behind the scenes
       if (ringRef.current) {
         ringRef.current.style.left = x + 'px'
         ringRef.current.style.top  = y + 'px'
@@ -144,11 +170,14 @@ export default function CursorTrailEffect() {
         dotRef.current.style.top  = y + 'px'
       }
 
-      const dx = x - lastRef.current.x
-      const dy = y - lastRef.current.y
-      if (dx * dx + dy * dy >= 50 * 50) {        // spawn every ~50px
-        lastRef.current = { x, y }
-        spawn(x, y)
+      // Only spawn images if we are NOT scrolled down
+      if (!isScrolledRef.current) {
+        const dx = x - lastRef.current.x
+        const dy = y - lastRef.current.y
+        if (dx * dx + dy * dy >= 55 * 55) {        // spawn every ~55px
+          lastRef.current = { x, y }
+          spawn(x, y, containerRef.current)
+        }
       }
 
       raf = requestAnimationFrame(tick)
@@ -160,9 +189,9 @@ export default function CursorTrailEffect() {
   }, [])
 
   return (
-    <>
+    <div ref={containerRef} style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
       <div ref={ringRef} className="tl-ring" style={{ left: -300, top: -300 }} />
       <div ref={dotRef}  className="tl-dot"  style={{ left: -300, top: -300 }} />
-    </>
+    </div>
   )
 }

@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 import { User, Mail, Phone, Globe, MapPin, Lock, Eye, EyeOff, Plane, ArrowRight, CheckCircle } from 'lucide-react'
-import CursorTrailEffect from '../components/landing/CursorTrailEffect'
 
 const TRAVEL_IMAGES = [
   'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
@@ -32,7 +31,6 @@ export default function Signup() {
 
   return (
     <div className="min-h-screen bg-[#050a14] flex overflow-hidden">
-      <CursorTrailEffect />
       {/* Left panel - Image */}
       <motion.div
         initial={{ x: -100, opacity: 0 }}
