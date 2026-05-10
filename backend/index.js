@@ -24,6 +24,7 @@ app.use('/api/stops', stopsRoutes);
 app.use('/api/expenses', expensesRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/extras', extraRoutes);
+app.use("/uploads", express.static("uploads"));
 
 // Health check endpoint
 app.get('/health', (req, res) => {
