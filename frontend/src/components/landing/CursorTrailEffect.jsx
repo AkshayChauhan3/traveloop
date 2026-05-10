@@ -71,7 +71,7 @@ function injectCSS() {
 }
 
 /* ── spawn one card at (x,y) ─────────────────────────────────────────────── */
-function spawn(x, y) {
+function spawn(x, y, container) {
   if (_count >= MAX) return
   _count++
 
@@ -95,7 +95,7 @@ function spawn(x, y) {
   const img = document.createElement('img')
   img.src = src; img.alt = ''
   el.appendChild(img)
-  document.body.appendChild(el)
+  if (container) container.appendChild(el)
 
   // Fade IN — one rAF so browser has painted the element first
   requestAnimationFrame(() => el.classList.add('tl-in'))
@@ -112,6 +112,7 @@ function spawn(x, y) {
 
 /* ── component ───────────────────────────────────────────────────────────── */
 export default function CursorTrailEffect() {
+  const containerRef = useRef(null)
   const ringRef = useRef(null)
   const dotRef  = useRef(null)
   const posRef  = useRef({ x: -300, y: -300 })
@@ -174,7 +175,7 @@ export default function CursorTrailEffect() {
         const dy = y - lastRef.current.y
         if (dx * dx + dy * dy >= 55 * 55) {        // spawn every ~55px
           lastRef.current = { x, y }
-          spawn(x, y)
+          spawn(x, y, containerRef.current)
         }
       }
 
@@ -187,9 +188,9 @@ export default function CursorTrailEffect() {
   }, [])
 
   return (
-    <>
+    <div ref={containerRef} style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
       <div ref={ringRef} className="tl-ring" style={{ left: -300, top: -300 }} />
       <div ref={dotRef}  className="tl-dot"  style={{ left: -300, top: -300 }} />
-    </>
+    </div>
   )
 }
