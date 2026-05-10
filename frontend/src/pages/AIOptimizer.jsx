@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sparkles, Zap, MapPin, DollarSign, Clock, Star, ChevronRight, Brain } from 'lucide-react'
+import { Sparkles, Zap, MapPin, Clock, Star, ChevronRight, Brain } from 'lucide-react'
 import DashboardLayout from '../layouts/DashboardLayout'
 
 const MOODS = [

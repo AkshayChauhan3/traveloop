@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { NavLink, Link, useNavigate } from 'react-router-dom'
+import { NavLink, Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Compass, Menu, X, LogIn, Sparkles } from 'lucide-react'
 
@@ -13,7 +13,6 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled]     = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const navigate = useNavigate()
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 30)

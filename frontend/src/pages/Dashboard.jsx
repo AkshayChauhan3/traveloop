@@ -2,8 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import {
-  Globe, DollarSign, Calendar, Sparkles, Map, Plus,
-  ArrowRight, Star, MapPin, Clock, Zap, ChevronRight
+  Globe, DollarSign, Calendar, Map, Plus,
+  ArrowRight, Star, MapPin, Clock, ChevronRight
 } from 'lucide-react'
 import DashboardLayout from '../layouts/DashboardLayout'
 import { tripApi, searchApi } from '../lib/api'
@@ -281,7 +281,6 @@ export default function Dashboard() {
             <div className="glass-card p-6 text-center text-slate-500">No upcoming trips. Create one from the trip planner.</div>
           )}
         </div>
-      </div>
     </DashboardLayout>
   )
 }

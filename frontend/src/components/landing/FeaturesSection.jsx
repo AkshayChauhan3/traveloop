@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Sparkles, DollarSign, Map, Users, Zap, Globe, PackageCheck, BookOpen } from 'lucide-react'
+import { Sparkles, DollarSign, Map, Users, Zap, Globe, PackageCheck } from 'lucide-react'
 
 const features = [
   {

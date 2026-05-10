@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Search, Star, MapPin, Clock, Globe, Filter, RefreshCw } from 'lucide-react'
+import { Search, Star, MapPin, Clock, Globe, RefreshCw } from 'lucide-react'
 import DashboardLayout from '../layouts/DashboardLayout'
 import { tripApi } from '../lib/api'
 import { useNavigate } from 'react-router-dom'

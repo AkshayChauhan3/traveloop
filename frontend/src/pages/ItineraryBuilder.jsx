@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Calendar, Plus, Trash2, ChevronDown, ChevronUp, Clock, DollarSign, MapPin, GripVertical, RefreshCw, Users } from 'lucide-react'
@@ -20,7 +20,6 @@ const formatDate = (value) => (value ? new Date(value).toLocaleDateString() : ''
 
 export default function ItineraryBuilder() {
   const [searchParams] = useSearchParams()
-  const [trips, setTrips] = useState([])
   const [trip, setTrip] = useState(null)
   const [stops, setStops] = useState([])
   const [cities, setCities] = useState([])
@@ -36,7 +35,7 @@ export default function ItineraryBuilder() {
 
   const tripId = searchParams.get('tripId')
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true)
     setMessage('')
     try {
@@ -44,11 +43,10 @@ export default function ItineraryBuilder() {
         tripApi.list(),
         fetch('/api/search/cities?q=').then(res => res.json())
       ])
-      
+
       const allTrips = tripsResult.data || []
-      setTrips(allTrips)
       setCities(citiesResult.data || [])
-      
+
       const selected = allTrips.find((item) => String(item.id) === String(tripId)) || allTrips[0] || null
       setTrip(selected)
       if (selected) {
@@ -69,11 +67,11 @@ export default function ItineraryBuilder() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [tripId])
 
   useEffect(() => {
     load()
-  }, [tripId])
+  }, [load])
 
   const totalCost = useMemo(
     () => stops.reduce((sum, stop) => sum + (stop.expenses?.reduce((inner, expense) => inner + Number(expense.amount || 0), 0) || 0), 0),

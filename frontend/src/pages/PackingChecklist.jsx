@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Plus, Check, Trash2, PackageCheck, RefreshCw } from 'lucide-react'
 import DashboardLayout from '../layouts/DashboardLayout'
@@ -22,7 +22,7 @@ export default function PackingChecklist() {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(true)
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true)
     setMessage('')
     try {
@@ -42,11 +42,11 @@ export default function PackingChecklist() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [tripId])
 
   useEffect(() => {
     load()
-  }, [tripId])
+  }, [load])
 
   const toggle = async (id, currentPacked) => {
     setMessage('')

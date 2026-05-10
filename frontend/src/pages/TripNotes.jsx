@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Plus, Trash2, Edit3, BookOpen, Clock, Save, X, RefreshCw } from 'lucide-react'
 import DashboardLayout from '../layouts/DashboardLayout'
@@ -22,7 +22,7 @@ export default function TripNotes() {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(true)
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true)
     setMessage('')
     try {
@@ -42,11 +42,11 @@ export default function TripNotes() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [tripId])
 
   useEffect(() => {
     load()
-  }, [tripId])
+  }, [load])
 
   const deleteNote = async (id) => {
     setMessage('')

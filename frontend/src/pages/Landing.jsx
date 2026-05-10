@@ -36,7 +36,7 @@ export default function Landing() {
               <span className="gradient-text">dream trip?</span>
             </h2>
             <p className="text-slate-500 text-lg mb-10">
-              Join thousands of travelers who plan smarter with Traveloop's AI-powered platform.
+              Join thousands of travelers who plan smarter with Traveloop&apos;s AI-powered platform.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/signup">

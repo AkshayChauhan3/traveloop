@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { CalendarPlus, MapPin, DollarSign, FileText, Tag, Sparkles } from 'lucide-react'
+import { CalendarPlus, MapPin, DollarSign, FileText, Tag } from 'lucide-react'
 import DashboardLayout from '../layouts/DashboardLayout'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { tripApi } from '../lib/api'
 import { useAuth } from '../context/AuthContext'
 

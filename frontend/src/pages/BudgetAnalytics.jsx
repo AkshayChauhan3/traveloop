@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { AlertTriangle, DollarSign, TrendingDown, CheckCircle, PieChart, BarChart2, RefreshCw } from 'lucide-react'
 import { PieChart as RechartsPie, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
@@ -27,11 +27,9 @@ export default function BudgetAnalytics() {
   const [tripId, setTripId] = useState('')
   const [budgetSummary, setBudgetSummary] = useState(null)
   const [expenses, setExpenses] = useState([])
-  const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState('')
 
-  const load = async () => {
-    setLoading(true)
+  const load = useCallback(async () => {
     setMessage('')
     try {
       const tripsResult = await tripApi.list()
@@ -53,14 +51,12 @@ export default function BudgetAnalytics() {
       }
     } catch (err) {
       setMessage(err.message || 'Unable to load budget analytics')
-    } finally {
-      setLoading(false)
     }
-  }
+  }, [tripId])
 
   useEffect(() => {
     load()
-  }, [tripId])
+  }, [load])
 
   const pct = Number(budgetSummary?.spending_percentage || 0)
   const remaining = Number(budgetSummary?.remaining_budget || 0)

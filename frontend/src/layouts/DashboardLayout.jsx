@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { NavLink, Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  LayoutDashboard, Map, Sparkles, DollarSign, Compass,
+  LayoutDashboard, Map, Compass,
   PackageCheck, Users, BookOpen, Search, User,
   ChevronLeft, ChevronRight, Bell, LogOut, Plus,
   BarChart2

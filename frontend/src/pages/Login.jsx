@@ -252,7 +252,7 @@ export default function Login() {
           </motion.button>
 
           <p style={{ textAlign: 'center', marginTop: 20, fontSize: 13, color: '#64748b' }}>
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link to="/signup" style={{ color: '#4CAF50', fontWeight: 500, textDecoration: 'none' }}>
               Sign up free
             </Link>
