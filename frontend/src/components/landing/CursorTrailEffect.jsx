@@ -124,7 +124,8 @@ export default function CursorTrailEffect() {
     
     // Check scroll position to determine if trail should be active
     const handleScroll = () => {
-      const scrolled = window.scrollY > 100
+      // Stop the trail when scrolled past the first viewport (Hero section)
+      const scrolled = window.scrollY > window.innerHeight * 0.8
       isScrolledRef.current = scrolled
       
       if (scrolled) {
