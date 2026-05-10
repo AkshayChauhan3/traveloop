@@ -1410,7 +1410,27 @@ async function main() {
     }
   ];
 
-  for (const city of cities) {
+  // 1. Automate the image URLs dynamically
+  const citiesWithAutomatedImages = cities.map((city) => {
+    return {
+      ...city,
+      // Generate an image URL based on the city name
+      imageUrl: `https://loremflickr.com/800/600/${encodeURIComponent(city.name)},city/all`,
+      
+      attractions: {
+        create: city.attractions.create.map((attraction) => ({
+          ...attraction,
+          // Generate an image URL based on the attraction name
+          imageUrl: `https://loremflickr.com/800/600/${encodeURIComponent(attraction.name)}/all`,
+        })),
+      },
+      // Activities don't have images in your current schema, but if they did, 
+      // you could map over them exactly like the attractions above.
+    };
+  });
+
+  // 2. Update your loop to use the new array
+  for (const city of citiesWithAutomatedImages) {
     await prisma.city.create({
       data: city,
     });
