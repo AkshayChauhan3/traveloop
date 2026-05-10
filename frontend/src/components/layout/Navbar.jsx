@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { NavLink, Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Leaf, Menu, X, LogIn, Sparkles } from 'lucide-react'
+import { Compass, Menu, X, LogIn, Sparkles } from 'lucide-react'
 
 const navLinks = [
   { to: '/',          label: 'Home',      exact: true },
@@ -42,7 +42,7 @@ export default function Navbar() {
               <div className="relative">
                 <div className="absolute inset-0 rounded-xl bg-brand-400 blur-md opacity-40 group-hover:opacity-60 transition-opacity" />
                 <div className="relative bg-gradient-to-br from-brand-400 to-brand-600 p-2 rounded-xl">
-                  <Leaf className="w-5 h-5 text-white" />
+                  <Compass className="w-5 h-5 text-white" />
                 </div>
               </div>
               <span className="text-xl font-bold">

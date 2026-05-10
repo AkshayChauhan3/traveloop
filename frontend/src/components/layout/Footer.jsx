@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Leaf, Github, Twitter, Instagram, Linkedin, Heart } from 'lucide-react'
+import { Compass, Github, Twitter, Instagram, Linkedin, Heart } from 'lucide-react'
 
 const footerLinks = {
   Product: [
@@ -42,7 +42,7 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-2 mb-4">
               <div className="bg-gradient-to-br from-brand-400 to-brand-600 p-2 rounded-xl">
-                <Leaf className="w-5 h-5 text-white" />
+                <Compass className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold">
                 <span className="gradient-text-purple">Travel</span>

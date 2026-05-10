@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard, Map, Sparkles, DollarSign, Compass,
   PackageCheck, Users, BookOpen, Search, User,
-  Leaf, ChevronLeft, ChevronRight, Bell, LogOut, Plus,
+  ChevronLeft, ChevronRight, Bell, LogOut, Plus,
   BarChart2
 } from 'lucide-react'
 
@@ -43,7 +43,7 @@ export default function DashboardLayout({ children }) {
         {/* Logo */}
         <div className="flex items-center gap-3 px-4 py-5" style={{ borderBottom: '1.5px solid #dff3e3' }}>
           <div className="bg-gradient-to-br from-brand-400 to-brand-600 p-2 rounded-xl flex-shrink-0">
-            <Leaf className="w-5 h-5 text-white" />
+            <Compass className="w-5 h-5 text-white" />
           </div>
           <AnimatePresence>
             {!collapsed && (

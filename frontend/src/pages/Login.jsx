@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
-import { Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles, Leaf } from 'lucide-react'
+import { Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles, Compass } from 'lucide-react'
 import CursorTrailEffect from '../components/landing/CursorTrailEffect'
 
 export default function Login() {
@@ -53,7 +53,7 @@ export default function Login() {
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               boxShadow: '0 6px 20px rgba(76,175,80,0.3)',
             }}>
-              <Leaf style={{ width: 26, height: 26, color: '#ffffff' }} />
+              <Compass style={{ width: 26, height: 26, color: '#ffffff' }} />
             </div>
             <span style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-0.5px', color: '#1e2d1f' }}>
               Travel<span style={{ color: '#4CAF50' }}>oop</span>

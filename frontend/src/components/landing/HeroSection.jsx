@@ -1,120 +1,116 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Play, Sparkles, Zap, Star, Leaf } from 'lucide-react'
+import { ArrowRight, Play, Zap, MapPin, Compass } from 'lucide-react'
 
-// Floating particles
+// Floating particles — subtle green dust
 const Particle = ({ x, y, size, delay, color }) => (
   <motion.div
-    className="absolute rounded-full opacity-30"
-    style={{ left: `${x}%`, top: `${y}%`, width: size, height: size, background: color }}
-    animate={{
-      y: [-10, 10, -10],
-      x: [-5, 5, -5],
-      opacity: [0.15, 0.35, 0.15],
-    }}
+    className="absolute rounded-full"
+    style={{ left: `${x}%`, top: `${y}%`, width: size, height: size, background: color, opacity: 0.25 }}
+    animate={{ y: [-8, 8, -8], x: [-4, 4, -4], opacity: [0.1, 0.3, 0.1] }}
     transition={{ duration: 4 + Math.random() * 4, delay, repeat: Infinity, ease: 'easeInOut' }}
   />
 )
 
-const particles = Array.from({ length: 20 }, (_, i) => ({
+const particles = Array.from({ length: 16 }, (_, i) => ({
   id: i,
   x: Math.random() * 100,
   y: Math.random() * 100,
-  size: 2 + Math.random() * 6,
+  size: 2 + Math.random() * 5,
   delay: Math.random() * 4,
-  color: i % 3 === 0 ? '#4CAF50' : i % 3 === 1 ? '#6FBF73' : '#a8d5a9',
+  color: i % 2 === 0 ? '#4CAF50' : '#f97316',
 }))
 
-const HERO_IMAGES = [
-  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80',
-  'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80',
-  'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&q=80',
-  'https://images.unsplash.com/photo-1530521954074-e64f6810b32d?w=400&q=80',
+// Static floating image cards — decorative, positioned at the sides
+const CARD_IMAGES = [
+  { src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80', top: '12%', left: '4%',  rotate: -10, w: 152, h: 108 },
+  { src: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80', top: '58%', left: '2%',  rotate:   7, w: 134, h: 170 },
+  { src: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&q=80', top:  '9%', right: '4%', rotate:  10, w: 158, h: 106 },
+  { src: 'https://images.unsplash.com/photo-1530521954074-e64f6810b32d?w=400&q=80', top: '63%', right: '3%', rotate:  -9, w: 138, h: 154 },
 ]
 
 export default function HeroSection() {
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
-  const y = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
+  const y       = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
 
   return (
-    <section ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20"
-      style={{ background: 'linear-gradient(160deg, #FAFAF7 0%, #F0FAF0 40%, #F8FAF5 100%)' }}>
-
-      {/* Animated background blobs */}
-      <div className="absolute inset-0">
+    <section
+      ref={ref}
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20"
+      style={{ background: 'linear-gradient(160deg, #FAFAF7 0%, #F0FAF0 40%, #F8FAF5 100%)' }}
+    >
+      {/* ── Layer 1: Background blobs ── z-0 */}
+      <div className="absolute inset-0 z-0">
         <motion.div
           className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full"
-          style={{
-            background: 'radial-gradient(ellipse, rgba(76,175,80,0.12) 0%, rgba(76,175,80,0.04) 40%, transparent 70%)',
-            filter: 'blur(60px)',
-          }}
+          style={{ background: 'radial-gradient(ellipse, rgba(76,175,80,0.13) 0%, rgba(76,175,80,0.04) 40%, transparent 70%)', filter: 'blur(60px)' }}
           animate={{ scale: [1, 1.1, 1], opacity: [0.8, 1, 0.8] }}
           transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.div
           className="absolute bottom-0 left-0 w-[600px] h-[400px] rounded-full"
-          style={{
-            background: 'radial-gradient(ellipse, rgba(110,191,115,0.1) 0%, transparent 70%)',
-            filter: 'blur(80px)',
-          }}
+          style={{ background: 'radial-gradient(ellipse, rgba(249,115,22,0.07) 0%, transparent 70%)', filter: 'blur(80px)' }}
           animate={{ scale: [1, 1.15, 1], x: [0, 30, 0] }}
           transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
         />
-        <motion.div
-          className="absolute top-1/2 right-0 w-[400px] h-[400px] rounded-full"
-          style={{
-            background: 'radial-gradient(ellipse, rgba(76,175,80,0.08) 0%, transparent 70%)',
-            filter: 'blur(60px)',
-          }}
-          animate={{ scale: [1, 1.2, 1], y: [0, -20, 0] }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        {/* Grid */}
         <div className="absolute inset-0 bg-grid opacity-40" />
       </div>
 
-      {/* Floating particles */}
-      <div className="absolute inset-0 pointer-events-none">
-        {particles.map((p) => (
-          <Particle key={p.id} {...p} />
-        ))}
+      {/* ── Layer 2: Floating particles ── z-[1] */}
+      <div className="absolute inset-0 z-[1] pointer-events-none">
+        {particles.map((p) => <Particle key={p.id} {...p} />)}
       </div>
 
-      {/* Floating image cards */}
+      {/* ── Layer 3: Static floating image cards (sides only) ── z-[2] */}
+      {/* These are decorative and positioned away from the text center */}
       <motion.div
         style={{ y, opacity }}
-        className="absolute inset-0 pointer-events-none hidden lg:block"
+        className="absolute inset-0 z-[2] pointer-events-none hidden lg:block"
       >
-        {HERO_IMAGES.map((img, i) => {
-          const positions = [
-            { top: '15%', left: '5%', rotate: -12 },
-            { top: '60%', left: '3%', rotate: 8 },
-            { top: '10%', right: '5%', rotate: 10 },
-            { top: '65%', right: '4%', rotate: -8 },
-          ]
-          const pos = positions[i]
+        {CARD_IMAGES.map((card, i) => {
+          // Build positioning style — left OR right based on card config
+          const posStyle = {
+            position: 'absolute',
+            top: card.top,
+            ...(card.left  ? { left:  card.left  } : {}),
+            ...(card.right ? { right: card.right } : {}),
+          }
           return (
             <motion.div
               key={i}
-              className="absolute w-40 h-28 rounded-2xl overflow-hidden shadow-leaf"
-              style={{ ...pos, border: '2px solid rgba(255,255,255,0.8)' }}
-              animate={{ y: [0, -12, 0], rotate: [pos.rotate, pos.rotate + 2, pos.rotate] }}
-              transition={{ duration: 5 + i * 1.5, delay: i * 0.8, repeat: Infinity, ease: 'easeInOut' }}
+              className="rounded-2xl overflow-hidden"
+              style={{
+                ...posStyle,
+                width: card.w,
+                height: card.h,
+                border: '2.5px solid rgba(255,255,255,0.9)',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.14), 0 2px 8px rgba(76,175,80,0.1)',
+                rotate: card.rotate,
+              }}
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 5 + i * 1.5, delay: i * 0.7, repeat: Infinity, ease: 'easeInOut' }}
             >
-              <img src={img} alt="destination" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+              <img src={card.src} alt="destination" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent" />
+              {/* Small destination pin badge */}
+              <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-white/90 backdrop-blur-sm rounded-full px-2 py-0.5">
+                <MapPin className="w-2.5 h-2.5 text-brand-600" />
+                <span className="text-[9px] font-semibold text-slate-700">Explore</span>
+              </div>
             </motion.div>
           )
         })}
       </motion.div>
 
-      {/* Main Content */}
+      {/* ── Layer 4: Cursor trail spawns here (z-[4] in CursorTrailEffect.jsx) ── */}
+
+      {/* ── Layer 5: Main hero text ── z-[10] — always on top of trail */}
       <motion.div
         style={{ opacity }}
-        className="relative z-10 text-center px-4 max-w-5xl mx-auto"
+        className="relative z-[10] text-center px-4 max-w-4xl mx-auto"
       >
         {/* Badge */}
         <motion.div
@@ -123,7 +119,7 @@ export default function HeroSection() {
           transition={{ delay: 0.2 }}
           className="inline-flex items-center gap-2 glass glow-border px-4 py-2 rounded-full mb-8 text-sm"
         >
-          <Leaf className="w-4 h-4 text-brand-500" />
+          <Compass className="w-4 h-4 text-brand-500" />
           <span className="text-slate-600">AI-Powered Travel Planning</span>
           <span className="badge badge-purple">New</span>
         </motion.div>
@@ -139,7 +135,7 @@ export default function HeroSection() {
           <span className="gradient-text">oop</span>
         </motion.h1>
 
-        {/* Sub heading */}
+        {/* Sub-heading — orange-only highlights, no multi-color */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -148,10 +144,10 @@ export default function HeroSection() {
           style={{ color: '#4a6b4c' }}
         >
           Plan your travel itinerary easily with{' '}
-          <span className="text-brand-600 font-semibold">smart trip planning</span>,{' '}
-          <span className="text-cyan-600 font-semibold">budget tracking</span>,{' '}
+          <span style={{ color: '#f97316', fontWeight: 600 }}>smart trip planning</span>,{' '}
+          <span style={{ color: '#f97316', fontWeight: 600 }}>budget tracking</span>,{' '}
           destination discovery, and{' '}
-          <span className="text-amber-600 font-semibold">AI-powered travel suggestions</span>.
+          <span style={{ color: '#f97316', fontWeight: 600 }}>AI-powered travel suggestions</span>.
         </motion.p>
 
         <motion.p
@@ -195,40 +191,36 @@ export default function HeroSection() {
           </Link>
         </motion.div>
 
-        {/* Social proof */}
+        {/* Minimal trust line — no fake numbers */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.9 }}
-          className="flex items-center justify-center gap-6 mt-12 text-sm"
-          style={{ color: '#4a6b4c' }}
+          className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-slate-500"
         >
-          <div className="flex items-center gap-2">
-            <div className="flex -space-x-2">
-              {['A', 'B', 'C', 'D'].map((l) => (
-                <div key={l} className="w-7 h-7 rounded-full border-2 border-white bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-xs font-bold">
-                  {l}
-                </div>
-              ))}
-            </div>
-            <span>12,000+ travelers</span>
-          </div>
-          <div className="flex items-center gap-1">
-            {[1, 2, 3, 4, 5].map((s) => (
-              <Star key={s} className="w-4 h-4 text-amber-400 fill-amber-400" />
-            ))}
-            <span>4.9/5</span>
-          </div>
-          <span className="hidden sm:block">50K+ trips planned</span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-brand-400 inline-block" />
+            Free to get started
+          </span>
+          <span className="hidden sm:block w-px h-4 bg-slate-300" />
+          <span className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-orange-400 inline-block" />
+            AI trip optimizer included
+          </span>
+          <span className="hidden sm:block w-px h-4 bg-slate-300" />
+          <span className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-brand-400 inline-block" />
+            No credit card required
+          </span>
         </motion.div>
       </motion.div>
 
-      {/* Scroll indicator */}
+      {/* ── Scroll indicator ── z-[10] */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[10]"
       >
         <motion.div
           animate={{ y: [0, 8, 0] }}

@@ -149,7 +149,7 @@ export default function FeaturesSection() {
           })}
         </motion.div>
 
-        {/* Stats row */}
+        {/* Product benefit highlights — honest, no fake numbers */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -157,14 +157,15 @@ export default function FeaturesSection() {
           className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6"
         >
           {[
-            { value: '50K+', label: 'Trips Planned' },
-            { value: '120+', label: 'Destinations' },
-            { value: '12K+', label: 'Happy Travelers' },
-            { value: '4.9★', label: 'Average Rating' },
-          ].map((stat) => (
-            <div key={stat.label} className="glass-card p-6 text-center">
-              <div className="text-3xl font-black gradient-text mb-1">{stat.value}</div>
-              <div className="text-slate-500 text-sm">{stat.label}</div>
+            { emoji: '🆓', label: 'Free to Start',       sub: 'No credit card needed' },
+            { emoji: '🤖', label: 'AI Trip Optimizer',    sub: 'Generate plans in seconds' },
+            { emoji: '💰', label: 'Budget-Smart',         sub: 'Real-time spending alerts' },
+            { emoji: '🔗', label: 'Easy Sharing',         sub: 'Share trips with anyone' },
+          ].map((item) => (
+            <div key={item.label} className="glass-card p-6 text-center">
+              <div className="text-3xl mb-2">{item.emoji}</div>
+              <div className="font-bold text-slate-800 text-sm mb-0.5">{item.label}</div>
+              <div className="text-slate-500 text-xs">{item.sub}</div>
             </div>
           ))}
         </motion.div>
