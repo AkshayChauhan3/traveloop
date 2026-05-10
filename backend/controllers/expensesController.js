@@ -1,9 +1,8 @@
-// Mock database for expenses
-let expenses = [];
-let expenseIdCounter = 1;
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 // ===== CREATE EXPENSE =====
-const createExpense = (data, userId) => {
+const createExpense = async (data, userId) => {
   try {
     if (!data.trip_id || !data.category || data.amount === undefined) {
       return {
@@ -12,20 +11,18 @@ const createExpense = (data, userId) => {
       };
     }
 
-    const expense = {
-      id: expenseIdCounter++,
-      trip_id: parseInt(data.trip_id),
-      stop_id: data.stop_id ? parseInt(data.stop_id) : null,
-      user_id: userId,
-      category: data.category,
-      amount: parseFloat(data.amount),
-      description: data.description || '',
-      date: data.date || new Date().toISOString().split('T')[0],
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
+    const expense = await prisma.expense.create({
+      data: {
+        tripId: parseInt(data.trip_id),
+        stopId: data.stop_id ? parseInt(data.stop_id) : null,
+        userId,
+        category: data.category,
+        amount: parseFloat(data.amount),
+        description: data.description || null,
+        date: data.date ? new Date(data.date) : new Date()
+      }
+    });
 
-    expenses.push(expense);
     return {
       success: true,
       message: 'Expense created successfully',
@@ -41,9 +38,15 @@ const createExpense = (data, userId) => {
 };
 
 // ===== GET ALL EXPENSES FOR A TRIP =====
-const getExpensesByTrip = (tripId, userId) => {
+const getExpensesByTrip = async (tripId, userId) => {
   try {
-    const tripExpenses = expenses.filter(e => e.trip_id === parseInt(tripId) && e.user_id === userId);
+    const tripExpenses = await prisma.expense.findMany({
+      where: {
+        tripId: parseInt(tripId),
+        userId
+      }
+    });
+
     return {
       success: true,
       data: tripExpenses
@@ -58,9 +61,15 @@ const getExpensesByTrip = (tripId, userId) => {
 };
 
 // ===== GET EXPENSES FOR A SPECIFIC STOP =====
-const getExpensesByStop = (stopId, userId) => {
+const getExpensesByStop = async (stopId, userId) => {
   try {
-    const stopExpenses = expenses.filter(e => e.stop_id === parseInt(stopId) && e.user_id === userId);
+    const stopExpenses = await prisma.expense.findMany({
+      where: {
+        stopId: parseInt(stopId),
+        userId
+      }
+    });
+
     return {
       success: true,
       data: stopExpenses
@@ -75,9 +84,14 @@ const getExpensesByStop = (stopId, userId) => {
 };
 
 // ===== GET BUDGET SUMMARY FOR A TRIP =====
-const getBudgetSummary = (tripId, totalBudget, userId) => {
+const getBudgetSummary = async (tripId, totalBudget, userId) => {
   try {
-    const tripExpenses = expenses.filter(e => e.trip_id === parseInt(tripId) && e.user_id === userId);
+    const tripExpenses = await prisma.expense.findMany({
+      where: {
+        tripId: parseInt(tripId),
+        userId
+      }
+    });
     
     const totalSpent = tripExpenses.reduce((sum, e) => sum + e.amount, 0);
     const remaining = totalBudget - totalSpent;
@@ -119,27 +133,33 @@ const getBudgetSummary = (tripId, totalBudget, userId) => {
 };
 
 // ===== UPDATE EXPENSE =====
-const updateExpense = (expenseId, data, userId) => {
+const updateExpense = async (expenseId, data, userId) => {
   try {
-    const expenseIndex = expenses.findIndex(e => e.id === parseInt(expenseId) && e.user_id === userId);
+    const existingExpense = await prisma.expense.findFirst({
+      where: {
+        id: parseInt(expenseId),
+        userId
+      }
+    });
     
-    if (expenseIndex === -1) {
+    if (!existingExpense) {
       return {
         success: false,
         message: 'Expense not found or unauthorized'
       };
     }
 
-    const expense = expenses[expenseIndex];
-    
-    if (data.category !== undefined) expense.category = data.category;
-    if (data.amount !== undefined) expense.amount = parseFloat(data.amount);
-    if (data.description !== undefined) expense.description = data.description;
-    if (data.date !== undefined) expense.date = data.date;
-    if (data.stop_id !== undefined) expense.stop_id = data.stop_id ? parseInt(data.stop_id) : null;
-    
-    expense.updated_at = new Date().toISOString();
-    expenses[expenseIndex] = expense;
+    const updateData = {};
+    if (data.category !== undefined) updateData.category = data.category;
+    if (data.amount !== undefined) updateData.amount = parseFloat(data.amount);
+    if (data.description !== undefined) updateData.description = data.description;
+    if (data.date !== undefined) updateData.date = new Date(data.date);
+    if (data.stop_id !== undefined) updateData.stopId = data.stop_id ? parseInt(data.stop_id) : null;
+
+    const expense = await prisma.expense.update({
+      where: { id: parseInt(expenseId) },
+      data: updateData
+    });
 
     return {
       success: true,
@@ -156,22 +176,30 @@ const updateExpense = (expenseId, data, userId) => {
 };
 
 // ===== DELETE EXPENSE =====
-const deleteExpense = (expenseId, userId) => {
+const deleteExpense = async (expenseId, userId) => {
   try {
-    const expenseIndex = expenses.findIndex(e => e.id === parseInt(expenseId) && e.user_id === userId);
+    const existingExpense = await prisma.expense.findFirst({
+      where: {
+        id: parseInt(expenseId),
+        userId
+      }
+    });
     
-    if (expenseIndex === -1) {
+    if (!existingExpense) {
       return {
         success: false,
         message: 'Expense not found or unauthorized'
       };
     }
 
-    const deletedExpense = expenses.splice(expenseIndex, 1);
+    const deletedExpense = await prisma.expense.delete({
+      where: { id: parseInt(expenseId) }
+    });
+
     return {
       success: true,
       message: 'Expense deleted successfully',
-      data: deletedExpense[0]
+      data: deletedExpense
     };
   } catch (error) {
     return {

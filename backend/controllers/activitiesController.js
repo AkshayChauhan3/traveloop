@@ -1,9 +1,8 @@
-// Mock database for activities
-let activities = [];
-let activityIdCounter = 1;
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 // ===== CREATE ACTIVITY =====
-const createActivity = (data, userId) => {
+const createActivity = async (data, userId) => {
   try {
     if (!data.stop_id || !data.name) {
       return {
@@ -12,24 +11,20 @@ const createActivity = (data, userId) => {
       };
     }
 
-    const activity = {
-      id: activityIdCounter++,
-      stop_id: parseInt(data.stop_id),
-      user_id: userId,
-      name: data.name,
-      description: data.description || '',
-      category: data.category || 'sightseeing',
-      duration_hours: data.duration_hours || 2,
-      estimated_cost: parseFloat(data.estimated_cost) || 0,
-      start_time: data.start_time || '09:00',
-      completed: false,
-      completed_at: null,
-      notes: data.notes || '',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
+    const activity = await prisma.activity.create({
+      data: {
+        stopId: parseInt(data.stop_id),
+        userId,
+        name: data.name,
+        description: data.description || null,
+        category: data.category || 'sightseeing',
+        durationHours: data.duration_hours || 2,
+        estimatedCost: parseFloat(data.estimated_cost) || 0,
+        startTime: data.start_time || '09:00',
+        notes: data.notes || null
+      }
+    });
 
-    activities.push(activity);
     return {
       success: true,
       message: 'Activity created successfully',
@@ -45,9 +40,15 @@ const createActivity = (data, userId) => {
 };
 
 // ===== GET ACTIVITIES FOR A STOP =====
-const getActivitiesByStop = (stopId, userId) => {
+const getActivitiesByStop = async (stopId, userId) => {
   try {
-    const stopActivities = activities.filter(a => a.stop_id === parseInt(stopId) && a.user_id === userId);
+    const stopActivities = await prisma.activity.findMany({
+      where: {
+        stopId: parseInt(stopId),
+        userId
+      }
+    });
+
     return {
       success: true,
       data: stopActivities
@@ -62,9 +63,14 @@ const getActivitiesByStop = (stopId, userId) => {
 };
 
 // ===== GET SINGLE ACTIVITY =====
-const getActivityById = (activityId, userId) => {
+const getActivityById = async (activityId, userId) => {
   try {
-    const activity = activities.find(a => a.id === parseInt(activityId) && a.user_id === userId);
+    const activity = await prisma.activity.findFirst({
+      where: {
+        id: parseInt(activityId),
+        userId
+      }
+    });
     
     if (!activity) {
       return {
@@ -87,29 +93,35 @@ const getActivityById = (activityId, userId) => {
 };
 
 // ===== UPDATE ACTIVITY =====
-const updateActivity = (activityId, data, userId) => {
+const updateActivity = async (activityId, data, userId) => {
   try {
-    const activityIndex = activities.findIndex(a => a.id === parseInt(activityId) && a.user_id === userId);
+    const existingActivity = await prisma.activity.findFirst({
+      where: {
+        id: parseInt(activityId),
+        userId
+      }
+    });
     
-    if (activityIndex === -1) {
+    if (!existingActivity) {
       return {
         success: false,
         message: 'Activity not found or unauthorized'
       };
     }
 
-    const activity = activities[activityIndex];
-    
-    if (data.name !== undefined) activity.name = data.name;
-    if (data.description !== undefined) activity.description = data.description;
-    if (data.category !== undefined) activity.category = data.category;
-    if (data.duration_hours !== undefined) activity.duration_hours = data.duration_hours;
-    if (data.estimated_cost !== undefined) activity.estimated_cost = parseFloat(data.estimated_cost);
-    if (data.start_time !== undefined) activity.start_time = data.start_time;
-    if (data.notes !== undefined) activity.notes = data.notes;
-    
-    activity.updated_at = new Date().toISOString();
-    activities[activityIndex] = activity;
+    const updateData = {};
+    if (data.name !== undefined) updateData.name = data.name;
+    if (data.description !== undefined) updateData.description = data.description;
+    if (data.category !== undefined) updateData.category = data.category;
+    if (data.duration_hours !== undefined) updateData.durationHours = data.duration_hours;
+    if (data.estimated_cost !== undefined) updateData.estimatedCost = parseFloat(data.estimated_cost);
+    if (data.start_time !== undefined) updateData.startTime = data.start_time;
+    if (data.notes !== undefined) updateData.notes = data.notes;
+
+    const activity = await prisma.activity.update({
+      where: { id: parseInt(activityId) },
+      data: updateData
+    });
 
     return {
       success: true,
@@ -126,22 +138,29 @@ const updateActivity = (activityId, data, userId) => {
 };
 
 // ===== MARK ACTIVITY COMPLETE =====
-const markActivityComplete = (activityId, userId) => {
+const markActivityComplete = async (activityId, userId) => {
   try {
-    const activityIndex = activities.findIndex(a => a.id === parseInt(activityId) && a.user_id === userId);
+    const existingActivity = await prisma.activity.findFirst({
+      where: {
+        id: parseInt(activityId),
+        userId
+      }
+    });
     
-    if (activityIndex === -1) {
+    if (!existingActivity) {
       return {
         success: false,
         message: 'Activity not found or unauthorized'
       };
     }
 
-    const activity = activities[activityIndex];
-    activity.completed = true;
-    activity.completed_at = new Date().toISOString();
-    activity.updated_at = new Date().toISOString();
-    activities[activityIndex] = activity;
+    const activity = await prisma.activity.update({
+      where: { id: parseInt(activityId) },
+      data: {
+        completed: true,
+        completedAt: new Date()
+      }
+    });
 
     return {
       success: true,
@@ -158,22 +177,30 @@ const markActivityComplete = (activityId, userId) => {
 };
 
 // ===== DELETE ACTIVITY =====
-const deleteActivity = (activityId, userId) => {
+const deleteActivity = async (activityId, userId) => {
   try {
-    const activityIndex = activities.findIndex(a => a.id === parseInt(activityId) && a.user_id === userId);
+    const existingActivity = await prisma.activity.findFirst({
+      where: {
+        id: parseInt(activityId),
+        userId
+      }
+    });
     
-    if (activityIndex === -1) {
+    if (!existingActivity) {
       return {
         success: false,
         message: 'Activity not found or unauthorized'
       };
     }
 
-    const deletedActivity = activities.splice(activityIndex, 1);
+    const deletedActivity = await prisma.activity.delete({
+      where: { id: parseInt(activityId) }
+    });
+
     return {
       success: true,
       message: 'Activity deleted successfully',
-      data: deletedActivity[0]
+      data: deletedActivity
     };
   } catch (error) {
     return {
