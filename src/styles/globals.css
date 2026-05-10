@@ -260,11 +260,8 @@
   }
 }
 
-/* Custom cursor */
-* {
-  cursor: none;
-}
-
-a, button, [role="button"], input, select, textarea, label {
-  cursor: none;
+/* Custom cursor – only active on landing page via .cursor-hidden class */
+.cursor-hidden,
+.cursor-hidden * {
+  cursor: none !important;
 }

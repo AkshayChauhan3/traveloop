@@ -1,166 +1,168 @@
-import { useEffect, useRef, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useState } from 'react'
+import { useEffect, useRef } from 'react'
 
-// Travel-themed Unsplash images for the trail effect
-const TRAIL_IMAGES = [
-  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&q=70', // mountains
-  'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=200&q=70', // beach
-  'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200&q=70', // mountains lake
-  'https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=200&q=70', // airplane window
-  'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=200&q=70', // city aerial
-  'https://images.unsplash.com/photo-1510525009511-b48d444334e8?w=200&q=70', // tropical
-  'https://images.unsplash.com/photo-1499678329028-101435549a4e?w=200&q=70', // beach sunset
-  'https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?w=200&q=70', // travel
-  'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=200&q=70', // road trip
-  'https://images.unsplash.com/photo-1530521954074-e64f6810b32d?w=200&q=70', // culture
+const IMAGES = [
+  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80',
+  'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80',
+  'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&q=80',
+  'https://images.unsplash.com/photo-1530521954074-e64f6810b32d?w=400&q=80',
+  'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400&q=80',
 ]
 
-let imageIndex = 0
+const SHAPES = [
+  { w: 160, h: 110 },
+  { w: 128, h: 160 },
+  { w: 175, h: 116 },
+  { w: 145, h: 145 },
+]
 
+let _imgIdx = 0
+let _count   = 0
+const MAX    = 8
+
+/* ── inject styles once ─────────────────────────────────────────────────── */
+let _css = false
+function injectCSS() {
+  if (_css) return; _css = true
+  const s = document.createElement('style')
+  s.textContent = `
+    .tl {
+      position: fixed;
+      pointer-events: none;
+      z-index: 2;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1.5px solid rgba(255,255,255,0.18);
+      box-shadow: 0 10px 32px rgba(0,0,0,0.55);
+      opacity: 0;
+      will-change: opacity;
+    }
+    .tl img {
+      width:100%; height:100%;
+      object-fit:cover; display:block;
+      pointer-events:none; user-select:none;
+      -webkit-user-drag:none;
+    }
+    .tl-in  { transition: opacity 0.12s ease-out; opacity: 0.88 !important; }
+    .tl-out { transition: opacity 0.32s ease-in;  opacity: 0    !important; }
+
+    /* cursor ring pulse */
+    @keyframes cRing {
+      0%,100% { transform:translate(-50%,-50%) scale(1);   opacity:.45; }
+      50%     { transform:translate(-50%,-50%) scale(1.28); opacity:.9;  }
+    }
+    .tl-ring {
+      position:fixed; pointer-events:none; z-index:9999;
+      border-radius:50%;
+      border: 1.5px solid rgba(167,139,250,0.7);
+      width:36px; height:36px;
+      animation: cRing 1.7s ease-in-out infinite;
+      will-change: transform, opacity;
+    }
+    .tl-dot {
+      position:fixed; pointer-events:none; z-index:9999;
+      border-radius:50%;
+      width:8px; height:8px;
+      background:#a78bfa;
+      transform:translate(-50%,-50%);
+      box-shadow: 0 0 10px 3px rgba(167,139,250,0.75);
+    }
+  `
+  document.head.appendChild(s)
+}
+
+/* ── spawn one card at (x,y) ─────────────────────────────────────────────── */
+function spawn(x, y) {
+  if (_count >= MAX) return
+  _count++
+
+  const shape = SHAPES[Math.floor(Math.random() * SHAPES.length)]
+  const src   = IMAGES[_imgIdx % IMAGES.length]; _imgIdx++
+
+  // Moderate scatter so it feels "around the cursor path"
+  const ox  = (Math.random() - 0.5) * 180
+  const oy  = (Math.random() - 0.5) * 130
+  const rot = (Math.random() - 0.5) * 24
+
+  const el = document.createElement('div')
+  el.className = 'tl'
+  el.style.left    = (x + ox) + 'px'
+  el.style.top     = (y + oy) + 'px'
+  el.style.width   = shape.w + 'px'
+  el.style.height  = shape.h + 'px'
+  // set rotation as static transform — never changes, so no keyframe issues
+  el.style.transform = `translate(-50%,-50%) rotate(${rot}deg)`
+
+  const img = document.createElement('img')
+  img.src = src; img.alt = ''
+  el.appendChild(img)
+  document.body.appendChild(el)
+
+  // Fade IN — one rAF so browser has painted the element first
+  requestAnimationFrame(() => el.classList.add('tl-in'))
+
+  // Fade OUT after hold time
+  const hold = 900 + Math.random() * 200
+  setTimeout(() => {
+    el.classList.remove('tl-in')
+    el.classList.add('tl-out')
+    // remove from DOM after transition ends
+    setTimeout(() => { el.remove(); _count-- }, 340)
+  }, hold)
+}
+
+/* ── component ───────────────────────────────────────────────────────────── */
 export default function CursorTrailEffect() {
-  const [trail, setTrail] = useState([])
-  const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 })
-  const lastPos = useRef({ x: 0, y: 0 })
-  const idCounter = useRef(0)
-  const throttleRef = useRef(null)
+  const ringRef = useRef(null)
+  const dotRef  = useRef(null)
+  const posRef  = useRef({ x: -300, y: -300 })
+  const lastRef = useRef({ x: -300, y: -300 })
 
-  const addTrailItem = useCallback((x, y) => {
-    const id = idCounter.current++
-    const img = TRAIL_IMAGES[imageIndex % TRAIL_IMAGES.length]
-    imageIndex++
-    
-    const offsetX = (Math.random() - 0.5) * 60
-    const offsetY = (Math.random() - 0.5) * 60
-    const rotation = (Math.random() - 0.5) * 30
-    const scale = 0.6 + Math.random() * 0.5
-    const size = 80 + Math.random() * 60
-
-    setTrail(prev => [
-      ...prev.slice(-15), // keep last 15
-      { id, x: x + offsetX, y: y + offsetY, img, rotation, scale, size }
-    ])
-
-    // Remove after animation
-    setTimeout(() => {
-      setTrail(prev => prev.filter(item => item.id !== id))
-    }, 1200)
+  useEffect(() => {
+    injectCSS()
+    document.body.classList.add('cursor-hidden')
+    return () => document.body.classList.remove('cursor-hidden')
   }, [])
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      const { clientX, clientY } = e
-      setCursorPos({ x: clientX, y: clientY })
+    let raf
 
-      const dx = clientX - lastPos.current.x
-      const dy = clientY - lastPos.current.y
-      const dist = Math.sqrt(dx * dx + dy * dy)
+    /* move listener: captures raw mouse position */
+    const onMove = (e) => {
+      posRef.current = { x: e.clientX, y: e.clientY }
+    }
 
-      if (dist > 50 && !throttleRef.current) {
-        lastPos.current = { x: clientX, y: clientY }
-        addTrailItem(clientX, clientY)
-        throttleRef.current = setTimeout(() => {
-          throttleRef.current = null
-        }, 200)
+    /* rAF loop: smoothly moves cursor elements & checks spawn distance */
+    const tick = () => {
+      const { x, y } = posRef.current
+
+      if (ringRef.current) {
+        ringRef.current.style.left = x + 'px'
+        ringRef.current.style.top  = y + 'px'
       }
+      if (dotRef.current) {
+        dotRef.current.style.left = x + 'px'
+        dotRef.current.style.top  = y + 'px'
+      }
+
+      const dx = x - lastRef.current.x
+      const dy = y - lastRef.current.y
+      if (dx * dx + dy * dy >= 50 * 50) {        // spawn every ~50px
+        lastRef.current = { x, y }
+        spawn(x, y)
+      }
+
+      raf = requestAnimationFrame(tick)
     }
 
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      if (throttleRef.current) clearTimeout(throttleRef.current)
-    }
-  }, [addTrailItem])
+    window.addEventListener('mousemove', onMove, { passive: true })
+    raf = requestAnimationFrame(tick)
+    return () => { window.removeEventListener('mousemove', onMove); cancelAnimationFrame(raf) }
+  }, [])
 
   return (
     <>
-      {/* Custom cursor */}
-      <motion.div
-        className="fixed pointer-events-none z-[9999] mix-blend-normal"
-        style={{ left: cursorPos.x, top: cursorPos.y, translateX: '-50%', translateY: '-50%' }}
-      >
-        {/* Outer ring */}
-        <motion.div
-          className="absolute rounded-full border border-brand-400/60"
-          style={{ width: 40, height: 40, x: '-50%', y: '-50%' }}
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.6, 1, 0.6],
-          }}
-          transition={{ duration: 2, repeat: Infinity }}
-        />
-        {/* Inner dot */}
-        <div
-          className="absolute rounded-full bg-brand-400"
-          style={{ width: 6, height: 6, x: '-50%', y: '-50%', transform: 'translate(-50%, -50%)' }}
-        />
-        {/* Glow */}
-        <div
-          className="absolute rounded-full"
-          style={{
-            width: 20, height: 20, x: '-50%', y: '-50%',
-            transform: 'translate(-50%, -50%)',
-            background: 'radial-gradient(circle, rgba(124,58,237,0.4) 0%, transparent 70%)',
-          }}
-        />
-      </motion.div>
-
-      {/* Trail images */}
-      <AnimatePresence>
-        {trail.map((item) => (
-          <motion.div
-            key={item.id}
-            className="fixed pointer-events-none z-[9990]"
-            style={{
-              left: item.x,
-              top: item.y,
-              translateX: '-50%',
-              translateY: '-50%',
-            }}
-            initial={{
-              opacity: 0,
-              scale: 0.3,
-              rotate: item.rotation - 15,
-              y: 0,
-            }}
-            animate={{
-              opacity: [0, 0.85, 0.85, 0],
-              scale: [0.3, item.scale, item.scale * 0.9],
-              rotate: item.rotation,
-              y: -60,
-            }}
-            exit={{ opacity: 0 }}
-            transition={{
-              duration: 1.1,
-              ease: 'easeOut',
-              times: [0, 0.2, 0.8, 1],
-            }}
-          >
-            <div
-              className="rounded-xl overflow-hidden shadow-2xl"
-              style={{
-                width: item.size,
-                height: item.size * 0.7,
-                border: '1px solid rgba(255,255,255,0.15)',
-              }}
-            >
-              <img
-                src={item.img}
-                alt="travel"
-                className="w-full h-full object-cover"
-                draggable={false}
-              />
-              {/* Overlay shimmer */}
-              <div
-                className="absolute inset-0 rounded-xl"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(124,58,237,0.15) 0%, transparent 60%)',
-                }}
-              />
-            </div>
-          </motion.div>
-        ))}
-      </AnimatePresence>
+      <div ref={ringRef} className="tl-ring" style={{ left: -300, top: -300 }} />
+      <div ref={dotRef}  className="tl-dot"  style={{ left: -300, top: -300 }} />
     </>
   )
 }

@@ -1,171 +1,243 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
-import { Mail, Lock, Eye, EyeOff, Plane, ArrowRight, Sparkles } from 'lucide-react'
+import { Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles } from 'lucide-react'
+import CursorTrailEffect from '../components/landing/CursorTrailEffect'
 
 export default function Login() {
   const [showPass, setShowPass] = useState(false)
   const [form, setForm] = useState({ email: '', password: '', remember: false })
   const [loading, setLoading] = useState(false)
+  const [focused, setFocused] = useState('')
   const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
     setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
-      navigate('/dashboard')
-    }, 1500)
+    setTimeout(() => { setLoading(false); navigate('/dashboard') }, 1400)
   }
 
   return (
-    <div className="min-h-screen bg-[#050a14] flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full opacity-20"
-          style={{ background: 'radial-gradient(ellipse, rgba(124,58,237,0.5), transparent 70%)', filter: 'blur(60px)' }}
-        />
-        <div className="absolute inset-0 bg-grid opacity-20" />
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
+      style={{ background: '#0f0f13' }}>
+
+      {/* Cursor trail — renders at z-[2], behind the form */}
+      <CursorTrailEffect />
+
+      {/* Subtle ambient glow — behind everything */}
+      <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden">
+        <div style={{
+          position: 'absolute', top: '20%', left: '50%', transform: 'translateX(-50%)',
+          width: 480, height: 320, borderRadius: '50%', filter: 'blur(90px)',
+          background: 'radial-gradient(ellipse, rgba(109,40,217,0.18) 0%, transparent 70%)',
+        }} />
       </div>
 
-      <div className="w-full max-w-md relative z-10">
-        {/* Logo */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-8"
-        >
-          <Link to="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="bg-gradient-to-br from-brand-400 to-brand-600 p-2.5 rounded-xl">
-              <Plane className="w-6 h-6 text-white" />
+      {/* Login card — z-[10] keeps it above the trail */}
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+        className="relative z-[10] w-full max-w-sm"
+      >
+        {/* Logo mark */}
+        <div className="text-center mb-8">
+          <Link to="/" className="inline-flex flex-col items-center gap-2">
+            <div style={{
+              width: 48, height: 48, borderRadius: 14,
+              background: 'linear-gradient(135deg,#7c3aed,#4f46e5)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 4px 20px rgba(124,58,237,0.35)',
+            }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M5 17.5L12 6L19 17.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M8 14h8" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+              </svg>
             </div>
-            <span className="text-2xl font-bold">
-              <span className="gradient-text-purple">Travel</span>
-              <span className="text-white">oop</span>
+            <span style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-0.5px', color: '#f1f0f5' }}>
+              Travel<span style={{ color: '#a78bfa' }}>oop</span>
             </span>
           </Link>
-          <h1 className="text-3xl font-bold text-white mb-2">Welcome back</h1>
-          <p className="text-slate-400">Sign in to continue planning your adventures</p>
-        </motion.div>
+          <p style={{ color: '#8b8799', fontSize: 14, marginTop: 6 }}>Sign in to your account</p>
+        </div>
 
-        {/* Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="glass-card glow-border p-8"
-        >
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Email */}
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Email Address</label>
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+        {/* Card surface — Material Design elevation */}
+        <div style={{
+          background: '#1c1b22',
+          borderRadius: 20,
+          border: '1px solid rgba(255,255,255,0.07)',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.3), 0 16px 48px rgba(0,0,0,0.4)',
+          padding: '32px 28px',
+        }}>
+
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+            {/* Email field — MD3 outlined style */}
+            <div style={{ position: 'relative' }}>
+              <label style={{
+                display: 'block', fontSize: 12, fontWeight: 500, marginBottom: 6,
+                color: focused === 'email' ? '#a78bfa' : '#8b8799',
+                transition: 'color 0.2s',
+              }}>
+                Email address
+              </label>
+              <div style={{ position: 'relative' }}>
+                <Mail style={{
+                  position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)',
+                  width: 16, height: 16, color: focused === 'email' ? '#a78bfa' : '#524f5e',
+                }} />
                 <input
                   id="login-email"
                   type="email"
                   placeholder="you@example.com"
                   value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="input-field pl-11"
+                  onChange={e => setForm({ ...form, email: e.target.value })}
+                  onFocus={() => setFocused('email')}
+                  onBlur={() => setFocused('')}
                   required
+                  style={{
+                    width: '100%', padding: '11px 14px 11px 40px',
+                    background: '#111017',
+                    border: `1.5px solid ${focused === 'email' ? '#7c3aed' : 'rgba(255,255,255,0.09)'}`,
+                    borderRadius: 10, color: '#f1f0f5', fontSize: 14, outline: 'none',
+                    transition: 'border-color 0.2s, box-shadow 0.2s',
+                    boxShadow: focused === 'email' ? '0 0 0 3px rgba(124,58,237,0.12)' : 'none',
+                    boxSizing: 'border-box',
+                  }}
                 />
               </div>
             </div>
 
-            {/* Password */}
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Password</label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+            {/* Password field */}
+            <div style={{ position: 'relative' }}>
+              <label style={{
+                display: 'block', fontSize: 12, fontWeight: 500, marginBottom: 6,
+                color: focused === 'pass' ? '#a78bfa' : '#8b8799',
+                transition: 'color 0.2s',
+              }}>
+                Password
+              </label>
+              <div style={{ position: 'relative' }}>
+                <Lock style={{
+                  position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)',
+                  width: 16, height: 16, color: focused === 'pass' ? '#a78bfa' : '#524f5e',
+                }} />
                 <input
                   id="login-password"
                   type={showPass ? 'text' : 'password'}
                   placeholder="••••••••"
                   value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  className="input-field pl-11 pr-11"
+                  onChange={e => setForm({ ...form, password: e.target.value })}
+                  onFocus={() => setFocused('pass')}
+                  onBlur={() => setFocused('')}
                   required
+                  style={{
+                    width: '100%', padding: '11px 44px 11px 40px',
+                    background: '#111017',
+                    border: `1.5px solid ${focused === 'pass' ? '#7c3aed' : 'rgba(255,255,255,0.09)'}`,
+                    borderRadius: 10, color: '#f1f0f5', fontSize: 14, outline: 'none',
+                    transition: 'border-color 0.2s, box-shadow 0.2s',
+                    boxShadow: focused === 'pass' ? '0 0 0 3px rgba(124,58,237,0.12)' : 'none',
+                    boxSizing: 'border-box',
+                  }}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass(!showPass)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                  style={{
+                    position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
+                    background: 'none', border: 'none', cursor: 'pointer', color: '#524f5e', padding: 4,
+                  }}
                 >
-                  {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPass ? <EyeOff style={{ width: 16, height: 16 }} /> : <Eye style={{ width: 16, height: 16 }} />}
                 </button>
               </div>
             </div>
 
             {/* Remember + Forgot */}
-            <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 text-sm text-slate-400">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
                 <input
-                  type="checkbox"
                   id="login-remember"
+                  type="checkbox"
                   checked={form.remember}
-                  onChange={(e) => setForm({ ...form, remember: e.target.checked })}
-                  className="rounded border-white/10 bg-white/5 text-brand-500 focus:ring-brand-500"
+                  onChange={e => setForm({ ...form, remember: e.target.checked })}
+                  style={{ accentColor: '#7c3aed', width: 15, height: 15, cursor: 'pointer' }}
                 />
-                Remember me
+                <span style={{ fontSize: 13, color: '#8b8799' }}>Remember me</span>
               </label>
-              <a href="#" className="text-sm text-brand-400 hover:text-brand-300 transition-colors">
+              <a href="#" style={{ fontSize: 13, color: '#a78bfa', textDecoration: 'none', fontWeight: 500 }}>
                 Forgot password?
               </a>
             </div>
 
-            {/* Submit */}
+            {/* Primary CTA — MD3 filled button */}
             <motion.button
-              type="submit"
               id="login-submit"
+              type="submit"
               disabled={loading}
-              whileHover={{ scale: loading ? 1 : 1.02 }}
-              whileTap={{ scale: loading ? 1 : 0.98 }}
-              className="btn-primary w-full flex items-center justify-center gap-2 py-3.5 text-base"
+              whileHover={{ scale: loading ? 1 : 1.015 }}
+              whileTap={{ scale: loading ? 1 : 0.985 }}
+              style={{
+                width: '100%', padding: '13px',
+                background: loading ? '#4a3a7a' : 'linear-gradient(135deg, #7c3aed, #6d28d9)',
+                border: 'none', borderRadius: 10,
+                color: '#fff', fontSize: 14, fontWeight: 600,
+                cursor: loading ? 'not-allowed' : 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                boxShadow: loading ? 'none' : '0 4px 16px rgba(124,58,237,0.35)',
+                transition: 'background 0.2s, box-shadow 0.2s',
+                marginTop: 4,
+              }}
             >
               {loading ? (
                 <>
                   <motion.div
                     animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                    className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
+                    transition={{ duration: 0.9, repeat: Infinity, ease: 'linear' }}
+                    style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,0.25)', borderTopColor: '#fff', borderRadius: '50%' }}
                   />
-                  Signing in...
+                  Signing in…
                 </>
               ) : (
-                <>
-                  Sign In
-                  <ArrowRight className="w-4 h-4" />
-                </>
+                <>Sign In <ArrowRight style={{ width: 15, height: 15 }} /></>
               )}
             </motion.button>
           </form>
 
           {/* Divider */}
-          <div className="flex items-center gap-4 my-6">
-            <div className="flex-1 h-px bg-white/5" />
-            <span className="text-slate-600 text-sm">or</span>
-            <div className="flex-1 h-px bg-white/5" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '20px 0' }}>
+            <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.06)' }} />
+            <span style={{ fontSize: 12, color: '#524f5e' }}>or</span>
+            <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.06)' }} />
           </div>
 
-          {/* Demo login */}
+          {/* Demo — MD3 tonal button */}
           <motion.button
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ scale: 1.015 }}
+            whileTap={{ scale: 0.985 }}
             onClick={() => navigate('/dashboard')}
-            className="btn-secondary w-full flex items-center justify-center gap-2 py-3"
+            style={{
+              width: '100%', padding: '12px',
+              background: 'rgba(124,58,237,0.1)',
+              border: '1px solid rgba(124,58,237,0.2)',
+              borderRadius: 10, color: '#c4b5fd',
+              fontSize: 13, fontWeight: 500, cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+            }}
           >
-            <Sparkles className="w-4 h-4 text-brand-400" />
+            <Sparkles style={{ width: 14, height: 14 }} />
             Continue as Demo User
           </motion.button>
 
-          <p className="text-center text-slate-500 text-sm mt-6">
+          <p style={{ textAlign: 'center', marginTop: 20, fontSize: 13, color: '#524f5e' }}>
             Don't have an account?{' '}
-            <Link to="/signup" className="text-brand-400 hover:text-brand-300 font-medium transition-colors">
+            <Link to="/signup" style={{ color: '#a78bfa', fontWeight: 500, textDecoration: 'none' }}>
               Sign up free
             </Link>
           </p>
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
     </div>
   )
 }
