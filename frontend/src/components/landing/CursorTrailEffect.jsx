@@ -116,11 +116,34 @@ export default function CursorTrailEffect() {
   const dotRef  = useRef(null)
   const posRef  = useRef({ x: -300, y: -300 })
   const lastRef = useRef({ x: -300, y: -300 })
+  const isScrolledRef = useRef(false)
 
   useEffect(() => {
     injectCSS()
-    document.body.classList.add('cursor-hidden')
-    return () => document.body.classList.remove('cursor-hidden')
+    
+    // Check scroll position to determine if trail should be active
+    const handleScroll = () => {
+      const scrolled = window.scrollY > 100
+      isScrolledRef.current = scrolled
+      
+      if (scrolled) {
+        document.body.classList.remove('cursor-hidden')
+        if (ringRef.current) ringRef.current.style.display = 'none'
+        if (dotRef.current) dotRef.current.style.display = 'none'
+      } else {
+        document.body.classList.add('cursor-hidden')
+        if (ringRef.current) ringRef.current.style.display = 'block'
+        if (dotRef.current) dotRef.current.style.display = 'block'
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll() // initial check
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      document.body.classList.remove('cursor-hidden')
+    }
   }, [])
 
   useEffect(() => {
@@ -135,6 +158,7 @@ export default function CursorTrailEffect() {
     const tick = () => {
       const { x, y } = posRef.current
 
+      // Always update cursor position behind the scenes
       if (ringRef.current) {
         ringRef.current.style.left = x + 'px'
         ringRef.current.style.top  = y + 'px'
@@ -144,11 +168,14 @@ export default function CursorTrailEffect() {
         dotRef.current.style.top  = y + 'px'
       }
 
-      const dx = x - lastRef.current.x
-      const dy = y - lastRef.current.y
-      if (dx * dx + dy * dy >= 50 * 50) {        // spawn every ~50px
-        lastRef.current = { x, y }
-        spawn(x, y)
+      // Only spawn images if we are NOT scrolled down
+      if (!isScrolledRef.current) {
+        const dx = x - lastRef.current.x
+        const dy = y - lastRef.current.y
+        if (dx * dx + dy * dy >= 55 * 55) {        // spawn every ~55px
+          lastRef.current = { x, y }
+          spawn(x, y)
+        }
       }
 
       raf = requestAnimationFrame(tick)
