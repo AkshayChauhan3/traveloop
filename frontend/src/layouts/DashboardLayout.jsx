@@ -42,7 +42,13 @@ export default function DashboardLayout({ children }) {
       >
         {/* Logo */}
         <div className="flex items-center gap-3 px-4 py-5" style={{ borderBottom: '1.5px solid #dff3e3' }}>
-          <div className="bg-gradient-to-br from-brand-400 to-brand-600 p-2 rounded-xl flex-shrink-0">
+          <div style={{
+            background: 'linear-gradient(135deg, #4CAF50, #3F8F50)',
+            padding: '8px',
+            borderRadius: '12px',
+            flexShrink: 0,
+            boxShadow: '0 2px 8px rgba(76,175,80,0.3)',
+          }}>
             <Compass className="w-5 h-5 text-white" />
           </div>
           <AnimatePresence>
@@ -53,7 +59,7 @@ export default function DashboardLayout({ children }) {
                 exit={{ opacity: 0, width: 0 }}
                 className="text-lg font-bold whitespace-nowrap overflow-hidden"
               >
-                <span className="gradient-text-purple">Travel</span>
+                <span style={{ color: '#4CAF50' }}>Travel</span>
                 <span style={{ color: '#1e2d1f' }}>oop</span>
               </motion.span>
             )}
@@ -134,7 +140,20 @@ export default function DashboardLayout({ children }) {
             boxShadow: '0 2px 8px rgba(76,175,80,0.05)',
           }}>
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-sm font-bold">
+            <div style={{
+              width: 34,
+              height: 34,
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #4CAF50, #3F8F50)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#ffffff',
+              fontSize: 14,
+              fontWeight: 700,
+              flexShrink: 0,
+              boxShadow: '0 2px 8px rgba(76,175,80,0.3)',
+            }}>
               S
             </div>
             <div>
