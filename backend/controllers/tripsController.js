@@ -1,9 +1,8 @@
-// Mock database for trips (will be replaced with PostgreSQL queries)
-let trips = [];
-let tripIdCounter = 1;
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 // ===== CREATE TRIP =====
-const createTrip = (data, userId) => {
+const createTrip = async (data, userId) => {
   try {
     if (!data.name || !data.description || !data.start_date || !data.end_date || !data.total_budget) {
       return {
@@ -22,21 +21,17 @@ const createTrip = (data, userId) => {
       };
     }
 
-    const trip = {
-      id: tripIdCounter++,
-      user_id: userId,
-      name: data.name,
-      description: data.description,
-      start_date: data.start_date,
-      end_date: data.end_date,
-      total_budget: data.total_budget,
-      spent_amount: 0,
-      status: 'planned', // planned, ongoing, completed
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
-
-    trips.push(trip);
+    const trip = await prisma.trip.create({
+      data: {
+        userId,
+        name: data.name,
+        description: data.description,
+        startDate,
+        endDate,
+        totalBudget: parseFloat(data.total_budget),
+        status: data.status || 'planned'
+      }
+    });
 
     return {
       success: true,
@@ -53,9 +48,12 @@ const createTrip = (data, userId) => {
 };
 
 // ===== GET ALL TRIPS FOR USER =====
-const getUserTrips = (userId) => {
+const getUserTrips = async (userId) => {
   try {
-    const userTrips = trips.filter(trip => trip.user_id === userId);
+    const userTrips = await prisma.trip.findMany({
+      where: { userId }
+    });
+
     return {
       success: true,
       data: userTrips
@@ -70,9 +68,14 @@ const getUserTrips = (userId) => {
 };
 
 // ===== GET SINGLE TRIP =====
-const getTripById = (tripId, userId) => {
+const getTripById = async (tripId, userId) => {
   try {
-    const trip = trips.find(t => t.id === parseInt(tripId) && t.user_id === userId);
+    const trip = await prisma.trip.findFirst({
+      where: {
+        id: parseInt(tripId),
+        userId
+      }
+    });
     
     if (!trip) {
       return {
@@ -95,29 +98,35 @@ const getTripById = (tripId, userId) => {
 };
 
 // ===== UPDATE TRIP =====
-const updateTrip = (tripId, data, userId) => {
+const updateTrip = async (tripId, data, userId) => {
   try {
-    const tripIndex = trips.findIndex(t => t.id === parseInt(tripId) && t.user_id === userId);
+    // First check if trip exists and belongs to user
+    const existingTrip = await prisma.trip.findFirst({
+      where: {
+        id: parseInt(tripId),
+        userId
+      }
+    });
     
-    if (tripIndex === -1) {
+    if (!existingTrip) {
       return {
         success: false,
         message: 'Trip not found or unauthorized'
       };
     }
 
-    const trip = trips[tripIndex];
+    const updateData = {};
+    if (data.name !== undefined) updateData.name = data.name;
+    if (data.description !== undefined) updateData.description = data.description;
+    if (data.start_date !== undefined) updateData.startDate = new Date(data.start_date);
+    if (data.end_date !== undefined) updateData.endDate = new Date(data.end_date);
+    if (data.total_budget !== undefined) updateData.totalBudget = parseFloat(data.total_budget);
+    if (data.status !== undefined) updateData.status = data.status;
 
-    // Update allowed fields
-    if (data.name !== undefined) trip.name = data.name;
-    if (data.description !== undefined) trip.description = data.description;
-    if (data.start_date !== undefined) trip.start_date = data.start_date;
-    if (data.end_date !== undefined) trip.end_date = data.end_date;
-    if (data.total_budget !== undefined) trip.total_budget = data.total_budget;
-    if (data.status !== undefined) trip.status = data.status;
-    
-    trip.updated_at = new Date().toISOString();
-    trips[tripIndex] = trip;
+    const trip = await prisma.trip.update({
+      where: { id: parseInt(tripId) },
+      data: updateData
+    });
 
     return {
       success: true,
@@ -134,23 +143,31 @@ const updateTrip = (tripId, data, userId) => {
 };
 
 // ===== DELETE TRIP =====
-const deleteTrip = (tripId, userId) => {
+const deleteTrip = async (tripId, userId) => {
   try {
-    const tripIndex = trips.findIndex(t => t.id === parseInt(tripId) && t.user_id === userId);
+    // First check if trip exists and belongs to user
+    const existingTrip = await prisma.trip.findFirst({
+      where: {
+        id: parseInt(tripId),
+        userId
+      }
+    });
     
-    if (tripIndex === -1) {
+    if (!existingTrip) {
       return {
         success: false,
         message: 'Trip not found or unauthorized'
       };
     }
 
-    const deletedTrip = trips.splice(tripIndex, 1);
+    const deletedTrip = await prisma.trip.delete({
+      where: { id: parseInt(tripId) }
+    });
 
     return {
       success: true,
       message: 'Trip deleted successfully',
-      data: deletedTrip[0]
+      data: deletedTrip
     };
   } catch (error) {
     return {
