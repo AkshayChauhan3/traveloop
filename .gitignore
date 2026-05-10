@@ -36,5 +36,5 @@ npm-debug.log*
 
 # ── Exclude mock data and utility helpers ─────────────────────────
 # Mentors see pages/components only — not generated data files
-src/data/
-src/utils/
+frontend/src/data/
+frontend/src/utils/
