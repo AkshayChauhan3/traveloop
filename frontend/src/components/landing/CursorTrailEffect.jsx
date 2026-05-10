@@ -7,6 +7,11 @@ const IMAGES = [
   'https://images.unsplash.com/photo-1530521954074-e64f6810b32d?w=300&q=80',
   'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=300&q=80',
   'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=300&q=80',
+  'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&q=80',
+  'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=300&q=80',
+  'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=300&q=80',
+  'https://images.unsplash.com/photo-1519451241324-20b4ea2c4220?w=300&q=80',
+  'https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=300&q=80',
 ]
 
 // Card dimensions — bigger cards for visual impact
@@ -17,7 +22,7 @@ const CARD_H = 140
 const SPAWN_DIST = 55    // px — tight train cart spacing
 
 // Max "carts" visible at one time
-const MAX_CARDS = 5
+const MAX_CARDS = 10
 
 // Hold time before fade starts (ms) — fast!
 const HOLD_MS = 180
