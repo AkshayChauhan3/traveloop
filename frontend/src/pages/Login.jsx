@@ -25,7 +25,7 @@ export default function Login() {
       <CursorTrailEffect />
 
       {/* Subtle ambient glow — behind everything */}
-      <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden">
+      <div className="absolute inset-0 z-[0] pointer-events-none overflow-hidden">
         <div style={{
           position: 'absolute', top: '20%', left: '50%', transform: 'translateX(-50%)',
           width: 480, height: 320, borderRadius: '50%', filter: 'blur(90px)',

@@ -31,10 +31,11 @@ function injectCSS() {
       z-index: 2;
       border-radius: 14px;
       overflow: hidden;
-      border: 1.5px solid rgba(255,255,255,0.18);
-      box-shadow: 0 10px 32px rgba(0,0,0,0.55);
+      border: 1.5px solid rgba(255,255,255,0.2);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+      background: rgba(255,255,255,0.05); /* Fallback bg */
       opacity: 0;
-      will-change: opacity;
+      will-change: opacity, transform;
     }
     .tl img {
       width:100%; height:100%;
@@ -42,8 +43,8 @@ function injectCSS() {
       pointer-events:none; user-select:none;
       -webkit-user-drag:none;
     }
-    .tl-in  { transition: opacity 0.12s ease-out; opacity: 0.88 !important; }
-    .tl-out { transition: opacity 0.15s ease-in;  opacity: 0    !important; }
+    .tl-in  { transition: opacity 0.25s ease-out; opacity: 0.85 !important; }
+    .tl-out { transition: opacity 0.6s ease-in;   opacity: 0    !important; }
 
     /* cursor ring pulse */
     @keyframes cRing {
@@ -100,13 +101,13 @@ function spawn(x, y, container) {
   // Fade IN — one rAF so browser has painted the element first
   requestAnimationFrame(() => el.classList.add('tl-in'))
 
-  // Fade OUT after hold time (very fast)
-  const hold = 150 + Math.random() * 150
+  // Fade OUT after hold time
+  const hold = 600 + Math.random() * 400
   setTimeout(() => {
     el.classList.remove('tl-in')
     el.classList.add('tl-out')
     // remove from DOM after transition ends
-    setTimeout(() => { el.remove(); _count-- }, 180)
+    setTimeout(() => { el.remove(); _count-- }, 650)
   }, hold)
 }
 
@@ -189,7 +190,7 @@ export default function CursorTrailEffect() {
   }, [])
 
   return (
-    <div ref={containerRef} style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+    <div ref={containerRef} style={{ position: 'fixed', inset: 0, zIndex: 2, pointerEvents: 'none' }}>
       <div ref={ringRef} className="tl-ring" style={{ left: -300, top: -300 }} />
       <div ref={dotRef}  className="tl-dot"  style={{ left: -300, top: -300 }} />
     </div>
