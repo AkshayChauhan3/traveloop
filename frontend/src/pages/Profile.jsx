@@ -22,7 +22,8 @@ export default function Profile() {
       <div className="p-6 lg:p-8 space-y-6 max-w-4xl">
         {/* Profile Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-card p-6 relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10" style={{ background: 'radial-gradient(ellipse at 80% 50%, rgba(124,58,237,1), transparent 60%)' }} />
+          <div className="absolute inset-0 opacity-15"
+            style={{ background: 'radial-gradient(ellipse at 80% 50%, rgba(76,175,80,0.2), transparent 60%)' }} />
           <div className="relative z-10 flex flex-col sm:flex-row items-center sm:items-start gap-5">
             {/* Avatar */}
             <div className="relative flex-shrink-0">
@@ -32,24 +33,24 @@ export default function Profile() {
               </button>
             </div>
             <div className="flex-1 text-center sm:text-left">
-              <h1 className="text-2xl font-bold text-white mb-1">{form.name}</h1>
+              <h1 className="text-2xl font-bold mb-1" style={{ color: '#1e2d1f' }}>{form.name}</h1>
               <p className="text-slate-400 text-sm mb-3">{form.city}, {form.country}</p>
               <div className="flex flex-wrap gap-2 justify-center sm:justify-start mb-4">
                 {form.styles.map(s => <span key={s} className="badge badge-purple">{s}</span>)}
               </div>
               <div className="flex gap-4 justify-center sm:justify-start text-sm">
                 <div className="text-center">
-                  <div className="text-white font-bold text-lg">12</div>
+                  <div className="font-bold text-lg" style={{ color: '#1e2d1f' }}>12</div>
                   <div className="text-slate-500 text-xs">Trips</div>
                 </div>
                 <div className="w-px bg-white/10" />
                 <div className="text-center">
-                  <div className="text-white font-bold text-lg">8</div>
+                  <div className="font-bold text-lg" style={{ color: '#1e2d1f' }}>8</div>
                   <div className="text-slate-500 text-xs">Countries</div>
                 </div>
                 <div className="w-px bg-white/10" />
                 <div className="text-center">
-                  <div className="text-white font-bold text-lg">234</div>
+                  <div className="font-bold text-lg" style={{ color: '#1e2d1f' }}>234</div>
                   <div className="text-slate-500 text-xs">Km walked</div>
                 </div>
               </div>
@@ -78,8 +79,8 @@ export default function Profile() {
                   {editing ? (
                     <input value={value} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))} className="input-field text-sm" />
                   ) : (
-                    <div className="flex items-center gap-2 text-slate-200 text-sm">
-                      <Icon className="w-4 h-4 text-slate-500" />{value}
+                    <div className="flex items-center gap-2 text-slate-700 text-sm">
+                      <Icon className="w-4 h-4 text-slate-400" />{value}
                     </div>
                   )}
                 </div>
@@ -89,11 +90,13 @@ export default function Profile() {
 
           <div className="space-y-5">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="glass-card p-5">
-              <h2 className="text-white font-bold mb-4 flex items-center gap-2"><Heart className="w-4 h-4 text-rose-400" />Travel Preferences</h2>
+              <h2 className="font-bold mb-4 flex items-center gap-2" style={{ color: '#1e2d1f' }}><Heart className="w-4 h-4 text-brand-500" />Travel Preferences</h2>
               <div className="flex flex-wrap gap-2">
                 {tripStyles.map(style => (
                   <button key={style} onClick={() => editing && toggleStyle(style)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-medium border transition-all ${form.styles.includes(style) ? 'bg-brand-500/20 border-brand-500/40 text-brand-300' : 'glass border-white/10 text-slate-400 hover:text-white'} ${!editing ? 'cursor-default' : ''}`}>
+                    className={`px-3 py-1.5 rounded-xl text-xs font-medium border transition-all ${
+                      form.styles.includes(style) ? 'bg-leaf-light border-brand-300 text-brand-700' : 'bg-white border-slate-200 text-slate-500 hover:text-slate-900'
+                    } ${!editing ? 'cursor-default' : ''}`}>
                     {style}
                   </button>
                 ))}
@@ -101,11 +104,11 @@ export default function Profile() {
             </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-card p-5">
-              <h2 className="text-white font-bold mb-4 flex items-center gap-2"><Map className="w-4 h-4 text-cyan-400" />About Me</h2>
+              <h2 className="font-bold mb-4 flex items-center gap-2" style={{ color: '#1e2d1f' }}><Map className="w-4 h-4 text-cyan-500" />About Me</h2>
               {editing ? (
                 <textarea value={form.bio} onChange={e => setForm(f => ({ ...f, bio: e.target.value }))} className="input-field text-sm resize-none" rows={4} />
               ) : (
-                <p className="text-slate-300 text-sm leading-relaxed">{form.bio}</p>
+                <p className="text-slate-600 text-sm leading-relaxed">{form.bio}</p>
               )}
             </motion.div>
           </div>

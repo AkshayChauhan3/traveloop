@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react'
 import { NavLink, Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plane, Menu, X, Compass, LogIn, LayoutDashboard, Globe, DollarSign, Sparkles } from 'lucide-react'
+import { Compass, Menu, X, LogIn, Sparkles } from 'lucide-react'
 
 const navLinks = [
-  { to: '/', label: 'Home', exact: true },
-  { to: '/explore', label: 'Explore' },
+  { to: '/',          label: 'Home',      exact: true },
+  { to: '/explore',   label: 'Explore' },
   { to: '/community', label: 'Community' },
   { to: '/dashboard', label: 'Dashboard' },
 ]
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false)
+  const [scrolled, setScrolled]     = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const navigate = useNavigate()
 
@@ -29,23 +29,25 @@ export default function Navbar() {
         transition={{ duration: 0.6, ease: 'easeOut' }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled
-            ? 'glass border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.4)]'
+            ? 'glass border-b shadow-sm'
             : 'bg-transparent'
         }`}
+        style={scrolled ? { borderColor: 'rgba(76,175,80,0.15)' } : {}}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 lg:h-20">
+
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2 group">
               <div className="relative">
-                <div className="absolute inset-0 rounded-xl bg-brand-500 blur-md opacity-60 group-hover:opacity-80 transition-opacity" />
+                <div className="absolute inset-0 rounded-xl bg-brand-400 blur-md opacity-40 group-hover:opacity-60 transition-opacity" />
                 <div className="relative bg-gradient-to-br from-brand-400 to-brand-600 p-2 rounded-xl">
-                  <Plane className="w-5 h-5 text-white" />
+                  <Compass className="w-5 h-5 text-white" />
                 </div>
               </div>
               <span className="text-xl font-bold">
                 <span className="gradient-text-purple">Travel</span>
-                <span className="text-white">oop</span>
+                <span style={{ color: '#1e2d1f' }}>oop</span>
               </span>
             </Link>
 
@@ -59,8 +61,8 @@ export default function Navbar() {
                   className={({ isActive }) =>
                     `px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                       isActive
-                        ? 'text-white bg-white/8 border border-brand-500/30'
-                        : 'text-slate-400 hover:text-white hover:bg-white/5'
+                        ? 'text-brand-700 bg-leaf-light border border-brand-200'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-leaf-light'
                     }`
                   }
                 >
@@ -89,7 +91,7 @@ export default function Navbar() {
 
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden p-2 rounded-lg text-slate-400 hover:text-white transition-colors"
+              className="md:hidden p-2 rounded-lg text-slate-600 hover:text-slate-900 transition-colors"
               onClick={() => setMobileOpen(!mobileOpen)}
               id="mobile-menu-btn"
             >
@@ -107,7 +109,8 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            className="fixed top-16 left-0 right-0 z-40 glass border-b border-white/5 md:hidden"
+            className="fixed top-16 left-0 right-0 z-40 glass border-b md:hidden"
+            style={{ borderColor: 'rgba(76,175,80,0.2)' }}
           >
             <div className="px-4 py-4 flex flex-col gap-2">
               {navLinks.map((link) => (
@@ -119,15 +122,15 @@ export default function Navbar() {
                   className={({ isActive }) =>
                     `px-4 py-3 rounded-xl text-sm font-medium transition-all ${
                       isActive
-                        ? 'text-white bg-brand-500/20 border border-brand-500/30'
-                        : 'text-slate-400 hover:text-white hover:bg-white/5'
+                        ? 'text-brand-700 bg-leaf-light border border-brand-200'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-leaf-light'
                     }`
                   }
                 >
                   {link.label}
                 </NavLink>
               ))}
-              <div className="flex gap-3 mt-2 pt-2 border-t border-white/5">
+              <div className="flex gap-3 mt-2 pt-2 border-t border-brand-100">
                 <Link to="/login" onClick={() => setMobileOpen(false)} className="flex-1 btn-secondary text-sm text-center">
                   Login
                 </Link>

@@ -17,10 +17,10 @@ import AdminAnalytics from '../pages/AdminAnalytics'
 
 function NotFound() {
   return (
-    <div className="min-h-screen bg-[#050a14] flex items-center justify-center text-center">
+    <div className="min-h-screen bg-surface-50 flex items-center justify-center text-center">
       <div>
         <div className="text-8xl font-black gradient-text mb-4">404</div>
-        <p className="text-slate-400 text-lg mb-6">Page not found</p>
+        <p className="text-slate-500 text-lg mb-6">Page not found</p>
         <a href="/" className="btn-primary px-6 py-3">Go Home</a>
       </div>
     </div>

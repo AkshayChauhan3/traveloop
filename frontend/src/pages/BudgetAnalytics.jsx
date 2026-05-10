@@ -17,11 +17,11 @@ const dayData = [
 ]
 
 const pieData = [
-  { name: 'Accommodation', value: 22000, color: '#7c3aed' },
-  { name: 'Food', value: 12000, color: '#06b6d4' },
-  { name: 'Transport', value: 18000, color: '#f59e0b' },
-  { name: 'Activities', value: 7500, color: '#10b981' },
-  { name: 'Shopping', value: 3000, color: '#f43f5e' },
+  { name: 'Accommodation', value: 22000, color: '#4CAF50' },
+  { name: 'Food',          value: 12000, color: '#6FBF73' },
+  { name: 'Transport',     value: 18000, color: '#f59e0b' },
+  { name: 'Activities',    value: 7500,  color: '#06b6d4' },
+  { name: 'Shopping',      value: 3000,  color: '#f43f5e' },
 ]
 
 const warnings = [
@@ -62,16 +62,16 @@ export default function BudgetAnalytics() {
       <div className="p-6 lg:p-8 space-y-8">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-card glow-border-amber p-6 relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10" style={{ background: 'radial-gradient(ellipse at 80% 50%, rgba(245,158,11,1), transparent 60%)' }} />
+          <div className="absolute inset-0 opacity-10" style={{ background: 'radial-gradient(ellipse at 80% 50%, rgba(245,158,11,0.5), transparent 60%)' }} />
           <div className="relative z-10 flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center">
-              <DollarSign className="w-7 h-7 text-amber-400" />
+            <div className="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center">
+              <DollarSign className="w-7 h-7 text-amber-500" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+              <h1 className="text-2xl font-bold flex items-center gap-2" style={{ color: '#1e2d1f' }}>
                 Smart Budget Analytics <span className="badge badge-amber">Live</span>
               </h1>
-              <p className="text-slate-400">Real-time budget tracking with intelligent warnings</p>
+              <p className="text-slate-500">Real-time budget tracking with intelligent warnings</p>
             </div>
           </div>
         </motion.div>
@@ -84,14 +84,14 @@ export default function BudgetAnalytics() {
             { label: 'Remaining', value: `₹${remaining.toLocaleString()}`, icon: CheckCircle, color: remaining < 0 ? 'rose' : 'emerald', sub: remaining >= 0 ? 'On track' : 'Over budget!' },
           ].map(card => {
             const Icon = card.icon
-            const c = { brand: 'text-brand-400 bg-brand-500/10 border-brand-500/20', amber: 'text-amber-400 bg-amber-500/10 border-amber-500/20', emerald: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20', rose: 'text-rose-400 bg-rose-500/10 border-rose-500/20' }[card.color]
+            const c = { brand: 'text-brand-500 bg-leaf-light border-brand-200', amber: 'text-amber-500 bg-amber-50 border-amber-200', emerald: 'text-emerald-500 bg-emerald-50 border-emerald-200', rose: 'text-rose-500 bg-rose-50 border-rose-200' }[card.color]
             return (
               <motion.div key={card.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="stat-card">
                 <div className={`w-10 h-10 rounded-xl ${c} border flex items-center justify-center mb-3`}>
                   <Icon className="w-5 h-5" />
                 </div>
-                <div className="text-2xl font-black text-white">{card.value}</div>
-                <div className="text-slate-400 text-sm">{card.label}</div>
+                <div className="text-2xl font-black" style={{ color: '#1e2d1f' }}>{card.value}</div>
+                <div className="text-slate-500 text-sm">{card.label}</div>
                 <div className="text-xs text-slate-500 mt-1">{card.sub}</div>
               </motion.div>
             )
@@ -101,10 +101,10 @@ export default function BudgetAnalytics() {
         {/* Progress Bar */}
         <div className="glass-card p-6">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-white font-semibold">Overall Budget Usage</span>
+            <span className="font-semibold" style={{ color: '#1e2d1f' }}>Overall Budget Usage</span>
             <span className={`text-lg font-bold ${pct >= 100 ? 'text-rose-400' : pct >= 80 ? 'text-amber-400' : 'text-emerald-400'}`}>{pct}%</span>
           </div>
-          <div className="w-full h-3 rounded-full bg-white/10 overflow-hidden">
+          <div className="w-full h-3 rounded-full overflow-hidden" style={{ background: '#dff3e3' }}>
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${Math.min(pct, 100)}%` }}
@@ -120,8 +120,8 @@ export default function BudgetAnalytics() {
         {/* Warning Cards */}
         {warnings.length > 0 && (
           <div>
-            <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-amber-400" />Budget Warnings
+            <h2 className="text-lg font-bold mb-4 flex items-center gap-2" style={{ color: '#1e2d1f' }}>
+              <AlertTriangle className="w-5 h-5 text-amber-500" />Budget Warnings
             </h2>
             <div className="space-y-3">
               {warnings.map((w, i) => (
@@ -131,8 +131,8 @@ export default function BudgetAnalytics() {
                     <AlertTriangle className="w-5 h-5 text-amber-400" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-white font-semibold text-sm">⚠️ {w.day} exceeds budget by <span className="text-amber-400">₹{w.over.toLocaleString()}</span></p>
-                    <p className="text-slate-400 text-xs">{w.city} · {w.type} expenses over limit</p>
+                    <p className="font-semibold text-sm" style={{ color: '#1e2d1f' }}>⚠️ {w.day} exceeds budget by <span className="text-amber-600">₹{w.over.toLocaleString()}</span></p>
+                    <p className="text-slate-500 text-xs">{w.city} · {w.type} expenses over limit</p>
                   </div>
                   <span className="badge badge-amber">Review</span>
                 </motion.div>
@@ -145,13 +145,13 @@ export default function BudgetAnalytics() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Bar chart */}
           <div className="glass-card p-6">
-            <h3 className="text-white font-bold mb-4 flex items-center gap-2"><BarChart2 className="w-4 h-4 text-brand-400" />Day-wise Spending</h3>
+            <h3 className="font-bold mb-4 flex items-center gap-2" style={{ color: '#1e2d1f' }}><BarChart2 className="w-4 h-4 text-brand-500" />Day-wise Spending</h3>
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={dayData} barGap={4}>
                 <XAxis dataKey="day" tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fill: '#64748b', fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={v => `₹${(v/1000).toFixed(0)}K`} />
                 <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="budget" name="Budget" fill="rgba(124,58,237,0.3)" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="budget" name="Budget" fill="rgba(76,175,80,0.2)" radius={[4, 4, 0, 0]} />
                 <Bar dataKey="spent" name="Spent" radius={[4, 4, 0, 0]}>
                   {dayData.map((entry, index) => (
                     <Cell key={index} fill={entry.spent > entry.budget ? '#ef4444' : '#10b981'} />
@@ -163,7 +163,7 @@ export default function BudgetAnalytics() {
 
           {/* Pie chart */}
           <div className="glass-card p-6">
-            <h3 className="text-white font-bold mb-4 flex items-center gap-2"><PieChart className="w-4 h-4 text-cyan-400" />Spending by Category</h3>
+            <h3 className="font-bold mb-4 flex items-center gap-2" style={{ color: '#1e2d1f' }}><PieChart className="w-4 h-4 text-cyan-500" />Spending by Category</h3>
             <div className="flex items-center gap-4">
               <ResponsiveContainer width="60%" height={180}>
                 <RechartsPie>
@@ -178,9 +178,9 @@ export default function BudgetAnalytics() {
                   <div key={item.name} className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full" style={{ background: item.color }} />
-                      <span className="text-slate-400">{item.name}</span>
+                      <span className="text-slate-500">{item.name}</span>
                     </div>
-                    <span className="text-white font-medium">₹{item.value.toLocaleString()}</span>
+                    <span className="font-medium" style={{ color: '#1e2d1f' }}>₹{item.value.toLocaleString()}</span>
                   </div>
                 ))}
               </div>
@@ -199,8 +199,8 @@ export default function BudgetAnalytics() {
                 className="glass-card p-4 flex items-start gap-3 hover:border-emerald-500/30 transition-all">
                 <span className="text-2xl flex-shrink-0">{s.icon}</span>
                 <div className="flex-1">
-                  <p className="text-slate-300 text-sm">{s.text}</p>
-                  <p className="text-emerald-400 text-xs mt-1 font-semibold">Save ₹{s.saving.toLocaleString()}</p>
+                  <p className="text-slate-600 text-sm">{s.text}</p>
+                  <p className="text-brand-600 text-xs mt-1 font-semibold">Save ₹{s.saving.toLocaleString()}</p>
                 </div>
               </motion.div>
             ))}

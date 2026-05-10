@@ -43,8 +43,8 @@ export default function TripNotes() {
       <div className="p-6 lg:p-8 space-y-6">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-white flex items-center gap-2"><BookOpen className="w-6 h-6 text-amber-400" />Trip Notes</h1>
-            <p className="text-slate-400 text-sm mt-1">{notes.length} notes · Himalayan Adventure</p>
+            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2"><BookOpen className="w-6 h-6 text-amber-500" />Trip Notes</h1>
+            <p className="text-slate-500 text-sm mt-1">{notes.length} notes · Himalayan Adventure</p>
           </div>
           <motion.button whileHover={{ scale: 1.04 }} onClick={() => setAdding(true)} className="btn-primary flex items-center gap-2 text-sm">
             <Plus className="w-4 h-4" />Add Note
@@ -54,7 +54,7 @@ export default function TripNotes() {
         {/* Add Note */}
         {adding && (
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="glass-card glow-border p-5">
-            <h3 className="text-white font-semibold mb-3">New Note</h3>
+            <h3 className="text-slate-900 font-semibold mb-3">New Note</h3>
             <input placeholder="Note title..." value={newNote.title} onChange={e => setNewNote(n => ({ ...n, title: e.target.value }))}
               className="input-field mb-3" />
             <textarea placeholder="Write your note..." value={newNote.content} onChange={e => setNewNote(n => ({ ...n, content: e.target.value }))}
@@ -74,10 +74,10 @@ export default function TripNotes() {
               className={`relative group rounded-2xl border bg-gradient-to-br p-5 ${NOTE_COLORS[note.colorIdx]} backdrop-blur-sm`}>
               {/* Actions */}
               <div className="absolute top-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button onClick={() => setEditing(note.id)} className="p-1.5 rounded-lg glass hover:bg-white/10 text-slate-400 hover:text-white">
+                <button onClick={() => setEditing(note.id)} className="p-1.5 rounded-lg bg-white/50 hover:bg-white text-slate-500 hover:text-slate-900 shadow-sm transition-colors">
                   <Edit3 className="w-3.5 h-3.5" />
                 </button>
-                <button onClick={() => deleteNote(note.id)} className="p-1.5 rounded-lg glass hover:bg-rose-500/20 text-slate-400 hover:text-rose-400">
+                <button onClick={() => deleteNote(note.id)} className="p-1.5 rounded-lg bg-white/50 hover:bg-rose-50 text-slate-500 hover:text-rose-600 shadow-sm transition-colors">
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -86,8 +86,8 @@ export default function TripNotes() {
                 <EditNoteForm note={note} onSave={saveEdit} onCancel={() => setEditing(null)} />
               ) : (
                 <>
-                  <h3 className="text-white font-bold text-base mb-2 pr-12">{note.title}</h3>
-                  <p className="text-slate-300 text-sm leading-relaxed mb-4">{note.content}</p>
+                  <h3 className="text-slate-900 font-bold text-base mb-2 pr-12">{note.title}</h3>
+                  <p className="text-slate-700 text-sm leading-relaxed mb-4">{note.content}</p>
                   <div className="flex items-center gap-2 text-slate-500 text-xs">
                     <Clock className="w-3 h-3" />{note.date}
                     <span className="badge badge-purple ml-1">{note.trip}</span>

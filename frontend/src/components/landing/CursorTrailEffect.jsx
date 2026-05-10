@@ -1,183 +1,198 @@
 import { useEffect, useRef } from 'react'
 
 const IMAGES = [
-  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80',
-  'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80',
-  'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&q=80',
-  'https://images.unsplash.com/photo-1530521954074-e64f6810b32d?w=400&q=80',
-  'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400&q=80',
+  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&q=80',
+  'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300&q=80',
+  'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=300&q=80',
+  'https://images.unsplash.com/photo-1530521954074-e64f6810b32d?w=300&q=80',
+  'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=300&q=80',
+  'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=300&q=80',
 ]
 
-const SHAPES = [
-  { w: 160, h: 110 },
-  { w: 128, h: 160 },
-  { w: 175, h: 116 },
-  { w: 145, h: 145 },
-]
+// Card dimensions — bigger cards for visual impact
+const CARD_W = 200
+const CARD_H = 140
+
+// How far cursor must travel before spawning the next card (cart spacing)
+const SPAWN_DIST = 55    // px — tight train cart spacing
+
+// Max "carts" visible at one time
+const MAX_CARDS = 5
+
+// Hold time before fade starts (ms) — fast!
+const HOLD_MS = 180
+
+// Fade-out duration (ms) — fast!
+const FADE_MS = 200
 
 let _imgIdx = 0
-let _count   = 0
-const MAX    = 8
 
-/* ── inject styles once ─────────────────────────────────────────────────── */
-let _css = false
+let _cssInjected = false
 function injectCSS() {
-  if (_css) return; _css = true
+  if (_cssInjected) return
+  _cssInjected = true
+
   const s = document.createElement('style')
   s.textContent = `
-    .tl {
+    /* ── Trail card ─────────────────────────────────────── */
+    .tr-card {
       position: fixed;
       pointer-events: none;
-      z-index: 2;
-      border-radius: 14px;
+      z-index: 4;                  /* behind hero text (z-10) */
+      width:  ${CARD_W}px;
+      height: ${CARD_H}px;
+      border-radius: 12px;
       overflow: hidden;
-      border: 1.5px solid rgba(255,255,255,0.2);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
-      background: rgba(255,255,255,0.05); /* Fallback bg */
+      border: 2px solid rgba(255,255,255,0.9);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.18);
+      /* positioned by left/top — centred on spawn point via transform */
+      transform: translate(-50%, -50%);
       opacity: 0;
-      will-change: opacity, transform;
+      /* fade-in */
+      transition: opacity ${FADE_MS * 0.8}ms ease-out;
+      will-change: opacity;
     }
-    .tl img {
-      width:100%; height:100%;
-      object-fit:cover; display:block;
-      pointer-events:none; user-select:none;
-      -webkit-user-drag:none;
+    .tr-card img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      pointer-events: none; user-select: none;
+      -webkit-user-drag: none;
     }
-    .tl-in  { transition: opacity 0.25s ease-out; opacity: 0.85 !important; }
-    .tl-out { transition: opacity 0.6s ease-in;   opacity: 0    !important; }
+    /* small green tint overlay */
+    .tr-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(76,175,80,0.07) 0%, transparent 60%);
+    }
+    /* active = fully visible */
+    .tr-card.tr-in  { opacity: 0.85; }
+    /* fading out */
+    .tr-card.tr-out {
+      opacity: 0 !important;
+      transition: opacity ${FADE_MS}ms ease-in !important;
+    }
 
-    /* cursor ring pulse */
-    @keyframes cRing {
-      0%,100% { transform:translate(-50%,-50%) scale(1);   opacity:.45; }
-      50%     { transform:translate(-50%,-50%) scale(1.28); opacity:.9;  }
+    /* ── Custom cursor ───────────────────────────────────── */
+    @keyframes trRing {
+      0%,100% { transform: translate(-50%,-50%) scale(1);    opacity: .4; }
+      50%      { transform: translate(-50%,-50%) scale(1.18); opacity: .8; }
     }
-    .tl-ring {
-      position:fixed; pointer-events:none; z-index:9999;
-      border-radius:50%;
-      border: 1.5px solid rgba(167,139,250,0.7);
-      width:36px; height:36px;
-      animation: cRing 1.7s ease-in-out infinite;
+    .tr-ring {
+      position: fixed; pointer-events: none; z-index: 9999;
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1.5px solid rgba(76,175,80,0.65);
+      animation: trRing 1.6s ease-in-out infinite;
       will-change: transform, opacity;
     }
-    .tl-dot {
-      position:fixed; pointer-events:none; z-index:9999;
-      border-radius:50%;
-      width:8px; height:8px;
-      background:#a78bfa;
-      transform:translate(-50%,-50%);
-      box-shadow: 0 0 10px 3px rgba(167,139,250,0.75);
+    .tr-dot {
+      position: fixed; pointer-events: none; z-index: 9999;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #4CAF50;
+      transform: translate(-50%,-50%);
+      box-shadow: 0 0 6px 2px rgba(76,175,80,0.4);
     }
   `
   document.head.appendChild(s)
 }
 
-/* ── spawn one card at (x,y) ─────────────────────────────────────────────── */
-function spawn(x, y, container) {
-  if (_count >= MAX) return
-  _count++
+/* Spawn one card at exact (x, y) — the cursor's historical position */
+let _activeCount = 0
 
-  const shape = SHAPES[Math.floor(Math.random() * SHAPES.length)]
-  const src   = IMAGES[_imgIdx % IMAGES.length]; _imgIdx++
+function spawnCard(x, y, container) {
+  if (_activeCount >= MAX_CARDS) return
+  _activeCount++
 
-  // Moderate scatter so it feels "around the cursor path"
-  const ox  = (Math.random() - 0.5) * 180
-  const oy  = (Math.random() - 0.5) * 130
-  const rot = (Math.random() - 0.5) * 24
+  const src = IMAGES[_imgIdx % IMAGES.length]
+  _imgIdx++
 
-  const el = document.createElement('div')
-  el.className = 'tl'
-  el.style.left    = (x + ox) + 'px'
-  el.style.top     = (y + oy) + 'px'
-  el.style.width   = shape.w + 'px'
-  el.style.height  = shape.h + 'px'
-  // set rotation as static transform — never changes, so no keyframe issues
-  el.style.transform = `translate(-50%,-50%) rotate(${rot}deg)`
+  const card = document.createElement('div')
+  card.className = 'tr-card'
+  card.style.left = x + 'px'
+  card.style.top  = y + 'px'
 
   const img = document.createElement('img')
-  img.src = src; img.alt = ''
-  el.appendChild(img)
-  if (container) container.appendChild(el)
+  img.src = src
+  img.alt = 'travel'
+  card.appendChild(img)
 
-  // Fade IN — one rAF so browser has painted the element first
-  requestAnimationFrame(() => el.classList.add('tl-in'))
+  container.appendChild(card)
 
-  // Fade OUT after hold time
-  const hold = 600 + Math.random() * 400
+  // Trigger fade-in on next frame
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => card.classList.add('tr-in'))
+  })
+
+  // After HOLD_MS, fast fade-out then remove
   setTimeout(() => {
-    el.classList.remove('tl-in')
-    el.classList.add('tl-out')
-    // remove from DOM after transition ends
-    setTimeout(() => { el.remove(); _count-- }, 650)
-  }, hold)
+    card.classList.remove('tr-in')
+    card.classList.add('tr-out')
+    setTimeout(() => {
+      card.remove()
+      _activeCount--
+    }, FADE_MS)
+  }, HOLD_MS)
 }
 
-/* ── component ───────────────────────────────────────────────────────────── */
 export default function CursorTrailEffect() {
-  const containerRef = useRef(null)
-  const ringRef = useRef(null)
-  const dotRef  = useRef(null)
-  const posRef  = useRef({ x: -300, y: -300 })
-  const lastRef = useRef({ x: -300, y: -300 })
+  const containerRef  = useRef(null)
+  const ringRef       = useRef(null)
+  const dotRef        = useRef(null)
+
+  // Raw cursor position (updated every mousemove)
+  const cursorRef     = useRef({ x: -500, y: -500 })
+  // Last position where we spawned a card
+  const lastSpawnRef  = useRef({ x: -500, y: -500 })
+
   const isScrolledRef = useRef(false)
 
+  /* ── Scroll: disable trail past hero ─────────────────── */
   useEffect(() => {
     injectCSS()
-    
-    // Check scroll position to determine if trail should be active
-    const handleScroll = () => {
-      // Stop the trail when scrolled past the first viewport (Hero section)
-      const scrolled = window.scrollY > window.innerHeight * 0.8
-      isScrolledRef.current = scrolled
-      
-      if (scrolled) {
-        document.body.classList.remove('cursor-hidden')
-        if (ringRef.current) ringRef.current.style.display = 'none'
-        if (dotRef.current) dotRef.current.style.display = 'none'
-      } else {
-        document.body.classList.add('cursor-hidden')
-        if (ringRef.current) ringRef.current.style.display = 'block'
-        if (dotRef.current) dotRef.current.style.display = 'block'
-      }
+
+    const onScroll = () => {
+      const past = window.scrollY > window.innerHeight * 0.8
+      isScrolledRef.current = past
+      const display = past ? 'none' : 'block'
+      if (ringRef.current) ringRef.current.style.display = display
+      if (dotRef.current)  dotRef.current.style.display  = display
+      document.body.classList.toggle('cursor-hidden', !past)
     }
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll() // initial check
-
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
     return () => {
-      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('scroll', onScroll)
       document.body.classList.remove('cursor-hidden')
     }
   }, [])
 
+  /* ── rAF loop: move cursor visuals + spawn trail ─────── */
   useEffect(() => {
     let raf
 
-    /* move listener: captures raw mouse position */
     const onMove = (e) => {
-      posRef.current = { x: e.clientX, y: e.clientY }
+      cursorRef.current = { x: e.clientX, y: e.clientY }
     }
 
-    /* rAF loop: smoothly moves cursor elements & checks spawn distance */
     const tick = () => {
-      const { x, y } = posRef.current
+      const { x, y } = cursorRef.current
 
-      // Always update cursor position behind the scenes
-      if (ringRef.current) {
-        ringRef.current.style.left = x + 'px'
-        ringRef.current.style.top  = y + 'px'
-      }
-      if (dotRef.current) {
-        dotRef.current.style.left = x + 'px'
-        dotRef.current.style.top  = y + 'px'
-      }
+      // Move cursor ring & dot
+      if (ringRef.current) { ringRef.current.style.left = x + 'px'; ringRef.current.style.top = y + 'px' }
+      if (dotRef.current)  { dotRef.current.style.left  = x + 'px'; dotRef.current.style.top  = y + 'px' }
 
-      // Only spawn images if we are NOT scrolled down
+      // Spawn trail card only in hero zone and when moved far enough
       if (!isScrolledRef.current) {
-        const dx = x - lastRef.current.x
-        const dy = y - lastRef.current.y
-        if (dx * dx + dy * dy >= 55 * 55) {        // spawn every ~55px
-          lastRef.current = { x, y }
-          spawn(x, y, containerRef.current)
+        const dx = x - lastSpawnRef.current.x
+        const dy = y - lastSpawnRef.current.y
+        const dist2 = dx * dx + dy * dy
+
+        if (dist2 >= SPAWN_DIST * SPAWN_DIST) {
+          // Spawn at the LAST position (behind cursor) — train-cart effect
+          // The card appears where the cursor WAS, not where it IS
+          spawnCard(lastSpawnRef.current.x, lastSpawnRef.current.y, containerRef.current)
+          lastSpawnRef.current = { x, y }
         }
       }
 
@@ -186,13 +201,20 @@ export default function CursorTrailEffect() {
 
     window.addEventListener('mousemove', onMove, { passive: true })
     raf = requestAnimationFrame(tick)
-    return () => { window.removeEventListener('mousemove', onMove); cancelAnimationFrame(raf) }
+    return () => {
+      window.removeEventListener('mousemove', onMove)
+      cancelAnimationFrame(raf)
+    }
   }, [])
 
   return (
-    <div ref={containerRef} style={{ position: 'fixed', inset: 0, zIndex: 2, pointerEvents: 'none' }}>
-      <div ref={ringRef} className="tl-ring" style={{ left: -300, top: -300 }} />
-      <div ref={dotRef}  className="tl-dot"  style={{ left: -300, top: -300 }} />
+    /* z-index 4 — above bg (z-0) but below hero text (z-10) */
+    <div
+      ref={containerRef}
+      style={{ position: 'fixed', inset: 0, zIndex: 4, pointerEvents: 'none' }}
+    >
+      <div ref={ringRef} className="tr-ring" style={{ left: -500, top: -500 }} />
+      <div ref={dotRef}  className="tr-dot"  style={{ left: -500, top: -500 }} />
     </div>
   )
 }

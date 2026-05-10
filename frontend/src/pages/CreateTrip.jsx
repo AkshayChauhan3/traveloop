@@ -24,8 +24,8 @@ export default function CreateTrip() {
     <DashboardLayout>
       <div className="p-6 lg:p-8 space-y-8">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2"><CalendarPlus className="w-6 h-6 text-brand-400" />Create New Trip</h1>
-          <p className="text-slate-400 text-sm mt-1">Start planning your next adventure</p>
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2"><CalendarPlus className="w-6 h-6 text-brand-500" />Create New Trip</h1>
+          <p className="text-slate-500 text-sm mt-1">Start planning your next adventure</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -33,7 +33,7 @@ export default function CreateTrip() {
           <div className="lg:col-span-2">
             <form onSubmit={handleCreate} className="glass-card p-6 space-y-5">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Trip Name *</label>
+                <label className="block text-sm font-medium text-slate-600 mb-2">Trip Name *</label>
                 <div className="relative">
                   <Tag className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                   <input id="trip-name" placeholder="e.g. Himalayan Summer Adventure" value={form.name}
@@ -43,17 +43,17 @@ export default function CreateTrip() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Start Date *</label>
+                  <label className="block text-sm font-medium text-slate-600 mb-2">Start Date *</label>
                   <input id="trip-start" type="date" value={form.startDate} onChange={e => setForm({ ...form, startDate: e.target.value })} className="input-field" required />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">End Date *</label>
+                  <label className="block text-sm font-medium text-slate-600 mb-2">End Date *</label>
                   <input id="trip-end" type="date" value={form.endDate} onChange={e => setForm({ ...form, endDate: e.target.value })} className="input-field" required />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Description</label>
+                <label className="block text-sm font-medium text-slate-600 mb-2">Description</label>
                 <div className="relative">
                   <FileText className="absolute left-4 top-4 w-4 h-4 text-slate-500" />
                   <textarea id="trip-desc" placeholder="Describe your trip..." value={form.description}
@@ -62,11 +62,11 @@ export default function CreateTrip() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Trip Type</label>
+                <label className="block text-sm font-medium text-slate-600 mb-2">Trip Type</label>
                 <div className="flex flex-wrap gap-2">
                   {TRIP_TYPES.map(type => (
                     <button key={type} type="button" onClick={() => setForm({ ...form, type })}
-                      className={`px-3 py-1.5 rounded-xl text-sm font-medium border transition-all ${form.type === type ? 'bg-brand-500/20 border-brand-500/50 text-brand-300' : 'glass border-white/10 text-slate-400 hover:text-white'}`}>
+                      className={`px-3 py-1.5 rounded-xl text-sm font-medium border transition-all ${form.type === type ? 'bg-brand-50 border-brand-200 text-brand-600' : 'bg-white border-slate-200 text-slate-500 hover:text-slate-900'}`}>
                       {type}
                     </button>
                   ))}
@@ -74,7 +74,7 @@ export default function CreateTrip() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Budget (₹)</label>
+                <label className="block text-sm font-medium text-slate-600 mb-2">Budget (₹)</label>
                 <div className="relative">
                   <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                   <input id="trip-budget" type="number" placeholder="e.g. 50000" value={form.budget}
@@ -98,7 +98,7 @@ export default function CreateTrip() {
 
           {/* Inspiration */}
           <div>
-            <h2 className="text-base font-bold text-white mb-4">✨ Trip Inspiration</h2>
+            <h2 className="text-base font-bold text-slate-900 mb-4">✨ Trip Inspiration</h2>
             <div className="space-y-3">
               {featured.map((dest, i) => (
                 <motion.div key={dest.id} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}
@@ -107,10 +107,10 @@ export default function CreateTrip() {
                     <img src={dest.image} alt={dest.name} className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-white text-sm font-semibold truncate">{dest.name}</h3>
+                    <h3 className="text-slate-900 text-sm font-semibold truncate">{dest.name}</h3>
                     <div className="flex items-center gap-1 text-slate-500 text-xs"><MapPin className="w-3 h-3" />{dest.country}</div>
                   </div>
-                  <div className="text-emerald-400 text-xs font-semibold flex-shrink-0">₹{(dest.avgCost / 1000).toFixed(0)}K</div>
+                  <div className="text-emerald-600 text-xs font-semibold flex-shrink-0">₹{(dest.avgCost / 1000).toFixed(0)}K</div>
                 </motion.div>
               ))}
             </div>

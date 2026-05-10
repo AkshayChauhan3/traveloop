@@ -27,7 +27,7 @@ const features = [
     color: 'cyan',
     badge: null,
     highlight: false,
-    glow: 'glow-border-cyan',
+    glow: '',
   },
   {
     icon: Globe,
@@ -42,7 +42,7 @@ const features = [
     icon: Users,
     title: 'Community Trips',
     description: 'Share your trips with the world, get inspired by fellow travelers, and copy great itineraries with one click.',
-    color: 'rose',
+    color: 'leaf',
     badge: null,
     highlight: false,
     glow: '',
@@ -59,28 +59,22 @@ const features = [
 ]
 
 const colorMap = {
-  brand: { icon: 'text-brand-400', bg: 'bg-brand-500/10', border: 'border-brand-500/20' },
-  amber: { icon: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/20' },
-  cyan: { icon: 'text-cyan-400', bg: 'bg-cyan-500/10', border: 'border-cyan-500/20' },
-  emerald: { icon: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
-  rose: { icon: 'text-rose-400', bg: 'bg-rose-500/10', border: 'border-rose-500/20' },
+  brand:   { icon: 'text-brand-500', bg: 'bg-leaf-light',   border: 'border-brand-200' },
+  amber:   { icon: 'text-amber-500', bg: 'bg-amber-50',     border: 'border-amber-200' },
+  cyan:    { icon: 'text-cyan-600',  bg: 'bg-cyan-50',      border: 'border-cyan-200' },
+  emerald: { icon: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200' },
+  leaf:    { icon: 'text-brand-600', bg: 'bg-leaf-soft',    border: 'border-brand-300' },
 }
 
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
-}
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
-}
+const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }
+const cardVariants = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } } }
 
 export default function FeaturesSection() {
   return (
-    <section className="relative py-24 overflow-hidden">
+    <section className="relative py-24 overflow-hidden" style={{ background: '#ffffff' }}>
       <div className="absolute inset-0 bg-grid opacity-20" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -114,18 +108,18 @@ export default function FeaturesSection() {
                 key={feature.title}
                 variants={cardVariants}
                 whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className={`glass-card p-6 relative overflow-hidden group ${
-                  feature.highlight ? `${feature.glow} scale-[1.02]` : 'border border-white/5'
+                className={`glass-card p-6 relative overflow-hidden group transition-all ${
+                  feature.highlight ? `${feature.glow}` : ''
                 }`}
               >
-                {/* Background glow for highlight cards */}
+                {/* Subtle background tint for highlighted cards */}
                 {feature.highlight && (
                   <div
-                    className="absolute inset-0 opacity-5"
+                    className="absolute inset-0 opacity-30 rounded-2xl"
                     style={{
                       background: feature.color === 'brand'
-                        ? 'radial-gradient(circle at 50% 0%, rgba(124,58,237,1), transparent 70%)'
-                        : 'radial-gradient(circle at 50% 0%, rgba(245,158,11,1), transparent 70%)',
+                        ? 'linear-gradient(135deg, #E8F5E9 0%, transparent 70%)'
+                        : 'linear-gradient(135deg, #fef9c3 0%, transparent 70%)',
                     }}
                   />
                 )}
@@ -141,8 +135,8 @@ export default function FeaturesSection() {
                       </span>
                     )}
                   </div>
-                  <h3 className="text-white font-bold text-lg mb-2">{feature.title}</h3>
-                  <p className="text-slate-400 text-sm leading-relaxed">{feature.description}</p>
+                  <h3 className="text-slate-800 font-bold text-lg mb-2">{feature.title}</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed">{feature.description}</p>
 
                   {/* Hover arrow */}
                   <div className={`mt-4 flex items-center gap-2 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity ${c.icon}`}>
@@ -155,7 +149,7 @@ export default function FeaturesSection() {
           })}
         </motion.div>
 
-        {/* Stats row */}
+        {/* Product benefit highlights — honest, no fake numbers */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -163,17 +157,19 @@ export default function FeaturesSection() {
           className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6"
         >
           {[
-            { value: '50K+', label: 'Trips Planned' },
-            { value: '120+', label: 'Destinations' },
-            { value: '12K+', label: 'Happy Travelers' },
-            { value: '4.9★', label: 'Average Rating' },
-          ].map((stat) => (
-            <div key={stat.label} className="glass-card p-6 text-center">
-              <div className="text-3xl font-black gradient-text mb-1">{stat.value}</div>
-              <div className="text-slate-400 text-sm">{stat.label}</div>
+            { emoji: '🆓', label: 'Free to Start',       sub: 'No credit card needed' },
+            { emoji: '🤖', label: 'AI Trip Optimizer',    sub: 'Generate plans in seconds' },
+            { emoji: '💰', label: 'Budget-Smart',         sub: 'Real-time spending alerts' },
+            { emoji: '🔗', label: 'Easy Sharing',         sub: 'Share trips with anyone' },
+          ].map((item) => (
+            <div key={item.label} className="glass-card p-6 text-center">
+              <div className="text-3xl mb-2">{item.emoji}</div>
+              <div className="font-bold text-slate-800 text-sm mb-0.5">{item.label}</div>
+              <div className="text-slate-500 text-xs">{item.sub}</div>
             </div>
           ))}
         </motion.div>
+
       </div>
     </section>
   )

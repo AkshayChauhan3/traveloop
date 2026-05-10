@@ -272,7 +272,6 @@ const deleteStop = async (stopId, userId) => {
     };
   }
 };
-
 module.exports = {
   createStop,
   getStopsByTrip,
