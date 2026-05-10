@@ -76,7 +76,7 @@ router.get('/:tripId/summary', verifyToken, async (req, res) => {
   try {
     const totalBudget = parseFloat(req.query.total_budget);
     
-    if (!totalBudget) {
+    if (Number.isNaN(totalBudget)) {
       return res.status(400).json({
         success: false,
         message: 'Missing total_budget query parameter'

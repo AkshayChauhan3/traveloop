@@ -1,6 +1,25 @@
-// Mock database for stops (cities/locations in a trip)
-let stops = [];
-let stopIdCounter = 1;
+const prisma = require('../lib/prisma');
+
+const getAccessibleTrip = (tripId, userId) => prisma.trip.findFirst({
+  where: {
+    id: parseInt(tripId, 10),
+    OR: [
+      { userId },
+      { members: { some: { userId } } }
+    ]
+  }
+});
+
+const findCity = async (cityName, country) => {
+  if (!cityName) return null;
+
+  return prisma.city.findFirst({
+    where: {
+      name: { equals: String(cityName).trim(), mode: 'insensitive' },
+      ...(country ? { country: { equals: String(country).trim(), mode: 'insensitive' } } : {})
+    }
+  });
+};
 
 // ===== CREATE STOP =====
 const createStop = async (data, tripId, userId) => {
@@ -22,13 +41,7 @@ const createStop = async (data, tripId, userId) => {
       };
     }
 
-    const { PrismaClient } = require('@prisma/client');
-    const prisma = new PrismaClient();
-
-    // Verify trip belongs to user
-    const trip = await prisma.trip.findFirst({
-      where: { id: parseInt(tripId), userId }
-    });
+    const trip = await getAccessibleTrip(tripId, userId);
 
     if (!trip) {
       return {
@@ -37,16 +50,22 @@ const createStop = async (data, tripId, userId) => {
       };
     }
 
-    const stop = await prisma.stop.create({
+    const city = await findCity(data.city, data.country);
+    const orderNumberResult = await prisma.tripStop.aggregate({
+      where: { tripId: parseInt(tripId, 10) },
+      _max: { orderNumber: true }
+    });
+
+    const stop = await prisma.tripStop.create({
       data: {
-        tripId: parseInt(tripId),
-        userId,
-        city: data.city,
-        country: data.country || null,
-        arrivalDate,
-        departureDate,
-        accommodation: data.accommodation || null,
-        notes: data.notes || null
+        tripId: parseInt(tripId, 10),
+        cityId: city ? city.id : null,
+        customCity: city ? null : data.city,
+        customCountry: city ? null : (data.country || null),
+        startDate: arrivalDate,
+        endDate: departureDate,
+        notes: data.notes || null,
+        orderNumber: (orderNumberResult._max.orderNumber || 0) + 1
       }
     });
 
@@ -67,13 +86,7 @@ const createStop = async (data, tripId, userId) => {
 // ===== GET STOPS FOR A TRIP =====
 const getStopsByTrip = async (tripId, userId) => {
   try {
-    const { PrismaClient } = require('@prisma/client');
-    const prisma = new PrismaClient();
-
-    // Verify trip belongs to user
-    const trip = await prisma.trip.findFirst({
-      where: { id: parseInt(tripId), userId }
-    });
+    const trip = await getAccessibleTrip(tripId, userId);
 
     if (!trip) {
       return {
@@ -83,8 +96,23 @@ const getStopsByTrip = async (tripId, userId) => {
       };
     }
 
-    const stops = await prisma.stop.findMany({
-      where: { tripId: parseInt(tripId), userId }
+    const stops = await prisma.tripStop.findMany({
+      where: { tripId: parseInt(tripId, 10) },
+      orderBy: { orderNumber: 'asc' },
+      include: {
+        city: true,
+        activities: {
+          include: {
+            cityActivity: {
+              include: {
+                city: true
+              }
+            }
+          }
+        },
+        tripNotes: true,
+        expenses: true
+      }
     });
 
     return {
@@ -104,13 +132,29 @@ const getStopsByTrip = async (tripId, userId) => {
 // ===== GET SINGLE STOP =====
 const getStopById = async (stopId, userId) => {
   try {
-    const { PrismaClient } = require('@prisma/client');
-    const prisma = new PrismaClient();
-
-    const stop = await prisma.stop.findFirst({
+    const stop = await prisma.tripStop.findFirst({
       where: {
-        id: parseInt(stopId),
-        userId
+        id: parseInt(stopId, 10),
+        trip: {
+          OR: [
+            { userId },
+            { members: { some: { userId } } }
+          ]
+        }
+      },
+      include: {
+        city: true,
+        activities: {
+          include: {
+            cityActivity: {
+              include: {
+                city: true
+              }
+            }
+          }
+        },
+        tripNotes: true,
+        expenses: true
       }
     });
     
@@ -137,14 +181,18 @@ const getStopById = async (stopId, userId) => {
 // ===== UPDATE STOP =====
 const updateStop = async (stopId, data, userId) => {
   try {
-    const { PrismaClient } = require('@prisma/client');
-    const prisma = new PrismaClient();
-
-    // First check if stop exists and belongs to user
-    const existingStop = await prisma.stop.findFirst({
+    const existingStop = await prisma.tripStop.findFirst({
       where: {
-        id: parseInt(stopId),
-        userId
+        id: parseInt(stopId, 10),
+        trip: {
+          OR: [
+            { userId },
+            { members: { some: { userId } } }
+          ]
+        }
+      },
+      include: {
+        city: true
       }
     });
     
@@ -156,15 +204,18 @@ const updateStop = async (stopId, data, userId) => {
     }
 
     const updateData = {};
-    if (data.city !== undefined) updateData.city = data.city;
-    if (data.country !== undefined) updateData.country = data.country;
-    if (data.arrival_date !== undefined) updateData.arrivalDate = new Date(data.arrival_date);
-    if (data.departure_date !== undefined) updateData.departureDate = new Date(data.departure_date);
-    if (data.accommodation !== undefined) updateData.accommodation = data.accommodation;
+    if (data.city !== undefined || data.country !== undefined) {
+      const city = await findCity(data.city || existingStop.customCity || existingStop.city?.name, data.country || existingStop.customCountry || existingStop.city?.country);
+      updateData.cityId = city ? city.id : null;
+      updateData.customCity = city ? null : (data.city !== undefined ? data.city : existingStop.customCity);
+      updateData.customCountry = city ? null : (data.country !== undefined ? data.country : existingStop.customCountry);
+    }
+    if (data.arrival_date !== undefined) updateData.startDate = new Date(data.arrival_date);
+    if (data.departure_date !== undefined) updateData.endDate = new Date(data.departure_date);
     if (data.notes !== undefined) updateData.notes = data.notes;
 
-    const stop = await prisma.stop.update({
-      where: { id: parseInt(stopId) },
+    const stop = await prisma.tripStop.update({
+      where: { id: parseInt(stopId, 10) },
       data: updateData
     });
 
@@ -185,14 +236,15 @@ const updateStop = async (stopId, data, userId) => {
 // ===== DELETE STOP =====
 const deleteStop = async (stopId, userId) => {
   try {
-    const { PrismaClient } = require('@prisma/client');
-    const prisma = new PrismaClient();
-
-    // First check if stop exists and belongs to user
-    const existingStop = await prisma.stop.findFirst({
+    const existingStop = await prisma.tripStop.findFirst({
       where: {
-        id: parseInt(stopId),
-        userId
+        id: parseInt(stopId, 10),
+        trip: {
+          OR: [
+            { userId },
+            { members: { some: { userId } } }
+          ]
+        }
       }
     });
     
@@ -203,8 +255,8 @@ const deleteStop = async (stopId, userId) => {
       };
     }
 
-    const deletedStop = await prisma.stop.delete({
-      where: { id: parseInt(stopId) }
+    const deletedStop = await prisma.tripStop.delete({
+      where: { id: parseInt(stopId, 10) }
     });
 
     return {
@@ -219,6 +271,8 @@ const deleteStop = async (stopId, userId) => {
       error: error.message
     };
   }
+};
+
 module.exports = {
   createStop,
   getStopsByTrip,

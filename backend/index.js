@@ -16,10 +16,12 @@ const stopsRoutes = require('./routes/stops');
 const expensesRoutes = require('./routes/expenses');
 const searchRoutes = require('./routes/search');
 const extraRoutes = require('./routes/extras');
+const tripCollaborationRoutes = require('./routes/tripCollaboration');
 
 // Use routes
 app.use('/api/auth', authRoutes);
 app.use('/api/trips', tripsRoutes);
+app.use('/api/trips', tripCollaborationRoutes);
 app.use('/api/stops', stopsRoutes);
 app.use('/api/expenses', expensesRoutes);
 app.use('/api/search', searchRoutes);

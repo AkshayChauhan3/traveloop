@@ -27,9 +27,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Dharavi Slum Tour", price: 15.0, duration: "2 hours", category: "Culture & Local Life" },
-          { name: "Bollywood Studio Tour", price: 50.0, duration: "Half day", category: "Entertainment" },
-          { name: "Street Food Tasting", price: 10.0, duration: "2 hours", category: "Food & Drink" }
+          { name: "Dharavi Slum Tour", price: 15.0, duration: "2 hours", category: "CULTURE" },
+          { name: "Bollywood Studio Tour", price: 50.0, duration: "Half day", category: "NIGHTLIFE" },
+          { name: "Street Food Tasting", price: 10.0, duration: "2 hours", category: "FOOD" }
         ]
       }
     },
@@ -55,9 +55,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Old Delhi Rickshaw Ride", price: 12.0, duration: "1.5 hours", category: "Sightseeing" },
-          { name: "Food Walk in Chandni Chowk", price: 18.0, duration: "3 hours", category: "Food & Drink" },
-          { name: "Akshardham Temple Visit", price: 0.0, duration: "Half day", category: "Culture & History" }
+          { name: "Old Delhi Rickshaw Ride", price: 12.0, duration: "1.5 hours", category: "NATURE" },
+          { name: "Food Walk in Chandni Chowk", price: 18.0, duration: "3 hours", category: "FOOD" },
+          { name: "Akshardham Temple Visit", price: 0.0, duration: "Half day", category: "CULTURE" }
         ]
       }
     },
@@ -83,9 +83,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Pub Crawl in Indiranagar", price: 25.0, duration: "4 hours", category: "Nightlife" },
-          { name: "Nandi Hills Sunrise Trek", price: 20.0, duration: "Half day", category: "Adventure & Outdoors" },
-          { name: "Tech Park Tour", price: 10.0, duration: "2 hours", category: "Sightseeing" }
+          { name: "Pub Crawl in Indiranagar", price: 25.0, duration: "4 hours", category: "NIGHTLIFE" },
+          { name: "Nandi Hills Sunrise Trek", price: 20.0, duration: "Half day", category: "ADVENTURE" },
+          { name: "Tech Park Tour", price: 10.0, duration: "2 hours", category: "NATURE" }
         ]
       }
     },
@@ -111,9 +111,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Hot Air Balloon Ride", price: 150.0, duration: "2 hours", category: "Adventure & Outdoors" },
-          { name: "Block Printing Workshop", price: 20.0, duration: "3 hours", category: "Arts & Crafts" },
-          { name: "Chokhi Dhani Dinner", price: 15.0, duration: "Evening", category: "Food & Drink" }
+          { name: "Hot Air Balloon Ride", price: 150.0, duration: "2 hours", category: "ADVENTURE" },
+          { name: "Block Printing Workshop", price: 20.0, duration: "3 hours", category: "CULTURE" },
+          { name: "Chokhi Dhani Dinner", price: 15.0, duration: "Evening", category: "FOOD" }
         ]
       }
     },
@@ -140,9 +140,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Scuba Diving", price: 40.0, duration: "Half day", category: "Water Sports" },
-          { name: "Mandovi River Cruise", price: 10.0, duration: "2 hours", category: "Sightseeing" },
-          { name: "Spice Plantation Tour", price: 15.0, duration: "3 hours", category: "Nature & Outdoors" }
+          { name: "Scuba Diving", price: 40.0, duration: "Half day", category: "ADVENTURE" },
+          { name: "Mandovi River Cruise", price: 10.0, duration: "2 hours", category: "NATURE" },
+          { name: "Spice Plantation Tour", price: 15.0, duration: "3 hours", category: "NATURE" }
         ]
       }
     },
@@ -168,9 +168,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Boat Ride on Lake Pichola", price: 10.0, duration: "1 hour", category: "Sightseeing" },
-          { name: "Dharohar Folk Dance Show", price: 5.0, duration: "Evening", category: "Entertainment" },
-          { name: "Sajjangarh Sunset Visit", price: 8.0, duration: "2 hours", category: "Nature & Outdoors" }
+          { name: "Boat Ride on Lake Pichola", price: 10.0, duration: "1 hour", category: "NATURE" },
+          { name: "Dharohar Folk Dance Show", price: 5.0, duration: "Evening", category: "NIGHTLIFE" },
+          { name: "Sajjangarh Sunset Visit", price: 8.0, duration: "2 hours", category: "NATURE" }
         ]
       }
     },
@@ -196,9 +196,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Ganga Aarti Ceremony", price: 0.0, duration: "Evening", category: "Culture & Religion" },
-          { name: "Morning Boat Ride", price: 8.0, duration: "1.5 hours", category: "Sightseeing" },
-          { name: "Silk Weaving Village Tour", price: 12.0, duration: "3 hours", category: "Arts & Crafts" }
+          { name: "Ganga Aarti Ceremony", price: 0.0, duration: "Evening", category: "CULTURE" },
+          { name: "Morning Boat Ride", price: 8.0, duration: "1.5 hours", category: "NATURE" },
+          { name: "Silk Weaving Village Tour", price: 12.0, duration: "3 hours", category: "CULTURE" }
         ]
       }
     },
@@ -224,9 +224,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Sunrise Taj Mahal Tour", price: 25.0, duration: "3 hours", category: "Sightseeing" },
-          { name: "Mughal Heritage Walk", price: 15.0, duration: "2 hours", category: "Culture & History" },
-          { name: "Marble Inlay Workshop", price: 10.0, duration: "1.5 hours", category: "Arts & Crafts" }
+          { name: "Sunrise Taj Mahal Tour", price: 25.0, duration: "3 hours", category: "NATURE" },
+          { name: "Mughal Heritage Walk", price: 15.0, duration: "2 hours", category: "CULTURE" },
+          { name: "Marble Inlay Workshop", price: 10.0, duration: "1.5 hours", category: "CULTURE" }
         ]
       }
     },
@@ -252,9 +252,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Tram Ride through Heritage Areas", price: 2.0, duration: "1 hour", category: "Sightseeing" },
-          { name: "Bengali Sweets Tasting", price: 8.0, duration: "2 hours", category: "Food & Drink" },
-          { name: "Sundarbans Day Trip", price: 60.0, duration: "Full day", category: "Nature & Wildlife" }
+          { name: "Tram Ride through Heritage Areas", price: 2.0, duration: "1 hour", category: "CULTURE" },
+          { name: "Bengali Sweets Tasting", price: 8.0, duration: "2 hours", category: "FOOD" },
+          { name: "Sundarbans Day Trip", price: 60.0, duration: "Full day", category: "NATURE" }
         ]
       }
     },
@@ -280,9 +280,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "South Indian Food Tour", price: 15.0, duration: "3 hours", category: "Food & Drink" },
-          { name: "Mahabalipuram Excursion", price: 30.0, duration: "Half day", category: "Culture & History" },
-          { name: "Silk Sari Shopping Walk", price: 5.0, duration: "2 hours", category: "Shopping" }
+          { name: "South Indian Food Tour", price: 15.0, duration: "3 hours", category: "FOOD" },
+          { name: "Mahabalipuram Excursion", price: 30.0, duration: "Half day", category: "CULTURE" },
+          { name: "Silk Sari Shopping Walk", price: 5.0, duration: "2 hours", category: "RELAXATION" }
         ]
       }
     },
@@ -308,9 +308,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Biryani Tasting Tour", price: 12.0, duration: "2 hours", category: "Food & Drink" },
-          { name: "Laad Bazaar Pearl Shopping", price: 0.0, duration: "2 hours", category: "Shopping" },
-          { name: "Hussain Sagar Boat Ride", price: 5.0, duration: "1 hour", category: "Sightseeing" }
+          { name: "Biryani Tasting Tour", price: 12.0, duration: "2 hours", category: "FOOD" },
+          { name: "Laad Bazaar Pearl Shopping", price: 0.0, duration: "2 hours", category: "RELAXATION" },
+          { name: "Hussain Sagar Boat Ride", price: 5.0, duration: "1 hour", category: "NATURE" }
         ]
       }
     },
@@ -336,9 +336,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Kathakali Dance Performance", price: 10.0, duration: "Evening", category: "Entertainment" },
-          { name: "Kerala Backwaters Cruise", price: 40.0, duration: "Half day", category: "Nature & Outdoors" },
-          { name: "Spice Market Walking Tour", price: 8.0, duration: "2 hours", category: "Culture & History" }
+          { name: "Kathakali Dance Performance", price: 10.0, duration: "Evening", category: "NIGHTLIFE" },
+          { name: "Kerala Backwaters Cruise", price: 40.0, duration: "Half day", category: "NATURE" },
+          { name: "Spice Market Walking Tour", price: 8.0, duration: "2 hours", category: "CULTURE" }
         ]
       }
     },
@@ -364,9 +364,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Osho Ashram Visit", price: 15.0, duration: "Half day", category: "Wellness & Spirituality" },
-          { name: "Trek to Sinhagad", price: 10.0, duration: "Half day", category: "Adventure & Outdoors" },
-          { name: "Koregaon Park Cafe Hopping", price: 20.0, duration: "Evening", category: "Food & Drink" }
+          { name: "Osho Ashram Visit", price: 15.0, duration: "Half day", category: "RELAXATION" },
+          { name: "Trek to Sinhagad", price: 10.0, duration: "Half day", category: "ADVENTURE" },
+          { name: "Koregaon Park Cafe Hopping", price: 20.0, duration: "Evening", category: "FOOD" }
         ]
       }
     },
@@ -392,9 +392,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "White Water Rafting", price: 25.0, duration: "3 hours", category: "Adventure & Outdoors" },
-          { name: "Yoga and Meditation Class", price: 10.0, duration: "2 hours", category: "Wellness & Spirituality" },
-          { name: "Bungee Jumping", price: 50.0, duration: "Half day", category: "Adventure & Outdoors" }
+          { name: "White Water Rafting", price: 25.0, duration: "3 hours", category: "ADVENTURE" },
+          { name: "Yoga and Meditation Class", price: 10.0, duration: "2 hours", category: "RELAXATION" },
+          { name: "Bungee Jumping", price: 50.0, duration: "Half day", category: "ADVENTURE" }
         ]
       }
     },
@@ -420,9 +420,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Tea Factory Tour", price: 5.0, duration: "1.5 hours", category: "Culture & History" },
-          { name: "Trekking in Western Ghats", price: 20.0, duration: "Half day", category: "Adventure & Outdoors" },
-          { name: "Elephant Safari", price: 15.0, duration: "1 hour", category: "Nature & Wildlife" }
+          { name: "Tea Factory Tour", price: 5.0, duration: "1.5 hours", category: "CULTURE" },
+          { name: "Trekking in Western Ghats", price: 20.0, duration: "Half day", category: "ADVENTURE" },
+          { name: "Elephant Safari", price: 15.0, duration: "1 hour", category: "NATURE" }
         ]
       }
     },
@@ -448,9 +448,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Toy Train Ride", price: 15.0, duration: "2 hours", category: "Sightseeing" },
-          { name: "Tea Estate Tasting", price: 10.0, duration: "2 hours", category: "Food & Drink" },
-          { name: "Himalayan Mountaineering Hike", price: 25.0, duration: "Half day", category: "Adventure & Outdoors" }
+          { name: "Toy Train Ride", price: 15.0, duration: "2 hours", category: "NATURE" },
+          { name: "Tea Estate Tasting", price: 10.0, duration: "2 hours", category: "FOOD" },
+          { name: "Himalayan Mountaineering Hike", price: 25.0, duration: "Half day", category: "ADVENTURE" }
         ]
       }
     },
@@ -476,9 +476,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Desert Safari", price: 35.0, duration: "Half day", category: "Adventure & Outdoors" },
-          { name: "Zip-lining at the Fort", price: 20.0, duration: "1.5 hours", category: "Adventure & Outdoors" },
-          { name: "Blue City Walking Tour", price: 12.0, duration: "2 hours", category: "Culture & Local Life" }
+          { name: "Desert Safari", price: 35.0, duration: "Half day", category: "ADVENTURE" },
+          { name: "Zip-lining at the Fort", price: 20.0, duration: "1.5 hours", category: "ADVENTURE" },
+          { name: "Blue City Walking Tour", price: 12.0, duration: "2 hours", category: "CULTURE" }
         ]
       }
     },
@@ -504,9 +504,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Langar Volunteering", price: 0.0, duration: "2 hours", category: "Culture & Religion" },
-          { name: "Wagah Border Ceremony", price: 0.0, duration: "Evening", category: "Sightseeing" },
-          { name: "Punjabi Dhaba Food Walk", price: 10.0, duration: "2 hours", category: "Food & Drink" }
+          { name: "Langar Volunteering", price: 0.0, duration: "2 hours", category: "CULTURE" },
+          { name: "Wagah Border Ceremony", price: 0.0, duration: "Evening", category: "CULTURE" },
+          { name: "Punjabi Dhaba Food Walk", price: 10.0, duration: "2 hours", category: "FOOD" }
         ]
       }
     },
@@ -532,9 +532,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Silk Weaving Tour", price: 8.0, duration: "2 hours", category: "Arts & Crafts" },
-          { name: "Yoga Intensive", price: 20.0, duration: "Half day", category: "Wellness & Spirituality" },
-          { name: "Palace Illumination Viewing", price: 0.0, duration: "Evening", category: "Sightseeing" }
+          { name: "Silk Weaving Tour", price: 8.0, duration: "2 hours", category: "CULTURE" },
+          { name: "Yoga Intensive", price: 20.0, duration: "Half day", category: "RELAXATION" },
+          { name: "Palace Illumination Viewing", price: 0.0, duration: "Evening", category: "NATURE" }
         ]
       }
     },
@@ -560,9 +560,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Heritage Night Walk", price: 10.0, duration: "2 hours", category: "Culture & History" },
-          { name: "Textile Museum Tour", price: 5.0, duration: "1.5 hours", category: "Arts & Crafts" },
-          { name: "Gujarati Thali Dinner", price: 12.0, duration: "Evening", category: "Food & Drink" }
+          { name: "Heritage Night Walk", price: 10.0, duration: "2 hours", category: "CULTURE" },
+          { name: "Textile Museum Tour", price: 5.0, duration: "1.5 hours", category: "CULTURE" },
+          { name: "Gujarati Thali Dinner", price: 12.0, duration: "Evening", category: "FOOD" }
         ]
       }
     },
@@ -588,9 +588,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Kalka-Shimla Toy Train", price: 10.0, duration: "4 hours", category: "Sightseeing" },
-          { name: "Ice Skating", price: 8.0, duration: "1 hour", category: "Sports & Recreation" },
-          { name: "Hike to Chadwick Falls", price: 0.0, duration: "Half day", category: "Nature & Outdoors" }
+          { name: "Kalka-Shimla Toy Train", price: 10.0, duration: "4 hours", category: "NATURE" },
+          { name: "Ice Skating", price: 8.0, duration: "1 hour", category: "ADVENTURE" },
+          { name: "Hike to Chadwick Falls", price: 0.0, duration: "Half day", category: "NATURE" }
         ]
       }
     },
@@ -616,9 +616,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "French Quarter Cycling", price: 12.0, duration: "2 hours", category: "Sightseeing" },
-          { name: "Surfing Lessons", price: 25.0, duration: "2 hours", category: "Water Sports" },
-          { name: "Cafe Hopping", price: 15.0, duration: "Afternoon", category: "Food & Drink" }
+          { name: "French Quarter Cycling", price: 12.0, duration: "2 hours", category: "ADVENTURE" },
+          { name: "Surfing Lessons", price: 25.0, duration: "2 hours", category: "ADVENTURE" },
+          { name: "Cafe Hopping", price: 15.0, duration: "Afternoon", category: "FOOD" }
         ]
       }
     },
@@ -644,9 +644,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Bouldering", price: 15.0, duration: "Half day", category: "Adventure & Outdoors" },
-          { name: "Coracle Ride", price: 5.0, duration: "1 hour", category: "Sightseeing" },
-          { name: "Guided Ruins Tour", price: 20.0, duration: "Half day", category: "Culture & History" }
+          { name: "Bouldering", price: 15.0, duration: "Half day", category: "ADVENTURE" },
+          { name: "Coracle Ride", price: 5.0, duration: "1 hour", category: "NATURE" },
+          { name: "Guided Ruins Tour", price: 20.0, duration: "Half day", category: "CULTURE" }
         ]
       }
     },
@@ -672,9 +672,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Paragliding", price: 40.0, duration: "1 hour", category: "Adventure & Outdoors" },
-          { name: "Skiing", price: 30.0, duration: "Half day", category: "Sports & Recreation" },
-          { name: "Trekking to Bhrigu Lake", price: 50.0, duration: "Full day", category: "Adventure & Outdoors" }
+          { name: "Paragliding", price: 40.0, duration: "1 hour", category: "ADVENTURE" },
+          { name: "Skiing", price: 30.0, duration: "Half day", category: "ADVENTURE" },
+          { name: "Trekking to Bhrigu Lake", price: 50.0, duration: "Full day", category: "ADVENTURE" }
         ]
       }
     },
@@ -700,9 +700,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Camel Safari", price: 20.0, duration: "Half day", category: "Adventure & Outdoors" },
-          { name: "Desert Camping", price: 60.0, duration: "Overnight", category: "Nature & Outdoors" },
-          { name: "Dune Bashing", price: 40.0, duration: "2 hours", category: "Adventure & Outdoors" }
+          { name: "Camel Safari", price: 20.0, duration: "Half day", category: "ADVENTURE" },
+          { name: "Desert Camping", price: 60.0, duration: "Overnight", category: "NATURE" },
+          { name: "Dune Bashing", price: 40.0, duration: "2 hours", category: "ADVENTURE" }
         ]
       }
     },
@@ -730,9 +730,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Seine River Cruise", price: 20.0, duration: "1 hour", category: "Sightseeing" },
-          { name: "Macaron Baking Class", price: 80.0, duration: "2.5 hours", category: "Food & Drink" },
-          { name: "Montmartre Walking Tour", price: 25.0, duration: "2 hours", category: "Culture & Local Life" }
+          { name: "Seine River Cruise", price: 20.0, duration: "1 hour", category: "NATURE" },
+          { name: "Macaron Baking Class", price: 80.0, duration: "2.5 hours", category: "FOOD" },
+          { name: "Montmartre Walking Tour", price: 25.0, duration: "2 hours", category: "CULTURE" }
         ]
       }
     },
@@ -758,9 +758,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Pasta Making Workshop", price: 65.0, duration: "3 hours", category: "Food & Drink" },
-          { name: "Vespa City Tour", price: 90.0, duration: "Half day", category: "Sightseeing" },
-          { name: "Catacombs Exploration", price: 30.0, duration: "2 hours", category: "Culture & History" }
+          { name: "Pasta Making Workshop", price: 65.0, duration: "3 hours", category: "FOOD" },
+          { name: "Vespa City Tour", price: 90.0, duration: "Half day", category: "ADVENTURE" },
+          { name: "Catacombs Exploration", price: 30.0, duration: "2 hours", category: "CULTURE" }
         ]
       }
     },
@@ -786,9 +786,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Afternoon Tea Bus Tour", price: 55.0, duration: "2 hours", category: "Food & Drink" },
-          { name: "West End Theatre Show", price: 80.0, duration: "Evening", category: "Entertainment" },
-          { name: "Thames Speedboat Ride", price: 45.0, duration: "1 hour", category: "Adventure & Outdoors" }
+          { name: "Afternoon Tea Bus Tour", price: 55.0, duration: "2 hours", category: "FOOD" },
+          { name: "West End Theatre Show", price: 80.0, duration: "Evening", category: "NIGHTLIFE" },
+          { name: "Thames Speedboat Ride", price: 45.0, duration: "1 hour", category: "ADVENTURE" }
         ]
       }
     },
@@ -814,9 +814,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Tapas and Wine Tour", price: 70.0, duration: "3 hours", category: "Food & Drink" },
-          { name: "Flamenco Show", price: 40.0, duration: "Evening", category: "Entertainment" },
-          { name: "Catamaran Cruise", price: 45.0, duration: "2 hours", category: "Water Sports" }
+          { name: "Tapas and Wine Tour", price: 70.0, duration: "3 hours", category: "FOOD" },
+          { name: "Flamenco Show", price: 40.0, duration: "Evening", category: "NIGHTLIFE" },
+          { name: "Catamaran Cruise", price: 45.0, duration: "2 hours", category: "ADVENTURE" }
         ]
       }
     },
@@ -842,9 +842,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Canal Boat Tour", price: 20.0, duration: "1.5 hours", category: "Sightseeing" },
-          { name: "Guided Bike Tour", price: 30.0, duration: "3 hours", category: "Sightseeing" },
-          { name: "Heineken Experience", price: 25.0, duration: "2 hours", category: "Food & Drink" }
+          { name: "Canal Boat Tour", price: 20.0, duration: "1.5 hours", category: "ADVENTURE" },
+          { name: "Guided Bike Tour", price: 30.0, duration: "3 hours", category: "ADVENTURE" },
+          { name: "Heineken Experience", price: 25.0, duration: "2 hours", category: "FOOD" }
         ]
       }
     },
@@ -870,9 +870,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Alternative Street Art Tour", price: 20.0, duration: "2.5 hours", category: "Arts & Culture" },
-          { name: "TV Tower Fast View", price: 25.0, duration: "1 hour", category: "Sightseeing" },
-          { name: "Underground Bunker Tour", price: 18.0, duration: "2 hours", category: "Culture & History" }
+          { name: "Alternative Street Art Tour", price: 20.0, duration: "2.5 hours", category: "CULTURE" },
+          { name: "TV Tower Fast View", price: 25.0, duration: "1 hour", category: "NATURE" },
+          { name: "Underground Bunker Tour", price: 18.0, duration: "2 hours", category: "CULTURE" }
         ]
       }
     },
@@ -898,9 +898,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Vltava River Cruise", price: 15.0, duration: "1 hour", category: "Sightseeing" },
-          { name: "Czech Beer Tasting", price: 25.0, duration: "2 hours", category: "Food & Drink" },
-          { name: "Ghost and Legends Walk", price: 18.0, duration: "Evening", category: "Culture & Local Life" }
+          { name: "Vltava River Cruise", price: 15.0, duration: "1 hour", category: "ADVENTURE" },
+          { name: "Czech Beer Tasting", price: 25.0, duration: "2 hours", category: "FOOD" },
+          { name: "Ghost and Legends Walk", price: 18.0, duration: "Evening", category: "CULTURE" }
         ]
       }
     },
@@ -926,9 +926,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Classical Concert", price: 50.0, duration: "Evening", category: "Entertainment" },
-          { name: "Viennese Waltz Lesson", price: 35.0, duration: "1.5 hours", category: "Arts & Culture" },
-          { name: "Strudel Baking Show", price: 20.0, duration: "1 hour", category: "Food & Drink" }
+          { name: "Classical Concert", price: 50.0, duration: "Evening", category: "NIGHTLIFE" },
+          { name: "Viennese Waltz Lesson", price: 35.0, duration: "1.5 hours", category: "CULTURE" },
+          { name: "Strudel Baking Show", price: 20.0, duration: "1 hour", category: "FOOD" }
         ]
       }
     },
@@ -954,9 +954,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Danube Night Cruise", price: 20.0, duration: "1.5 hours", category: "Sightseeing" },
-          { name: "Ruin Bar Crawl", price: 15.0, duration: "Evening", category: "Nightlife" },
-          { name: "Thermal Bath Relaxation", price: 25.0, duration: "Half day", category: "Wellness & Spirituality" }
+          { name: "Danube Night Cruise", price: 20.0, duration: "1.5 hours", category: "ADVENTURE" },
+          { name: "Ruin Bar Crawl", price: 15.0, duration: "Evening", category: "NIGHTLIFE" },
+          { name: "Thermal Bath Relaxation", price: 25.0, duration: "Half day", category: "RELAXATION" }
         ]
       }
     },
@@ -982,9 +982,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Greek Cooking Class", price: 60.0, duration: "3 hours", category: "Food & Drink" },
-          { name: "Mythology Walking Tour", price: 35.0, duration: "2 hours", category: "Culture & History" },
-          { name: "Cape Sounion Sunset Trip", price: 50.0, duration: "Half day", category: "Nature & Outdoors" }
+          { name: "Greek Cooking Class", price: 60.0, duration: "3 hours", category: "FOOD" },
+          { name: "Mythology Walking Tour", price: 35.0, duration: "2 hours", category: "CULTURE" },
+          { name: "Cape Sounion Sunset Trip", price: 50.0, duration: "Half day", category: "NATURE" }
         ]
       }
     },
@@ -1010,9 +1010,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Churros and Chocolate Tasting", price: 10.0, duration: "1 hour", category: "Food & Drink" },
-          { name: "Bernabeu Stadium Tour", price: 25.0, duration: "2 hours", category: "Sports & Recreation" },
-          { name: "Tapas Crawl in La Latina", price: 45.0, duration: "Evening", category: "Food & Drink" }
+          { name: "Churros and Chocolate Tasting", price: 10.0, duration: "1 hour", category: "FOOD" },
+          { name: "Bernabeu Stadium Tour", price: 25.0, duration: "2 hours", category: "ADVENTURE" },
+          { name: "Tapas Crawl in La Latina", price: 45.0, duration: "Evening", category: "FOOD" }
         ]
       }
     },
@@ -1038,9 +1038,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Pastel de Nata Class", price: 35.0, duration: "2 hours", category: "Food & Drink" },
-          { name: "Tram 28 Ride", price: 3.0, duration: "1 hour", category: "Sightseeing" },
-          { name: "Fado Music Show with Dinner", price: 50.0, duration: "Evening", category: "Entertainment" }
+          { name: "Pastel de Nata Class", price: 35.0, duration: "2 hours", category: "FOOD" },
+          { name: "Tram 28 Ride", price: 3.0, duration: "1 hour", category: "NATURE" },
+          { name: "Fado Music Show with Dinner", price: 50.0, duration: "Evening", category: "NIGHTLIFE" }
         ]
       }
     },
@@ -1066,9 +1066,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Gondola Ride", price: 80.0, duration: "45 mins", category: "Sightseeing" },
-          { name: "Murano Glass Blowing Tour", price: 20.0, duration: "Half day", category: "Arts & Crafts" },
-          { name: "Mask Making Workshop", price: 45.0, duration: "2 hours", category: "Arts & Crafts" }
+          { name: "Gondola Ride", price: 80.0, duration: "45 mins", category: "NATURE" },
+          { name: "Murano Glass Blowing Tour", price: 20.0, duration: "Half day", category: "CULTURE" },
+          { name: "Mask Making Workshop", price: 45.0, duration: "2 hours", category: "CULTURE" }
         ]
       }
     },
@@ -1094,9 +1094,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Chianti Wine Tasting", price: 60.0, duration: "Half day", category: "Food & Drink" },
-          { name: "Michelangelo's David Tour", price: 30.0, duration: "2 hours", category: "Arts & Culture" },
-          { name: "Leather Crafting Workshop", price: 40.0, duration: "2 hours", category: "Arts & Crafts" }
+          { name: "Chianti Wine Tasting", price: 60.0, duration: "Half day", category: "FOOD" },
+          { name: "Michelangelo's David Tour", price: 30.0, duration: "2 hours", category: "CULTURE" },
+          { name: "Leather Crafting Workshop", price: 40.0, duration: "2 hours", category: "CULTURE" }
         ]
       }
     },
@@ -1122,9 +1122,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Bavarian Beer Tour", price: 35.0, duration: "3 hours", category: "Food & Drink" },
-          { name: "BMW Museum Visit", price: 15.0, duration: "2 hours", category: "Culture & History" },
-          { name: "Neuschwanstein Castle Day Trip", price: 70.0, duration: "Full day", category: "Sightseeing" }
+          { name: "Bavarian Beer Tour", price: 35.0, duration: "3 hours", category: "FOOD" },
+          { name: "BMW Museum Visit", price: 15.0, duration: "2 hours", category: "CULTURE" },
+          { name: "Neuschwanstein Castle Day Trip", price: 70.0, duration: "Full day", category: "NATURE" }
         ]
       }
     },
@@ -1150,9 +1150,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Irish Whiskey Museum Tour", price: 20.0, duration: "1.5 hours", category: "Food & Drink" },
-          { name: "Cliffs of Moher Day Trip", price: 65.0, duration: "Full day", category: "Nature & Outdoors" },
-          { name: "Traditional Pub Crawl", price: 30.0, duration: "Evening", category: "Nightlife" }
+          { name: "Irish Whiskey Museum Tour", price: 20.0, duration: "1.5 hours", category: "FOOD" },
+          { name: "Cliffs of Moher Day Trip", price: 65.0, duration: "Full day", category: "NATURE" },
+          { name: "Traditional Pub Crawl", price: 30.0, duration: "Evening", category: "NIGHTLIFE" }
         ]
       }
     },
@@ -1178,9 +1178,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Underground Vaults Tour", price: 20.0, duration: "1.5 hours", category: "Culture & History" },
-          { name: "Scotch Whisky Experience", price: 25.0, duration: "2 hours", category: "Food & Drink" },
-          { name: "Loch Ness Day Trip", price: 60.0, duration: "Full day", category: "Nature & Outdoors" }
+          { name: "Underground Vaults Tour", price: 20.0, duration: "1.5 hours", category: "CULTURE" },
+          { name: "Scotch Whisky Experience", price: 25.0, duration: "2 hours", category: "FOOD" },
+          { name: "Loch Ness Day Trip", price: 60.0, duration: "Full day", category: "NATURE" }
         ]
       }
     },
@@ -1206,9 +1206,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Archipelago Boat Tour", price: 35.0, duration: "3 hours", category: "Sightseeing" },
-          { name: "Nordic Food Walk", price: 80.0, duration: "3 hours", category: "Food & Drink" },
-          { name: "Icebar Experience", price: 25.0, duration: "45 mins", category: "Nightlife" }
+          { name: "Archipelago Boat Tour", price: 35.0, duration: "3 hours", category: "NATURE" },
+          { name: "Nordic Food Walk", price: 80.0, duration: "3 hours", category: "FOOD" },
+          { name: "Icebar Experience", price: 25.0, duration: "45 mins", category: "NIGHTLIFE" }
         ]
       }
     },
@@ -1234,9 +1234,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Canal Tour", price: 15.0, duration: "1 hour", category: "Sightseeing" },
-          { name: "City Bike Rental", price: 10.0, duration: "Full day", category: "Sports & Recreation" },
-          { name: "Danish Pastry Baking Class", price: 50.0, duration: "2 hours", category: "Food & Drink" }
+          { name: "Canal Tour", price: 15.0, duration: "1 hour", category: "NATURE" },
+          { name: "City Bike Rental", price: 10.0, duration: "Full day", category: "ADVENTURE" },
+          { name: "Danish Pastry Baking Class", price: 50.0, duration: "2 hours", category: "FOOD" }
         ]
       }
     },
@@ -1262,9 +1262,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Fjord Sightseeing Cruise", price: 40.0, duration: "2 hours", category: "Sightseeing" },
-          { name: "Holmenkollen Ski Jump Zip Line", price: 65.0, duration: "1 hour", category: "Adventure & Outdoors" },
-          { name: "Sauna and Fjord Dip", price: 25.0, duration: "2 hours", category: "Wellness & Spirituality" }
+          { name: "Fjord Sightseeing Cruise", price: 40.0, duration: "2 hours", category: "NATURE" },
+          { name: "Holmenkollen Ski Jump Zip Line", price: 65.0, duration: "1 hour", category: "ADVENTURE" },
+          { name: "Sauna and Fjord Dip", price: 25.0, duration: "2 hours", category: "RELAXATION" }
         ]
       }
     },
@@ -1290,9 +1290,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Traditional Finnish Sauna", price: 20.0, duration: "2 hours", category: "Wellness & Spirituality" },
-          { name: "Archipelago Boat Tour", price: 30.0, duration: "1.5 hours", category: "Sightseeing" },
-          { name: "Design District Walking Tour", price: 15.0, duration: "2 hours", category: "Culture & Local Life" }
+          { name: "Traditional Finnish Sauna", price: 20.0, duration: "2 hours", category: "RELAXATION" },
+          { name: "Archipelago Boat Tour", price: 30.0, duration: "1.5 hours", category: "NATURE" },
+          { name: "Design District Walking Tour", price: 15.0, duration: "2 hours", category: "CULTURE" }
         ]
       }
     },
@@ -1318,9 +1318,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Pierogi Cooking Class", price: 35.0, duration: "2.5 hours", category: "Food & Drink" },
-          { name: "Chopin Piano Concert", price: 20.0, duration: "Evening", category: "Entertainment" },
-          { name: "Communism Tour in Retro Bus", price: 40.0, duration: "3 hours", category: "Culture & History" }
+          { name: "Pierogi Cooking Class", price: 35.0, duration: "2.5 hours", category: "FOOD" },
+          { name: "Chopin Piano Concert", price: 20.0, duration: "Evening", category: "NIGHTLIFE" },
+          { name: "Communism Tour in Retro Bus", price: 40.0, duration: "3 hours", category: "CULTURE" }
         ]
       }
     },
@@ -1346,9 +1346,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Wieliczka Salt Mine Tour", price: 30.0, duration: "Half day", category: "Culture & History" },
-          { name: "Jewish Quarter Walking Tour", price: 15.0, duration: "2 hours", category: "Culture & History" },
-          { name: "Vodka Tasting", price: 25.0, duration: "1.5 hours", category: "Food & Drink" }
+          { name: "Wieliczka Salt Mine Tour", price: 30.0, duration: "Half day", category: "CULTURE" },
+          { name: "Jewish Quarter Walking Tour", price: 15.0, duration: "2 hours", category: "CULTURE" },
+          { name: "Vodka Tasting", price: 25.0, duration: "1.5 hours", category: "FOOD" }
         ]
       }
     },
@@ -1374,9 +1374,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Swiss Chocolate Tour", price: 50.0, duration: "2 hours", category: "Food & Drink" },
-          { name: "Mount Titlis Day Trip", price: 150.0, duration: "Full day", category: "Nature & Outdoors" },
-          { name: "Rhine Falls Excursion", price: 60.0, duration: "Half day", category: "Nature & Outdoors" }
+          { name: "Swiss Chocolate Tour", price: 50.0, duration: "2 hours", category: "FOOD" },
+          { name: "Mount Titlis Day Trip", price: 150.0, duration: "Full day", category: "NATURE" },
+          { name: "Rhine Falls Excursion", price: 60.0, duration: "Half day", category: "NATURE" }
         ]
       }
     },
@@ -1402,9 +1402,9 @@ async function main() {
       },
       activities: {
         create: [
-          { name: "Golden Circle Tour", price: 80.0, duration: "Full day", category: "Sightseeing" },
-          { name: "Northern Lights Hunt", price: 60.0, duration: "Evening", category: "Nature & Outdoors" },
-          { name: "Whale Watching", price: 90.0, duration: "3 hours", category: "Nature & Wildlife" }
+          { name: "Golden Circle Tour", price: 80.0, duration: "Full day", category: "NATURE" },
+          { name: "Northern Lights Hunt", price: 60.0, duration: "Evening", category: "NATURE" },
+          { name: "Whale Watching", price: 90.0, duration: "3 hours", category: "NATURE" }
         ]
       }
     }

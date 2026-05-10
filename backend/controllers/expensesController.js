@@ -1,5 +1,27 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const prisma = require('../lib/prisma');
+
+const getAccessibleTrip = (tripId, userId) => prisma.trip.findFirst({
+  where: {
+    id: parseInt(tripId, 10),
+    OR: [
+      { userId },
+      { members: { some: { userId } } }
+    ]
+  }
+});
+
+const getAccessibleStop = (stopId, tripId, userId) => prisma.tripStop.findFirst({
+  where: {
+    id: parseInt(stopId, 10),
+    tripId: parseInt(tripId, 10),
+    trip: {
+      OR: [
+        { userId },
+        { members: { some: { userId } } }
+      ]
+    }
+  }
+});
 
 // ===== CREATE EXPENSE =====
 const createExpense = async (data, userId) => {
@@ -11,12 +33,33 @@ const createExpense = async (data, userId) => {
       };
     }
 
+    const trip = await getAccessibleTrip(data.trip_id, userId);
+
+    if (!trip) {
+      return {
+        success: false,
+        message: 'Trip not found or unauthorized'
+      };
+    }
+
+    let stop = null;
+    if (data.stop_id) {
+      stop = await getAccessibleStop(data.stop_id, data.trip_id, userId);
+
+      if (!stop) {
+        return {
+          success: false,
+          message: 'Stop not found or does not belong to the trip'
+        };
+      }
+    }
+
     const expense = await prisma.expense.create({
       data: {
-        tripId: parseInt(data.trip_id),
-        stopId: data.stop_id ? parseInt(data.stop_id) : null,
+        tripId: parseInt(data.trip_id, 10),
+        stopId: stop ? stop.id : null,
         userId,
-        category: data.category,
+        category: String(data.category).toLowerCase(),
         amount: parseFloat(data.amount),
         description: data.description || null,
         date: data.date ? new Date(data.date) : new Date()
@@ -40,11 +83,20 @@ const createExpense = async (data, userId) => {
 // ===== GET ALL EXPENSES FOR A TRIP =====
 const getExpensesByTrip = async (tripId, userId) => {
   try {
+    const trip = await getAccessibleTrip(tripId, userId);
+
+    if (!trip) {
+      return {
+        success: false,
+        message: 'Trip not found or unauthorized'
+      };
+    }
+
     const tripExpenses = await prisma.expense.findMany({
       where: {
-        tripId: parseInt(tripId),
-        userId
-      }
+        tripId: parseInt(tripId, 10)
+      },
+      orderBy: { date: 'desc' }
     });
 
     return {
@@ -63,11 +115,30 @@ const getExpensesByTrip = async (tripId, userId) => {
 // ===== GET EXPENSES FOR A SPECIFIC STOP =====
 const getExpensesByStop = async (stopId, userId) => {
   try {
+    const stop = await prisma.tripStop.findFirst({
+      where: {
+        id: parseInt(stopId, 10),
+        trip: {
+          OR: [
+            { userId },
+            { members: { some: { userId } } }
+          ]
+        }
+      }
+    });
+
+    if (!stop) {
+      return {
+        success: false,
+        message: 'Stop not found or unauthorized'
+      };
+    }
+
     const stopExpenses = await prisma.expense.findMany({
       where: {
-        stopId: parseInt(stopId),
-        userId
-      }
+        stopId: parseInt(stopId, 10)
+      },
+      orderBy: { date: 'desc' }
     });
 
     return {
@@ -86,10 +157,18 @@ const getExpensesByStop = async (stopId, userId) => {
 // ===== GET BUDGET SUMMARY FOR A TRIP =====
 const getBudgetSummary = async (tripId, totalBudget, userId) => {
   try {
+    const trip = await getAccessibleTrip(tripId, userId);
+
+    if (!trip) {
+      return {
+        success: false,
+        message: 'Trip not found or unauthorized'
+      };
+    }
+
     const tripExpenses = await prisma.expense.findMany({
       where: {
-        tripId: parseInt(tripId),
-        userId
+        tripId: parseInt(tripId, 10)
       }
     });
     
@@ -118,7 +197,7 @@ const getBudgetSummary = async (tripId, totalBudget, userId) => {
         total_budget: totalBudget,
         total_spent: totalSpent.toFixed(2),
         remaining_budget: remaining.toFixed(2),
-        spending_percentage: ((totalSpent / totalBudget) * 100).toFixed(2),
+        spending_percentage: totalBudget > 0 ? ((totalSpent / totalBudget) * 100).toFixed(2) : '0.00',
         by_category: byCategory,
         expense_count: tripExpenses.length
       }
@@ -137,7 +216,7 @@ const updateExpense = async (expenseId, data, userId) => {
   try {
     const existingExpense = await prisma.expense.findFirst({
       where: {
-        id: parseInt(expenseId),
+        id: parseInt(expenseId, 10),
         userId
       }
     });
@@ -150,14 +229,14 @@ const updateExpense = async (expenseId, data, userId) => {
     }
 
     const updateData = {};
-    if (data.category !== undefined) updateData.category = data.category;
+    if (data.category !== undefined) updateData.category = String(data.category).toLowerCase();
     if (data.amount !== undefined) updateData.amount = parseFloat(data.amount);
     if (data.description !== undefined) updateData.description = data.description;
     if (data.date !== undefined) updateData.date = new Date(data.date);
-    if (data.stop_id !== undefined) updateData.stopId = data.stop_id ? parseInt(data.stop_id) : null;
+    if (data.stop_id !== undefined) updateData.stopId = data.stop_id ? parseInt(data.stop_id, 10) : null;
 
     const expense = await prisma.expense.update({
-      where: { id: parseInt(expenseId) },
+      where: { id: parseInt(expenseId, 10) },
       data: updateData
     });
 
@@ -180,7 +259,7 @@ const deleteExpense = async (expenseId, userId) => {
   try {
     const existingExpense = await prisma.expense.findFirst({
       where: {
-        id: parseInt(expenseId),
+        id: parseInt(expenseId, 10),
         userId
       }
     });
@@ -193,7 +272,7 @@ const deleteExpense = async (expenseId, userId) => {
     }
 
     const deletedExpense = await prisma.expense.delete({
-      where: { id: parseInt(expenseId) }
+      where: { id: parseInt(expenseId, 10) }
     });
 
     return {

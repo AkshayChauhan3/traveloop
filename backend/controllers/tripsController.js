@@ -1,19 +1,55 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const prisma = require('../lib/prisma');
+const crypto = require('crypto');
+
+const TRIP_STATUSES = new Set(['PLANNED', 'ONGOING', 'COMPLETED', 'CANCELLED']);
+
+const parseBoolean = (value) => {
+  if (value === true || value === false) return value;
+  if (value === 'true' || value === '1') return true;
+  if (value === 'false' || value === '0') return false;
+  return Boolean(value);
+};
+
+const normalizeTripStatus = (status) => {
+  if (status === undefined || status === null || status === '') {
+    return undefined;
+  }
+
+  const normalized = String(status).trim().toUpperCase();
+  return TRIP_STATUSES.has(normalized) ? normalized : undefined;
+};
+
+const getTripTitle = (data) => data.title || data.name;
+const getTripBudget = (data) => data.budget ?? data.total_budget;
+const generateShareSlug = () => crypto.randomBytes(6).toString('hex');
+
+const getTripWhereClause = (tripId, userId) => ({
+  id: parseInt(tripId, 10),
+  OR: [
+    { userId },
+    { members: { some: { userId } } }
+  ]
+});
 
 // ===== CREATE TRIP =====
 const createTrip = async (data, userId) => {
   try {
-    if (!data.name || !data.description || !data.start_date || !data.end_date || !data.total_budget) {
+    const title = getTripTitle(data);
+    const budget = getTripBudget(data);
+    const startDateValue = data.startDate || data.start_date;
+    const endDateValue = data.endDate || data.end_date;
+    const status = normalizeTripStatus(data.status) || 'PLANNED';
+
+    if (!title || !data.description || !startDateValue || !endDateValue || budget === undefined || budget === null || budget === '') {
       return {
         success: false,
-        message: 'Missing required fields: name, description, start_date, end_date, total_budget'
+        message: 'Missing required fields: title/name, description, start_date/end_date, total_budget/budget'
       };
     }
 
     // Validate dates
-    const startDate = new Date(data.start_date);
-    const endDate = new Date(data.end_date);
+    const startDate = new Date(startDateValue);
+    const endDate = new Date(endDateValue);
     if (startDate >= endDate) {
       return {
         success: false,
@@ -21,16 +57,30 @@ const createTrip = async (data, userId) => {
       };
     }
 
-    const trip = await prisma.trip.create({
-      data: {
-        userId,
-        name: data.name,
-        description: data.description,
-        startDate,
-        endDate,
-        totalBudget: parseFloat(data.total_budget),
-        status: data.status || 'planned'
-      }
+    const trip = await prisma.$transaction(async (tx) => {
+      const createdTrip = await tx.trip.create({
+        data: {
+          userId,
+          title,
+          description: data.description,
+          startDate,
+          endDate,
+          budget: parseFloat(budget),
+          status,
+          isPublic: parseBoolean(data.is_public ?? data.isPublic),
+          shareSlug: generateShareSlug()
+        }
+      });
+
+      await tx.tripMember.create({
+        data: {
+          tripId: createdTrip.id,
+          userId,
+          role: 'OWNER'
+        }
+      });
+
+      return createdTrip;
     });
 
     return {
@@ -51,7 +101,19 @@ const createTrip = async (data, userId) => {
 const getUserTrips = async (userId) => {
   try {
     const userTrips = await prisma.trip.findMany({
-      where: { userId }
+      where: {
+        OR: [
+          { userId },
+          { members: { some: { userId } } }
+        ]
+      },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        members: true,
+        stops: {
+          orderBy: { orderNumber: 'asc' }
+        }
+      }
     });
 
     return {
@@ -71,9 +133,40 @@ const getUserTrips = async (userId) => {
 const getTripById = async (tripId, userId) => {
   try {
     const trip = await prisma.trip.findFirst({
-      where: {
-        id: parseInt(tripId),
-        userId
+      where: getTripWhereClause(tripId, userId),
+      include: {
+        members: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+                profilePhoto: true
+              }
+            }
+          }
+        },
+        stops: {
+          orderBy: { orderNumber: 'asc' },
+          include: {
+            city: true,
+            activities: {
+              include: {
+                cityActivity: {
+                  include: {
+                    city: true
+                  }
+                }
+              }
+            },
+            expenses: true
+          }
+        },
+        expenses: true,
+        packingItems: true,
+        notes: true
       }
     });
     
@@ -100,12 +193,8 @@ const getTripById = async (tripId, userId) => {
 // ===== UPDATE TRIP =====
 const updateTrip = async (tripId, data, userId) => {
   try {
-    // First check if trip exists and belongs to user
     const existingTrip = await prisma.trip.findFirst({
-      where: {
-        id: parseInt(tripId),
-        userId
-      }
+      where: getTripWhereClause(tripId, userId)
     });
     
     if (!existingTrip) {
@@ -116,15 +205,16 @@ const updateTrip = async (tripId, data, userId) => {
     }
 
     const updateData = {};
-    if (data.name !== undefined) updateData.name = data.name;
+    if (data.title !== undefined || data.name !== undefined) updateData.title = getTripTitle(data);
     if (data.description !== undefined) updateData.description = data.description;
-    if (data.start_date !== undefined) updateData.startDate = new Date(data.start_date);
-    if (data.end_date !== undefined) updateData.endDate = new Date(data.end_date);
-    if (data.total_budget !== undefined) updateData.totalBudget = parseFloat(data.total_budget);
-    if (data.status !== undefined) updateData.status = data.status;
+    if (data.startDate !== undefined || data.start_date !== undefined) updateData.startDate = new Date(data.startDate || data.start_date);
+    if (data.endDate !== undefined || data.end_date !== undefined) updateData.endDate = new Date(data.endDate || data.end_date);
+    if (data.budget !== undefined || data.total_budget !== undefined) updateData.budget = parseFloat(getTripBudget(data));
+    const status = normalizeTripStatus(data.status);
+    if (status !== undefined) updateData.status = status;
 
     const trip = await prisma.trip.update({
-      where: { id: parseInt(tripId) },
+      where: { id: parseInt(tripId, 10) },
       data: updateData
     });
 
@@ -145,12 +235,8 @@ const updateTrip = async (tripId, data, userId) => {
 // ===== DELETE TRIP =====
 const deleteTrip = async (tripId, userId) => {
   try {
-    // First check if trip exists and belongs to user
     const existingTrip = await prisma.trip.findFirst({
-      where: {
-        id: parseInt(tripId),
-        userId
-      }
+      where: getTripWhereClause(tripId, userId)
     });
     
     if (!existingTrip) {
@@ -161,7 +247,7 @@ const deleteTrip = async (tripId, userId) => {
     }
 
     const deletedTrip = await prisma.trip.delete({
-      where: { id: parseInt(tripId) }
+      where: { id: parseInt(tripId, 10) }
     });
 
     return {

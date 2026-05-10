@@ -1,5 +1,29 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const prisma = require('../lib/prisma');
+
+const ACTIVITY_CATEGORIES = new Set(['ADVENTURE', 'FOOD', 'CULTURE', 'NATURE', 'NIGHTLIFE', 'RELAXATION']);
+
+const normalizeCategory = (category) => {
+  if (!category) return 'RELAXATION';
+
+  const normalized = String(category).trim().toUpperCase();
+  return ACTIVITY_CATEGORIES.has(normalized) ? normalized : 'RELAXATION';
+};
+
+const getAccessibleStop = (stopId, userId) => prisma.tripStop.findFirst({
+  where: {
+    id: parseInt(stopId, 10),
+    trip: {
+      OR: [
+        { userId },
+        { members: { some: { userId } } }
+      ]
+    }
+  },
+  include: {
+    city: true,
+    trip: true
+  }
+});
 
 // ===== CREATE ACTIVITY =====
 const createActivity = async (data, userId) => {
@@ -11,17 +35,59 @@ const createActivity = async (data, userId) => {
       };
     }
 
-    const activity = await prisma.activity.create({
+    const stop = await getAccessibleStop(data.stop_id, userId);
+
+    if (!stop) {
+      return {
+        success: false,
+        message: 'Stop not found or unauthorized'
+      };
+    }
+
+    const estimatedCost = data.estimated_cost !== undefined ? parseFloat(data.estimated_cost) : null;
+    const scheduledTime = data.start_time || null;
+    const duration = data.duration_hours !== undefined ? String(data.duration_hours) : null;
+    const normalizedCategory = normalizeCategory(data.category);
+    const activityName = data.name.trim();
+
+    const existingCityActivity = stop.cityId
+      ? await prisma.cityActivity.findFirst({
+          where: {
+            cityId: stop.cityId,
+            name: { equals: activityName, mode: 'insensitive' }
+          }
+        })
+      : null;
+
+    const cityActivity = existingCityActivity || (stop.cityId
+      ? await prisma.cityActivity.create({
+          data: {
+            cityId: stop.cityId,
+            name: activityName,
+            category: normalizedCategory,
+            description: data.description || null,
+            duration,
+            price: estimatedCost,
+            availabilityTime: scheduledTime
+          }
+        })
+      : null);
+
+    const activity = await prisma.tripActivity.create({
       data: {
-        stopId: parseInt(data.stop_id),
-        userId,
-        name: data.name,
-        description: data.description || null,
-        category: data.category || 'sightseeing',
-        durationHours: data.duration_hours || 2,
-        estimatedCost: parseFloat(data.estimated_cost) || 0,
-        startTime: data.start_time || '09:00',
-        notes: data.notes || null
+        tripStopId: parseInt(data.stop_id, 10),
+        cityActivityId: cityActivity ? cityActivity.id : null,
+        customActivity: cityActivity ? null : activityName,
+        notes: data.notes || data.description || null,
+        estimatedCost,
+        scheduledTime
+      },
+      include: {
+        cityActivity: {
+          include: {
+            city: true
+          }
+        }
       }
     });
 
@@ -42,10 +108,25 @@ const createActivity = async (data, userId) => {
 // ===== GET ACTIVITIES FOR A STOP =====
 const getActivitiesByStop = async (stopId, userId) => {
   try {
-    const stopActivities = await prisma.activity.findMany({
+    const stop = await getAccessibleStop(stopId, userId);
+
+    if (!stop) {
+      return {
+        success: false,
+        message: 'Stop not found or unauthorized'
+      };
+    }
+
+    const stopActivities = await prisma.tripActivity.findMany({
       where: {
-        stopId: parseInt(stopId),
-        userId
+        tripStopId: parseInt(stopId, 10)
+      },
+      include: {
+        cityActivity: {
+          include: {
+            city: true
+          }
+        }
       }
     });
 
@@ -65,10 +146,30 @@ const getActivitiesByStop = async (stopId, userId) => {
 // ===== GET SINGLE ACTIVITY =====
 const getActivityById = async (activityId, userId) => {
   try {
-    const activity = await prisma.activity.findFirst({
+    const activity = await prisma.tripActivity.findFirst({
       where: {
-        id: parseInt(activityId),
-        userId
+        id: parseInt(activityId, 10),
+        tripStop: {
+          trip: {
+            OR: [
+              { userId },
+              { members: { some: { userId } } }
+            ]
+          }
+        }
+      },
+      include: {
+        cityActivity: {
+          include: {
+            city: true
+          }
+        },
+        tripStop: {
+          include: {
+            city: true,
+            trip: true
+          }
+        }
       }
     });
     
@@ -95,10 +196,21 @@ const getActivityById = async (activityId, userId) => {
 // ===== UPDATE ACTIVITY =====
 const updateActivity = async (activityId, data, userId) => {
   try {
-    const existingActivity = await prisma.activity.findFirst({
+    const existingActivity = await prisma.tripActivity.findFirst({
       where: {
-        id: parseInt(activityId),
-        userId
+        id: parseInt(activityId, 10),
+        tripStop: {
+          trip: {
+            OR: [
+              { userId },
+              { members: { some: { userId } } }
+            ]
+          }
+        }
+      },
+      include: {
+        cityActivity: true,
+        tripStop: true
       }
     });
     
@@ -110,17 +222,45 @@ const updateActivity = async (activityId, data, userId) => {
     }
 
     const updateData = {};
-    if (data.name !== undefined) updateData.name = data.name;
-    if (data.description !== undefined) updateData.description = data.description;
-    if (data.category !== undefined) updateData.category = data.category;
-    if (data.duration_hours !== undefined) updateData.durationHours = data.duration_hours;
-    if (data.estimated_cost !== undefined) updateData.estimatedCost = parseFloat(data.estimated_cost);
-    if (data.start_time !== undefined) updateData.startTime = data.start_time;
-    if (data.notes !== undefined) updateData.notes = data.notes;
+    const hasName = data.name !== undefined;
+    const hasCategory = data.category !== undefined;
+    const hasDuration = data.duration_hours !== undefined;
+    const hasCost = data.estimated_cost !== undefined;
+    const hasStartTime = data.start_time !== undefined;
 
-    const activity = await prisma.activity.update({
-      where: { id: parseInt(activityId) },
-      data: updateData
+    if (existingActivity.cityActivityId) {
+      const cityActivityUpdate = {};
+      if (hasName) cityActivityUpdate.name = data.name;
+      if (hasCategory) cityActivityUpdate.category = normalizeCategory(data.category);
+      if (data.description !== undefined) cityActivityUpdate.description = data.description;
+      if (hasDuration) cityActivityUpdate.duration = String(data.duration_hours);
+      if (hasCost) cityActivityUpdate.price = parseFloat(data.estimated_cost);
+      if (hasStartTime) cityActivityUpdate.availabilityTime = data.start_time;
+
+      if (Object.keys(cityActivityUpdate).length > 0) {
+        await prisma.cityActivity.update({
+          where: { id: existingActivity.cityActivityId },
+          data: cityActivityUpdate
+        });
+      }
+    } else {
+      if (hasName) updateData.customActivity = data.name;
+    }
+
+    if (data.notes !== undefined) updateData.notes = data.notes;
+    if (hasCost) updateData.estimatedCost = parseFloat(data.estimated_cost);
+    if (hasStartTime) updateData.scheduledTime = data.start_time;
+
+    const activity = await prisma.tripActivity.update({
+      where: { id: parseInt(activityId, 10) },
+      data: updateData,
+      include: {
+        cityActivity: {
+          include: {
+            city: true
+          }
+        }
+      }
     });
 
     return {
@@ -140,10 +280,17 @@ const updateActivity = async (activityId, data, userId) => {
 // ===== MARK ACTIVITY COMPLETE =====
 const markActivityComplete = async (activityId, userId) => {
   try {
-    const existingActivity = await prisma.activity.findFirst({
+    const existingActivity = await prisma.tripActivity.findFirst({
       where: {
-        id: parseInt(activityId),
-        userId
+        id: parseInt(activityId, 10),
+        tripStop: {
+          trip: {
+            OR: [
+              { userId },
+              { members: { some: { userId } } }
+            ]
+          }
+        }
       }
     });
     
@@ -154,11 +301,10 @@ const markActivityComplete = async (activityId, userId) => {
       };
     }
 
-    const activity = await prisma.activity.update({
-      where: { id: parseInt(activityId) },
+    const activity = await prisma.tripActivity.update({
+      where: { id: parseInt(activityId, 10) },
       data: {
-        completed: true,
-        completedAt: new Date()
+        completed: true
       }
     });
 
@@ -179,10 +325,17 @@ const markActivityComplete = async (activityId, userId) => {
 // ===== DELETE ACTIVITY =====
 const deleteActivity = async (activityId, userId) => {
   try {
-    const existingActivity = await prisma.activity.findFirst({
+    const existingActivity = await prisma.tripActivity.findFirst({
       where: {
-        id: parseInt(activityId),
-        userId
+        id: parseInt(activityId, 10),
+        tripStop: {
+          trip: {
+            OR: [
+              { userId },
+              { members: { some: { userId } } }
+            ]
+          }
+        }
       }
     });
     
@@ -193,8 +346,8 @@ const deleteActivity = async (activityId, userId) => {
       };
     }
 
-    const deletedActivity = await prisma.activity.delete({
-      where: { id: parseInt(activityId) }
+    const deletedActivity = await prisma.tripActivity.delete({
+      where: { id: parseInt(activityId, 10) }
     });
 
     return {
